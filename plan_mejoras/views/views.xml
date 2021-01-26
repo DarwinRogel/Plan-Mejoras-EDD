@@ -1,5 +1,185 @@
 <odoo>
     <data>
+        <!--Vista Form Docente-->
+        <record id="view_form_docente" model="ir.ui.view">
+            <field name="name">view.form.res.users</field>
+            <field name="model">res.users</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                            <field name="name" required="1"/>
+                            </group>
+                            <group>
+                            <field name="image_128" string="Foto" widget="image"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="phone" required="1"/>
+                                <field name="password" value="docente2020"/>
+                                <field name="login"/>
+                            </group>
+                            <group>
+                                <field name="email"/>
+                                <field name="groups_id"/> <!-- domain="['|','|', ('id','=',31),('id','=',32),('id','=',33)]"-->
+                            </group>
+                        </group>
+                        <group>
+                            <field name="criterio_ids"/>
+                            <field name="tarea_ids"/>
+                        </group>
+                        <group>
+                            <field name="us_cat"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <!--Vista Kanban Docente-->
+        <record id="view_kanban_docente" model="ir.ui.view">
+            <field name="name">view.tree.res.users</field>
+            <field name="model">res.users</field>
+            <field name="type">kanban</field>
+            <field name="arch" type="xml">
+                 <kanban> <!--decoration-success="total_val == 100" decoration-danger="total_val == 0">-->
+                   <field name="name"/>
+                   <field name="email"/>
+                     <field name="count_tarea"/>
+                   <field name="us_cat" optional="hide"/>
+                   <!--<field name="us_cat" invisible="1"/>-->
+                   <templates>
+                       <t t-name="kanban-box">
+                           <div t-attf-class="oe_kanban_global_click">
+                               <div class="o_kanban_image">
+                                   <div t-if="record.image_128.value">
+                                       <t t-esc="record.image_128.value"/>
+                                   </div>
+                               </div>
+                               <div class="oe_kanban_details">
+                                   <t class="o_kanban_record_title">
+                                       <strong t-esc="record.name.value"/>
+                                   </t>
+                                   <div t-if="record.email.value">
+                                       <t t-esc="record.email.value"/>
+                                   </div>
+                                   <div t-if="record.count_tarea.value">Tareas por Ponderar:
+                                       <t t-esc="record.count_tarea.value"/>
+                                   </div>
+                                   <div t-if="record.us_cat.value">
+                                       <t t-esc="record.us_cat.value"/>
+                                   </div>
+                                   <!--<div t-if="record.us_cat.value">
+                                       <t t-esc="record.us_cat.value"/>
+                                   </div>-->
+                               </div>
+                               <br/>
+                               <div align="right" class="oe_button_box" >
+                                    <button id="task_view"
+                                            string="Ver Tareas"
+                                            type="object"
+                                            name="vista_tree"
+                                            class="btn btn-primary">Ver Plan Actividades</button>
+                               </div>
+                           </div>
+                       </t>
+                   </templates>
+                 </kanban>
+            </field>
+        </record>
+
+
+        <!--Vista Tree Docente-->
+        <record id="view_tree_docente" model="ir.ui.view">
+            <field name="name">view.tree.res.docente</field>
+            <field name="model">res.users</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="email"/>
+                    <field name="us_cat"/>
+                    <field name="count_tarea"/>
+                    <field name="phone" optional="hide"/>
+                    <field name="phone" optional="hide"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <!--Filtro por valoración docente-->
+        <record model="ir.ui.view" id="view_docente_search_valoracion">
+            <field name="name">res.users.view.search</field>
+            <field name="model">res.users</field>
+            <field name="arch" type="xml">
+                <search string="Docentes">
+                    <field name="name"/>
+                    <field name="us_cat"/>
+                    <group string="Group By">
+                        <filter string="Valoracion"
+                                name="group_valoracion_docente"
+                                context="{'group_by':'us_cat'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+
+        <!--Accion de ventana Docente-->
+        <record id="action_view_usuario" model="ir.actions.act_window">
+            <field name="name">Docentes</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.users</field>
+            <field name="view_mode">kanban,tree,form,graph</field>
+            <field name="search_view_id" ref="pm1_app.view_docente_search_valoracion"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Crear un Usuario en el módulo Plan Mejoras
+                </p>
+            </field>
+        </record>
+
+
+        <!--Accion de ventana Docente kanban-->
+        <record id="action_view_docente_kanban" model="ir.actions.act_window.view">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="pm1_app.view_kanban_docente"/>
+            <field name="act_window_id" ref="action_view_usuario"/>
+        </record>
+
+
+        <!--Accion de ventana Docente tree-->
+        <record id="action_view_docente_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="pm1_app.view_tree_docente"/>
+            <field name="act_window_id" ref="action_view_usuario"/>
+        </record>
+
+
+        <!--Accion de ventana Docente form-->
+        <record id="action_view_docente_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="pm1_app.view_form_docente"/>
+            <field name="act_window_id" ref="action_view_usuario"/>
+        </record>
+
+        <!--Menú-->
+         <menuitem id="menu_main_pm_app"
+                  name="Plan Mejoras"
+                  parent=""
+                  action="pm_app.action_view_usuario"/>
+
+        <menuitem id="menu_docentes"
+                  name="Docentes"
+                  sequence = "0"
+                  groups = "pm_app.res_groups_administrador,pm_app.res_groups_docente_consejo"
+                  parent="pm_app.menu_main_pm_app"
+                  action="pm_app.action_view_usuario"/>
 
     </data>
 </odoo>
