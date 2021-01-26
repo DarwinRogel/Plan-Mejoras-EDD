@@ -1,4 +1,34 @@
 <odoo>
+    <record id="model_access_tarea" model="ir.model.access">
+        <field name="name">model.access.tarea</field>
+        <field name="model_id" ref="plan_mejoras.model_pm_tarea"/>
+        <field name="group_id" ref="base.group_system"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <record id="model_access_tarea_consejo" model="ir.model.access">
+        <field name="name">model.access.tarea_consejo</field>
+        <field name="model_id" ref="plan_mejoras.model_pm_tarea"/>
+        <field name="group_id" ref="plan_mejoras.res_groups_docente_consejo"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="0"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="0"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <record id="model_access_categoria_consejo" model="ir.model.access">
+        <field name="name">model.access.categoria_consejo</field>
+        <field name="model_id" ref="plan_mejoras.model_pm_estado"/>
+        <field name="group_id" ref="plan_mejoras.res_groups_docente_consejo"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
     <record id="model_access_res_user" model="ir.model.access">
         <field name="name">model.access.res.user</field>
         <field name="model_id" ref="base.model_res_users"/>
