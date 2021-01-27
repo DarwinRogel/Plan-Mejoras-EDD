@@ -7,8 +7,8 @@ class Tarea(models.Model):
     _description = "Tareas"
     _inherit = "mail.thread"
 
-    nombre = fields.Char(string="Tarea", required=True)
-    descripcion = fields.Html(string="Descripción", default="""<p>Tarea creada por: Administrador</p>""",
+    name = fields.Char(string="Tarea", required=True)
+    description = fields.Html(string="Descripción", default="""<p>Tarea creada por: Administrador</p>""",
                               track_visibility="onchange")
     fecha_inicio = fields.Date(string="Fecha de Inicio", required=True)
     fecha_fin = fields.Date(string="Fecha Fin", required=True)
@@ -18,8 +18,7 @@ class Tarea(models.Model):
 
     ponderacion = fields.Selection(
         selection=[("nulo", "Sin Calificar"), ("noc", "No Cumple"), ("cep", "Cumple en parte"), ("cum", "Cumple")],
-        string="Ponderación",
-        default="bajo", required=True)
+        string="Ponderación", default="nulo", required=True)
 
     estado = fields.Boolean(default=False)
 
@@ -62,8 +61,8 @@ class Estado(models.Model):
     _description = "Estado"
     _order = 'sequence'
 
-    nombre = fields.Char(string="Nombre", required=True)
-    descripcion = fields.Html(string="Descripción")
+    name = fields.Char(string="Nombre", required=True)
+    description = fields.Char(string="Descripción")
     sequence = fields.Integer()
 
 
@@ -71,13 +70,13 @@ class Evidencia(models.Model):
     _name = "pm.evidencia"
     _description = "Evidencias"
 
-    nombre = fields.Char(string='Nombre', required=True, translate=True)
+    name = fields.Char(string='Nombre', required=True, translate=True)
     evidencia = fields.Html(string="Evidencias")
 
     tareas_ids = fields.Many2one("pm.tarea", string="Tareas")
 
     _sql_constraints = [
-        ('name_unique', 'unique (nombre)', "El nombre de la Evidencia ya existe!"),
+        ('name_unique', 'unique (name)', "El nombre de la Evidencia ya existe!"),
     ]
 
 
@@ -85,38 +84,65 @@ class Etiqueta(models.Model):
     _name = "pm.etiqueta"
     _description = "Etiqueta"
 
-    nombre = fields.Char(string='Nombre',required=True, translate=True)
+    name = fields.Char(string='Nombre',required=True, translate=True)
     color = fields.Integer(string='Color Index')
 
     _sql_constraints = [
-        ('name_unique', 'unique(nombre)', "El nombre de la Etiqueta ya existe!"),
+        ('name_unique', 'unique(name)', "El nombre de la Etiqueta ya existe!"),
     ]
+
+class CriterioNombre(models.Model):
+    _name = "pm.criterionombre"
+    _description = "Nombre del Criterio"
+
+    name = fields.Char(string="Criterio de Evaluación", required=True)
+    description = fields.Char(string="Descripción")
+    porcentaje_ponderacion = fields.Integer(string="% Ponderación", required=True)
+
+
+
 
 class Criterio(models.Model):
     _name = "pm.criterio"
-    _description = "Criterios de Evaluación"
+    _description = "Nota del Criterio Evaluación"
 
-    nombre = fields.Char(string="Criterio de Evaluación", required=True)
-    descripcion = fields.Char(string="Descripción")
     calificacion = fields.Float(string="Calificación", required=True)
-    porcentaje_ponderacion = fields.Integer(string="% Ponderación", required=True)
+
+    criterionombre_id = fields.Many2one("pm.criterionombre", string="Nombre del Criterio", ondelete='restrict',
+                                        required=True,
+                                        default=lambda self: self.env['pm.criterionombre'].search([], limit=1),
+                                        group_expand='_group_expand_stage_ids', track_visibility="onchange")
 
     user_id = fields.Many2one("res.users", string="Docente", required=True, default=lambda self: self.env.uid)
 
-    @api.constrains('calificacion', 'porcentaje_ponderacion')
+    @api.constrains('calificacion', 'criterionombre_id')
     def _check_calificacion(self):
         #for record in self:
-        criterio = self.env["pm.tarea"].search([])
-        for p in criterio.calificacion:
-            p += p
-        aux = self.porcentaje_ponderacion + p;
+        criterio = self.env["pm.criterionombre"].search([])
+        p=0
+        lista_docentes = self.env["res.users"].search([])
+        gg = 0
+        for docente in lista_docentes:
+            if docente.id == self.env.uid:
+                gg = gg + docente.criterio_ids.calificacion
+        print(gg)
+        for c in criterio:
+            if self.criterionombre_id.id == c.id:
+                porcentaje = c.porcentaje_ponderacion
+                print(porcentaje)
+            else:
+                p = p + c.porcentaje_ponderacion
+
+        print(p)
+        aux = p + self.calificacion
+        print(aux)
         if aux > 100:
             raise ValidationError("Porcentaje de Valoración supera el 100%")
         else:
             if self.calificacion < 0:
                 raise ValidationError("Calificación no puede ser Negativo")
             else:
-                if self.calificacion > self.porcentaje_ponderacion:
+                if self.calificacion > porcentaje:
                     raise ValidationError("Calificación supera rango de Valoración")
 
 
@@ -177,11 +203,12 @@ class ResUser(models.Model):
 
     @api.depends('total_val', 'criterio_ids', 'us_cat')
     def _compute_valoracion_docente(self):
-        criterios = self.env["pm.criterio"].search([])
+        #nota = self.env["pm.criterio"].search([])
+        #criterios = self.env["pm.criterionombre"].search([])
         total = 0
+
         for record in self:
-            if record.criterio_ids == criterios.id:
-                total = total + criterios.calificacion
+            total = total + 10
 
         if total >= 0 and total <= 40:
             us_cat = "insatisfactorio"
@@ -212,7 +239,7 @@ class Plan(models.Model):
     _name = "pm.plan"
     _description = "Plan Mejoras"
 
-    nombre = fields.Char(required=True, translate=True, string="Nombre")
+    name = fields.Char(required=True, translate=True, string="Nombre")
     fecha_inicio = fields.Date(string="Fecha de Inicio", required=True)
     fecha_fin = fields.Date(string="Fecha Fin", required=True)
     objetivo = fields.Html(string="Objetivos")
@@ -235,7 +262,7 @@ class Plan(models.Model):
     user_ids = fields.Many2one("res.users", string="Docente")
 
     _sql_constraints = [
-        ('name_uniq', 'unique (nombre)', "El Plan Mejoras ya existe!"),
+        ('name_uniq', 'unique (name)', "El Plan Mejoras ya existe!"),
     ]
 
     def inicializar(self):
@@ -278,8 +305,8 @@ class Debilidad(models.Model):
     _name = "pm.debilidad"
     _description = "Debilidades"
 
-    nombre = fields.Char(required=True, translate=True, string="Nombre")
-    descripcion = fields.Char(string="Descripción")
+    name = fields.Char(required=True, translate=True, string="Nombre")
+    description = fields.Char(string="Descripción")
 
     tarea_ids = fields.One2many("pm.tarea", "debilidad_id")
 
@@ -322,8 +349,8 @@ class confirm_wizardI(models.TransientModel):
             for docente in lista_docentes:
                 if int(info_id) == int(tarea.plan_id):
                     print("Entro")
-                    if docente.nombre != "Administrator":
-                        self.env["cv.tarea"].create({"nombre": tarea.nombre, "date_init": tarea.fecha_inicio,
+                    if docente.name != "Administrator":
+                        self.env["cv.tarea"].create({"name": tarea.name, "date_init": tarea.fecha_inicio,
                                                      "fecha_fin": tarea.fecha_fin,
                                                      "ponderacion": tarea.ponderacion, "estado_id": '1',
                                                      "user_id": docente.id, "plan_id": info_id})

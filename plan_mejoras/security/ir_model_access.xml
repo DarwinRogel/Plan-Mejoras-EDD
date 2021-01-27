@@ -43,6 +43,28 @@
         <field name="perm_read" eval="1"/>
     </record>
 
+    <!-- Accesos al Grupo Administrador a Criterios-->
+    <record id="model_access_criterio_administrador" model="ir.model.access">
+        <field name="name">model.access.criterio_administrador</field>
+        <field name="model_id" ref="plan_mejoras.model_pm_criterio"/>
+        <field name="group_id" ref="plan_mejoras.res_groups_administrador"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <!-- Accesos al Grupo Administrador a Criterio Nombre-->
+    <record id="model_access_criterionombre_administrador" model="ir.model.access">
+        <field name="name">model.access.criterionombre_administrador</field>
+        <field name="model_id" ref="plan_mejoras.model_pm_criterionombre"/>
+        <field name="group_id" ref="plan_mejoras.res_groups_administrador"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
     <!-- Accesos al Grupo Consejo Consultivo a la Informe-->
     <record id="model_access_informe_consejo" model="ir.model.access">
         <field name="name">model.access.informe_consejo</field>

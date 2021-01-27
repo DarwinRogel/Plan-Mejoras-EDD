@@ -20,7 +20,7 @@
 
                             </group>
                             <group>
-                                <field name="nombre" required="1" groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
+                                <field name="name" required="1" groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
                                 <field name="ponderacion" required="1" groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
                                 <field name="expirado" groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
                             </group>
@@ -35,8 +35,8 @@
 
                         </group>
                         <group>
-                                <field name="descripcion"  required="1" groups = "plan_mejoras.res_groups_docente"/>
-                                <field name="descripcion"  required="1" groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo" invisible="1"/>
+                                <field name="description"  required="1" groups = "plan_mejoras.res_groups_docente"/>
+                                <field name="description"  required="1" groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo" invisible="1"/>
                         </group>
                         <notebook>
                         </notebook>
@@ -48,6 +48,29 @@
             </field>
         </record>
 
+
+        <!--Vista Form Estado-->
+        <record id="view_form_estado" model="ir.ui.view">
+            <field name="name">view.form.pm.estado</field>
+            <field name="model">pm.estado</field>
+            <field name="arch" type="xml">
+                <form>
+
+                    <sheet>
+                        <div class="oe_button_box d-flex justify-content-end" name="button_box">
+                        </div>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                        </group>
+                        <group>
+                              <field name="description"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
 
         <!--Vista Form Docente-->
         <record id="view_form_docente" model="ir.ui.view">
@@ -76,7 +99,7 @@
                             </group>
                         </group>
                         <group>
-                            <field name="criterio_ids"/>
+                            <field name="criterio_ids" widget="one2many_tags"/>
                             <field name="tarea_ids"/>
                         </group>
                         <group>
@@ -95,7 +118,7 @@
             <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Tareas del Plan Mejoras">
-                    <field name="nombre"/>
+                    <field name="name"/>
                     <field name="estado_id"/>
                 </graph>
             </field>
@@ -109,11 +132,11 @@
             <field name="type">kanban</field>
             <field name="arch" type="xml">
                  <kanban  default_group_by = "estado_id" class="o_kanban_small_column o_kanban_project_tasks">
-                     <field name="nombre"/>
+                     <field name="name"/>
                      <field name="estado_id" options='{"group_by_tooltip": {"description": "Description"}}'/>
                      <field name="create_uid"/>
                      <field name="user_id" />
-                     <progressbar field="calificacion" colors='{"nulo": "muted", "noc": "danger", "cep": "warning", "cum": "success"}'/>
+                     <progressbar field="ponderacion" colors='{"nulo": "muted", "noc": "danger", "cep": "warning", "cum": "success"}'/>
                    <templates>
                        <t t-name="kanban-box">
                            <div t-attf-class="oe_kanban_global_click">
@@ -122,7 +145,7 @@
                                </div>
                                <div class="oe_kanban_details">
                                    <t class="o_kanban_record_title">
-                                       <strong t-esc="record.nombre.value"/>
+                                       <strong t-esc="record.name.value"/>
                                    </t>
                                    <div t-if="record.estado_id.value">
                                        <t t-esc="record.estado_id.value"/>
@@ -198,7 +221,7 @@
             <field name="type">kanban</field>
             <field name="arch" type="xml">
                  <kanban> <!--decoration-success="total_val == 100" decoration-danger="total_val == 0">-->
-                   <field name="nombre"/>
+                   <field name="name"/>
                    <field name="fecha_inicio"/>
                      <field name="fecha_fin"/>
                      <field name="finalizado"/>
@@ -221,7 +244,7 @@
                                    </div>
                                <div class="oe_kanban_details">
                                    <t class="o_kanban_record_title">
-                                       <h5><strong t-esc="record.nombre.value"/></h5>
+                                       <h5><strong t-esc="record.name.value"/></h5>
                                    </t>
 
                                    <div t-if="record.fecha_inicio.value">
@@ -257,7 +280,7 @@
                 <form>
                     <sheet>
                         <group>
-                            <field name="nombre" required="1"/>
+                            <field name="name" required="1"/>
                         </group>
                         <group>
                             <group>
@@ -288,10 +311,23 @@
             <field name="model">pm.tarea</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="nombre"/>
+                    <field name="name"/>
                     <field name="estado_id"/>
                    <field name="fecha_inicio" optional="hide"/>
                     <field name="fecha_fin" optional="hide"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <!--Vista Tree Tarea-->
+        <record id="view_tree_estado" model="ir.ui.view">
+            <field name="name">view.tree.pm.estado</field>
+            <field name="model">pm.estado</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                   <field name="description"/>
                 </tree>
             </field>
         </record>
@@ -303,7 +339,7 @@
             <field name="model">pm.plan</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="nombre"/>
+                    <field name="name"/>
                     <field name="fecha_inicio"/>
                     <field name="fecha_fin"/>
                     <field name="estado_Inicializar" invisible="1"/>
@@ -343,10 +379,6 @@
                 </tree>
             </field>
         </record>
-
-
-
-
 
 
         <!--  TAREA TAGS !
@@ -398,13 +430,13 @@
         </record>-->
 
 
-        <!--Vista Tree Estado-->
+        <!--Vista Search Estado-->
         <record model="ir.ui.view" id="cv_categoria_view_search">
             <field name="name">pm.estado.view.search</field>
             <field name="model">pm.estado</field>
             <field name="arch" type="xml">
                 <search string="Stages">
-                    <field name="nombre"/>
+                    <field name="name"/>
                 </search>
             </field>
         </record>
@@ -417,7 +449,7 @@
             <field name="model">pm.tarea</field>
             <field name="arch" type="xml">
                 <calendar date_start="fecha_fin"  mode="month" color="user_id" event_limit="5">
-                    <field name="nombre"/>
+                    <field name="name"/>
                     <field name="user_id" avatar_field="image_128"/>
                 </calendar>
             </field>
@@ -444,7 +476,7 @@
             <field name="model">pm.tarea</field>
             <field name="arch" type="xml">
                 <search string="Tareas">
-                    <field name="nombre"/>
+                    <field name="name"/>
                     <field name="etiqueta_ids" widget="many2many_tags"/>
                     <field name="user_id"/>
                     <group expand="0" string="Group By">
@@ -573,13 +605,40 @@
 
 
 
-        <!--Acciones de ventana categoria-->
-        <record id="action_view_categoria" model="ir.actions.act_window">
+        <!--Acciones de ventana estado-->
+        <record id="action_view_estado" model="ir.actions.act_window">
             <field name="name">Estados</field>
+            <field name="type">ir.actions.act_window</field>
             <field name="res_model">pm.estado</field>
-            <field name="limit">10</field>
-            <!--<field name="view_mode">kanban,form</field>-->
+            <field name="view_mode">tree,form</field>
+            <!--<field name="search_view_id" ref="base.view_res_partner_filter"/>-->
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Crear Nuevo Estado para empezar a Gestionar sus Tablero Kanban.
+                </p>
+                <p></p>
+            </field>
         </record>
+
+
+
+        <!--Accion de ventana estado tree-->
+        <record id="action_view_estado_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="plan_mejoras.view_tree_estado"/>
+            <field name="act_window_id" ref="action_view_estado"/>
+        </record>
+
+
+        <!--Accion de ventana estado form-->
+        <record id="action_view_estado_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="plan_mejoras.view_form_estado"/>
+            <field name="act_window_id" ref="action_view_estado"/>
+        </record>
+
 
          <!--Acciones de ventana tag-->
         <record id="action_view_tag" model="ir.actions.act_window">
@@ -604,20 +663,20 @@
 
         <menuitem id="menu_docentes"
                   name="Docentes"
-                  sequence = "0"
+                  sequence = "1"
                   groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"
                   parent="plan_mejoras.menu_main_pm_app"
                   action="plan_mejoras.action_view_usuario"/>
 
         <menuitem id="menu_tarea"
                   name="Tareas"
-                  sequence = "1"
+                  sequence = "2"
                   parent="plan_mejoras.menu_main_pm_app"
                   action="plan_mejoras.action_view_tarea"/>
 
         <menuitem id="menu_plan"
                   name="Plan Mejoras"
-                  sequence = "2"
+                  sequence = "0"
                   parent="plan_mejoras.menu_main_pm_app"
                   action="plan_mejoras.action_view_informe"/>
 
@@ -629,7 +688,7 @@
         <menuitem id="menu_categoria"
                   name="Estados Kanban"
                   parent="plan_mejoras.menu_configuracion"
-                  action="plan_mejoras.action_view_categoria"/>
+                  action="plan_mejoras.action_view_estado"/>
 
         <menuitem id="menu_tag"
                   name="Etiquetas"
