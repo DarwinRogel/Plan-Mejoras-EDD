@@ -89,8 +89,58 @@ class Etiqueta(models.Model):
     color = fields.Integer(string='Color Index')
 
     _sql_constraints = [
-        ('name_unique', 'unique(name)', "El nombre de la Etiqueta ya existe!"),
+        ('name_unique', 'unique(nombre)', "El nombre de la Etiqueta ya existe!"),
     ]
+
+class Criterio(models.Model):
+    _name = "pm.criterio"
+    _description = "Criterios de Evaluación"
+
+    nombre = fields.Char(string="Criterio de Evaluación", required=True)
+    descripcion = fields.Char(string="Descripción")
+    calificacion = fields.Float(string="Calificación", required=True)
+    porcentaje_ponderacion = fields.Integer(string="% Ponderación", required=True)
+
+    user_id = fields.Many2one("res.users", string="Docente", required=True, default=lambda self: self.env.uid)
+
+    @api.constrains('calificacion', 'porcentaje_ponderacion')
+    def _check_calificacion(self):
+        #for record in self:
+        criterio = self.env["pm.tarea"].search([])
+        for p in criterio.calificacion:
+            p += p
+        aux = self.porcentaje_ponderacion + p;
+        if aux > 100:
+            raise ValidationError("Porcentaje de Valoración supera el 100%")
+        else:
+            if self.calificacion < 0:
+                raise ValidationError("Calificación no puede ser Negativo")
+            else:
+                if self.calificacion > self.porcentaje_ponderacion:
+                    raise ValidationError("Calificación supera rango de Valoración")
+
+
+
+    #Sobrecarga de Create
+    '''
+    @api.model
+    def create(self, vals):
+        name = vals.get("name","-")
+        amount = vals.get("amount","0")
+        type_mov = vals.get("type_mov","")
+        date = vals.get("date", "")
+
+        #para la cantidad de movimientos del usuario
+        user = self.env.user
+        count_movs = user.count_mov
+        #Condicion para controlar los 5 movimientos de usuarios Free
+        if count_movs >= 5 and user.has_group("saldo_app.res_groups_user_free"):
+            raise ValidationError("Tu cuenta permite creacion de 5 movimientos")
+
+        notas = """<p>Tipo de Movimiento: {}</p><p>Nombre: {}</p><p>Monto: {}</p><p>Fecha: {}<br></p>"""
+        vals["notas"] = notas.format(type_mov, name, amount, date)
+        return super(Movimiento, self).create(vals)
+    '''
 
 
 class ResUser(models.Model):
@@ -127,21 +177,24 @@ class ResUser(models.Model):
 
     @api.depends('total_val', 'criterio_ids', 'us_cat')
     def _compute_valoracion_docente(self):
+        criterios = self.env["pm.criterio"].search([])
+        total = 0
         for record in self:
-            record.total_val = sum(record.criterio_ids.filtered().mapped("calificacion"))
+            if record.criterio_ids == criterios.id:
+                total = total + criterios.calificacion
 
-        if record.total_val >= 0 and record.total_val <= 40:
+        if total >= 0 and total <= 40:
             us_cat = "insatisfactorio"
-        elif record.total_val > 40 and record.total_val <= 60:
+        elif total > 40 and total <= 60:
             us_cat = "poco_satisfactorio"
-        elif record.total_val > 60 and record.total_val <= 80:
+        elif total > 60 and total <= 80:
             us_cat = "satisfactorio"
-        elif record.total_val > 80 and record.total_val <= 100:
+        elif total > 80 and total <= 100:
             us_cat = "destacado"
         else:
             raise ValidationError("El valor esta fuera de rango (0-100)")
-
         record.us_cat = us_cat
+        record.total_val = total
 
     def vista_tree(self):
         return {
@@ -229,56 +282,6 @@ class Debilidad(models.Model):
     descripcion = fields.Char(string="Descripción")
 
     tarea_ids = fields.One2many("pm.tarea", "debilidad_id")
-
-class Criterio(models.Model):
-    _name = "pm.criterio"
-    _description = "Criterios de Evaluación"
-
-    nombre = fields.Char(string="Criterio de Evaluación", required=True)
-    descripcion = fields.Char(string="Descripción")
-    calificacion = fields.Float(string="Calificación", required=True)
-    porcentaje_ponderacion = fields.Integer(string="% Ponderación", required=True)
-
-    user_id = fields.Many2one("res.users", string="Docente", required=True, default=lambda self: self.env.uid)
-
-    @api.constrains('calificacion', 'porcentaje_ponderacion')
-    def _check_calificacion(self):
-        #for record in self:
-        criterio = self.env["pm.tarea"].search([])
-        for p in criterio.calificacion:
-            p += p
-        aux = self.porcentaje_ponderacion + p;
-        if aux > 100:
-            raise ValidationError("Porcentaje de Valoración supera el 100%")
-        else:
-            if self.calificacion < 0:
-                raise ValidationError("Calificación no puede ser Negativo")
-            else:
-                if self.calificacion > self.porcentaje_ponderacion:
-                    raise ValidationError("Calificación supera rango de Valoración")
-
-
-
-    #Sobrecarga de Create
-    '''
-    @api.model
-    def create(self, vals):
-        name = vals.get("name","-")
-        amount = vals.get("amount","0")
-        type_mov = vals.get("type_mov","")
-        date = vals.get("date", "")
-
-        #para la cantidad de movimientos del usuario
-        user = self.env.user
-        count_movs = user.count_mov
-        #Condicion para controlar los 5 movimientos de usuarios Free
-        if count_movs >= 5 and user.has_group("saldo_app.res_groups_user_free"):
-            raise ValidationError("Tu cuenta permite creacion de 5 movimientos")
-
-        notas = """<p>Tipo de Movimiento: {}</p><p>Nombre: {}</p><p>Monto: {}</p><p>Fecha: {}<br></p>"""
-        vals["notas"] = notas.format(type_mov, name, amount, date)
-        return super(Movimiento, self).create(vals)
-    '''
 
 
 class confirm_wizard(models.TransientModel):

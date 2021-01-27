@@ -10,6 +10,17 @@
         <field name="perm_read" eval="1"/>
     </record>
 
+    <!-- Accesos al Grupo Administrador a la Tarea-->
+    <record id="model_access_criterio" model="ir.model.access">
+        <field name="name">model.access.criterio</field>
+        <field name="model_id" ref="plan_mejoras.model_pm_criterio"/>
+        <field name="group_id" ref="base.group_system"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
     <!-- Accesos al Grupo Consejo Consultivo a la Tarea-->
     <record id="model_access_tarea_consejo" model="ir.model.access">
         <field name="name">model.access.tarea_consejo</field>

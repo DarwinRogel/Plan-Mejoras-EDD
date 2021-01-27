@@ -1,11 +1,11 @@
 {
     "name": "Plan Mejoras",
-    "description":"Modulo de software para el Plan Mejoras de la Evaluacion al Desempeno Docente para la CIS/C",
-    "author": "Darwin Rogel - Robin Cordova",
+    "description":"Módulo de software para el Plan Mejoras de la Evaluación al Desempeño Docente para la CIS/C",
+    "author": "Darwin Rogel Rivera - Robin Cordova Alvarado",
 
     "summary": """
-        Este es un trabajo de titulacion para la obtencion del titulo de Ingeniero en Sistemas
-        Permite la optimizacion tecnica del Plan Mejoras de la EDD. en la CIS/C de la Universidad Nacional de Loja
+        Trabajo de titulación para la obtención del Título de Ingeniero en Sistemas
+        Permite la optimización técnica del Plan Mejoras de la EDD en la CIS/C de la Universidad Nacional de Loja 2021
         """,
 
     "website": "https://unl.edu.ec/",
@@ -13,7 +13,7 @@
     "category": "Seguimiento",
 
     "version": "1.0",
-    "depends": ["base"],
+    "depends": ["base", "mail"],
     "data": [
         "data/quotation_expiration_cron.xml",
         "security/res_groups.xml",
