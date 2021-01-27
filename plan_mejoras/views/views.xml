@@ -1,5 +1,57 @@
 <odoo>
     <data>
+        <!--Vista Form Tarea-->
+        <record id="view_form_tarea" model="ir.ui.view">
+            <field name="name">view.form.pm.tarea</field>
+            <field name="model">pm.tarea</field>
+            <field name="arch" type="xml">
+                <form>
+                    <!--<header>
+                    <field name="categoria_id" widget="statusbar" options="{'clickable': '1'}"/>
+                    </header>-->
+                    <sheet>
+                        <div class="oe_button_box d-flex justify-content-end" name="button_box">
+                        </div>
+
+
+
+                        <group>
+                            <group>
+                                <field name="estado_id"/>
+                                <field name="debilidad_id"/>
+                                <field name="etiqueta_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+
+                            </group>
+                            <group>
+                                <field name="nombre" required="1" groups = "pm_app.res_groups_administrador,pm_app.res_groups_docente_consejo"/>
+                                <field name="calificacion" required="1" groups = "pm_app.res_groups_administrador,pm_app.res_groups_docente_consejo"/>
+                                <field name="expirado" groups = "pm_app.res_groups_administrador,pm_app.res_groups_docente_consejo"/>
+                            </group>
+                            <group>
+                                <field name="fecha_inicio" required="1" groups = "pm_app.res_groups_administrador,pm_app.res_groups_docente_consejo"/>
+                                <field name="fecha_fin" required="1" groups = "pm_app.res_groups_administrador,pm_app.res_groups_docente_consejo"/>
+                            </group>
+                            <group>
+                                <field name="user_id" invisible="1"/>
+                                <field name="evicencia_id" groups="pm_app.res_groups_administrador, pm_app.res_groups_docente"/>
+                            </group>
+
+                        </group>
+                        <group>
+                                <field name="descripcion"  required="1" groups = "pm_app.res_groups_docente"/>
+                                <field name="descripcion"  required="1" groups = "pm_app.res_groups_administrador,pm_app.res_groups_docente_consejo" invisible="1"/>
+                        </group>
+                        <notebook>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                            <field name="message_ids" widget="mail_thread" groups="pm_app.res_groups_administrador,pm_app.res_groups_docente_consejo"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+
         <!--Vista Form Docente-->
         <record id="view_form_docente" model="ir.ui.view">
             <field name="name">view.form.res.users</field>
@@ -35,6 +87,57 @@
                         </group>
                     </sheet>
                 </form>
+            </field>
+        </record>
+
+
+        <!--Vista Graph Tarea-->
+        <record id="view_graph_tarea" model="ir.ui.view">
+            <field name="name">view.tree.pm.tarea</field>
+            <field name="model">pm.tarea</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph string="Tareas del Plan Mejoras">
+                    <field name="nombre"/>
+                    <field name="estado_id"/>
+                </graph>
+            </field>
+        </record>
+
+
+        <!--Vista Kanban Tarea-->
+        <record id="view_kanban_tarea" model="ir.ui.view">
+            <field name="name">view.tree.pm.tarea</field>
+            <field name="model">pm.tarea</field>
+            <field name="type">kanban</field>
+            <field name="arch" type="xml">
+                 <kanban  default_group_by = "estado_id" class="o_kanban_small_column o_kanban_project_tasks">
+                     <field name="nombre"/>
+                     <field name="estado_id" options='{"group_by_tooltip": {"description": "Description"}}'/>
+                     <field name="create_uid"/>
+                     <field name="user_id" />
+                     <progressbar field="calificacion" colors='{"nulo": "muted", "noc": "danger", "cep": "warning", "cum": "success"}'/>
+                   <templates>
+                       <t t-name="kanban-box">
+                           <div t-attf-class="oe_kanban_global_click">
+                               <div class="o_kanban_image">
+
+                               </div>
+                               <div class="oe_kanban_details">
+                                   <t class="o_kanban_record_title">
+                                       <strong t-esc="record.nombre.value"/>
+                                   </t>
+                                   <div t-if="record.estado_id.value">
+                                       <t t-esc="record.estado_id.value"/>
+                                   </div>
+                                   <div t-if="record.user_id.value">
+                                       <t t-esc="record.user_id.value"/>
+                                   </div>
+                               </div>
+                           </div>
+                       </t>
+                   </templates>
+                 </kanban>
             </field>
         </record>
 
@@ -92,6 +195,143 @@
         </record>
 
 
+        <!--Vista Kanban Plan-->
+        <record id="view_kanban_informe" model="ir.ui.view">
+            <field name="name">view.kanban.pm.plan</field>
+            <field name="model">pm.plan</field>
+            <field name="type">kanban</field>
+            <field name="arch" type="xml">
+                 <kanban> <!--decoration-success="total_val == 100" decoration-danger="total_val == 0">-->
+                   <field name="nombre"/>
+                   <field name="fecha_inicio"/>
+                     <field name="fecha_fin"/>
+                     <field name="finalizado"/>
+
+                   <templates>
+                       <t t-name="kanban-box">
+                           <div t-attf-class="oe_kanban_global_click">
+                               <div class="o_kanban_image">
+                                   <img src="https://thumbs.dreamstime.com/b/icono-del-var%C3%B3n-del-usuario-ninguna-cara-43652345.jpg"
+                                         width="80"
+                                         height="80"/>
+                               </div>
+                               <div class="oe_kanban_details">
+                                       <strong>
+                                           <ul>
+                                                <li class="text-danger float-right mb4" t-if="record.finalizado.raw_value"><i class="fa fa-circle" role="img" aria-label="Finalizado" title="Finalizado"></i></li>
+                                                <li class="text-success float-right mb4" t-if="!record.finalizado.raw_value"><i class="fa fa-circle" role="img" aria-label="En Curso" title="En Curso"></i></li>
+                                           </ul>
+                                       </strong>
+                                   </div>
+                               <div class="oe_kanban_details">
+                                   <t class="o_kanban_record_title">
+                                       <h5><strong t-esc="record.nombre.value"/></h5>
+                                   </t>
+
+                                   <div t-if="record.date_init.value">
+                                       <p><strong>Fecha inicio: </strong><t t-esc="record.fecha_inicio.value"/></p>
+                                   </div>
+
+                                   <div t-if="record.fecha_fin.value">
+                                       <p><strong>Fecha fin: </strong><t t-esc="record.fecha_fin.value"/></p>
+                                   </div>
+
+                               </div>
+
+                               <div align="right" class="oe_button_box" >
+                                    <button id="task_view"
+                                            string="Ver Tareas"
+                                            type="object"
+                                            name="vista_tree_tareas"
+                                            class="btn btn-primary">Ver Tareas</button>
+                               </div>
+                           </div>
+                       </t>
+                   </templates>
+                 </kanban>
+            </field>
+        </record>
+
+
+        <!--Vista Form Plan-->
+        <record id="view_form_informe" model="ir.ui.view">
+            <field name="name">view.form.pm.plan</field>
+            <field name="model">pm.plan</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="nombre" required="1"/>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="fecha_inicio" required="1"/>
+                            </group>
+                            <group>
+                                <field name="fecha_fin" required="1"/>
+                            </group>
+                        </group>
+                         <group>
+                             <field name="objetivo" placeholder="Ingrese aquí los objetivos del Plan Mejoras"/>
+                             <field name="introduccion" placeholder="Ingrese aquí la introducción del Plan Mejoras"/>
+                             <field name="add_resultados"/>
+                             <field name="tarea_ids"/>
+                             <field name="conclusion" placeholder="Ingrese aquí los objetivos del Plan Mejoras"/>
+                             <field name="recomendacion" placeholder="Ingrese aquí los objetivos del Plan Mejoras"/>
+                             <field name="add_anexos"/>
+
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!--Vista Tree Tarea-->
+        <record id="view_tree_tarea" model="ir.ui.view">
+            <field name="name">view.tree.pm.tarea</field>
+            <field name="model">pm.tarea</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="nombre"/>
+                    <field name="estado_id"/>
+                   <field name="fecha_inicio" optional="hide"/>
+                    <field name="fecha_fin" optional="hide"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <!--Vista Tree Informe-->
+        <record id="view_tree_informe" model="ir.ui.view">
+            <field name="name">view.tree.pm.plan</field>
+            <field name="model">pm.informe</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="nombre"/>
+                    <field name="fecha_inicio"/>
+                    <field name="fecha_fin"/>
+                    <field name="estado_Inicializar" invisible="1"/>
+                    <field name="estado_Comunicar" invisible="1"/>
+
+                    <button
+                            string="Comunicar Plan Mejoras"
+                            type="object"
+                            name="comunicar"
+                            attrs="{'invisible':[('estado_Comunicar', '!=', False)]}"
+                            class="btn btn-primary"/>
+
+                    <button
+                            string="Inicializar Plan Mejoras"
+                            type="object"
+                            name="inicializar"
+                            attrs="{'invisible':[('estado_Inicializar', '!=', False)]}"
+                            class="btn btn-primary"/>
+
+                </tree>
+            </field>
+        </record>
+
+
         <!--Vista Tree Docente-->
         <record id="view_tree_docente" model="ir.ui.view">
             <field name="name">view.tree.res.docente</field>
@@ -108,6 +348,118 @@
             </field>
         </record>
 
+
+
+
+
+
+        <!--  TAREA TAGS !
+        <record id="view_tree_tag" model="ir.ui.view">
+            <field name="name">view.tree.cv.tag</field>
+            <field name="model">cv.tag</field>
+            <field name="arch" type="xml">
+                <tree string="Tags" editable="top">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>-->
+
+         <!--Vista Para La Busqueda (Filtros - Agrupacion)
+        <record id="view_search_docentes" model="ir.ui.view">
+            <field name="name">view.search.sa.movimiento</field>
+            <field name="model">sa.movimiento</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="notas"/>
+                    <field name="category_id"/>
+                    <field name="tag_ids"/>
+                    <filter name="filter_tipo_ingresos"
+                            string="Ingresos"
+                            domain="[('type_mov','=','ingreso')]"/>
+                    <filter name="filter_tipo_gatos"
+                            string="Gastos"
+                            domain="[('type_mov','=','gasto')]"/>
+                    <separator/>
+                    <filter name="filter_today"
+                            string="Hoy"
+                            domain="[('date','&gt;=',datetime.datetime.now().strftime('%Y-%m-%d 00:00:00')),
+                            ('date','&lt;=',datetime.datetime.now().strftime('%Y-%m-%d 23:59:59'))]"/>
+                    <filter name="filter_this_week"
+                            string="Ultimos 7 dias"
+                            domain="[('date','&lt;=',context_today().strftime('%Y-%m-%d 23:59:59')),
+                            ('date','&gt;=',(context_today()-datetime.timedelta(days=7)).strftime('%Y-%m-%d 00:00:00'))]"/>
+
+                    <filter name="group_type_move"
+                            string="Tipo"
+                            context="{'group_by':'type_mov'}"/>
+                    <separator/>
+                    <filter name="group_date"
+                            string="Fecha"
+                            context="{'group_by':'date'}"/>
+                </search>
+            </field>
+        </record>-->
+
+
+        <!--Vista Tree Estado-->
+        <record model="ir.ui.view" id="cv_categoria_view_search">
+            <field name="name">pm.estado.view.search</field>
+            <field name="model">pm.estado</field>
+            <field name="arch" type="xml">
+                <search string="Stages">
+                    <field name="nombre"/>
+                </search>
+            </field>
+        </record>
+
+
+
+        <!--Vista de calendario Tarea-->
+        <record id="view_calendar_tarea" model="ir.ui.view">
+            <field name="name">view.calendar.pm.tarea</field>
+            <field name="model">pm.tarea</field>
+            <field name="arch" type="xml">
+                <calendar date_start="fecha_fin"  mode="month" color="user_id" event_limit="5">
+                    <field name="nombre"/>
+                    <field name="user_id" avatar_field="image_128"/>
+                </calendar>
+            </field>
+        </record>
+
+        <!--Vista Usuario-->
+       <record id="view_res_users_add_tareas" model="ir.ui.view">
+            <field name="name">view.res.users.add.tareas</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_simple_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="sheet" position="inside"/>
+                <group>
+                    <field name="email"/>
+                    <field name="tarea_ids"/>
+                </group>
+            </field>
+       </record>
+
+
+        <!--Vista Buscar Tarea-->
+        <record model="ir.ui.view" id="view_tarea_search">
+            <field name="name">pm.tarea.view.search</field>
+            <field name="model">pm.tarea</field>
+            <field name="arch" type="xml">
+                <search string="Tareas">
+                    <field name="nombre"/>
+                    <field name="etiqueta_ids" widget="many2many_tags"/>
+                    <field name="user_id"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Ponderación" name="group_stage_id"
+                        context="{'group_by': 'ponderacion'}"/>
+                        <filter string="Docentes" name="group_user_id"
+                        context="{'group_by': 'user_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
 
         <!--Filtro por valoración docente-->
         <record model="ir.ui.view" id="view_docente_search_valoracion">
@@ -126,184 +478,16 @@
             </field>
         </record>
 
-        <!--Vista Form Tarea-->
-        <record id="view_form_tarea" model="ir.ui.view">
-            <field name="name">view.form.pm.tarea</field>
-            <field name="model">pm.tarea</field>
+        <record model="ir.ui.view" id="session_gantt_view">
+            <field name="name">cv.tarea.view.gantt</field>
+            <field name="model">cv.tarea</field>
+            <field name="type">gantt</field>
             <field name="arch" type="xml">
-                <form>
-                    <!--<header>
-                    <field name="categoria_id" widget="statusbar" options="{'clickable': '1'}"/>
-                    </header>-->
-                    <sheet>
-                        <div class="oe_button_box d-flex justify-content-end" name="button_box">
-                        </div>
-
-
-
-                        <group>
-                            <group>
-                                <field name="estado_id"/>
-                                <field name="debilidad_id"/>
-                                <field name="etiqueta_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
-
-                            </group>
-                            <group>
-                                <field name="nombre" required="1" groups = "pm_app.res_groups_administrador,pm_app.res_groups_docente_consejo"/>
-                                <field name="calificacion" required="1" groups = "pm_app.res_groups_administrador,pm_app.res_groups_docente_consejo"/>
-                                <field name="expirado" groups = "pm_app.res_groups_administrador,pm_app.res_groups_docente_consejo"/>
-                            </group>
-                            <group>
-                                <field name="fecha_inicio" required="1" groups = "pm_app.res_groups_administrador,pm_app.res_groups_docente_consejo"/>
-                                <field name="fecha_fin" required="1" groups = "pm_app.res_groups_administrador,pm_app.res_groups_docente_consejo"/>
-                            </group>
-                            <group>
-                                <field name="user_id" invisible="1"/>
-                                <field name="evicencia_id" groups="pm_app.res_groups_administrador, pm_app.res_groups_docente"/>
-                            </group>
-
-                        </group>
-                        <group>
-                                <field name="descripcion"  required="1" groups = "pm_app.res_groups_docente"/>
-                                <field name="descripcion"  required="1" groups = "pm_app.res_groups_administrador,pm_app.res_groups_docente_consejo" invisible="1"/>
-                        </group>
-                        <notebook>
-                        </notebook>
-                    </sheet>
-                    <div class="oe_chatter">
-                            <field name="message_ids" widget="mail_thread" groups="pm_app.res_groups_administrador,pm_app.res_groups_docente_consejo"/>
-                    </div>
-                </form>
+                <gantt string="Session Gantt"
+                       date_start="date_init" date_stop="date_fin"
+                       default_group_by='user_id'>
+                </gantt>
             </field>
-        </record>
-
-
-
-
-
-        <!--Vista Graph Tarea-->
-        <record id="view_graph_tarea" model="ir.ui.view">
-            <field name="name">view.tree.pm.tarea</field>
-            <field name="model">pm.tarea</field>
-            <field name="type">graph</field>
-            <field name="arch" type="xml">
-                <graph string="Tareas del Plan Mejoras">
-                    <field name="nombre"/>
-                    <field name="estado_id"/>
-                </graph>
-            </field>
-        </record>
-
-
-        <!--Vista Kanban Tarea-->
-        <record id="view_kanban_tarea" model="ir.ui.view">
-            <field name="name">view.tree.pm.tarea</field>
-            <field name="model">pm.tarea</field>
-            <field name="type">kanban</field>
-            <field name="arch" type="xml">
-                 <kanban  default_group_by = "estado_id" class="o_kanban_small_column o_kanban_project_tasks">
-                     <field name="nombre"/>
-                     <field name="estado_id" options='{"group_by_tooltip": {"description": "Description"}}'/>
-                     <field name="create_uid"/>
-                     <field name="user_id" />
-                     <progressbar field="calificacion" colors='{"nulo": "muted", "noc": "danger", "cep": "warning", "cum": "success"}'/>
-                   <templates>
-                       <t t-name="kanban-box">
-                           <div t-attf-class="oe_kanban_global_click">
-                               <div class="o_kanban_image">
-
-                               </div>
-                               <div class="oe_kanban_details">
-                                   <t class="o_kanban_record_title">
-                                       <strong t-esc="record.nombre.value"/>
-                                   </t>
-                                   <div t-if="record.estado_id.value">
-                                       <t t-esc="record.estado_id.value"/>
-                                   </div>
-                                   <div t-if="record.user_id.value">
-                                       <t t-esc="record.user_id.value"/>
-                                   </div>
-                               </div>
-                           </div>
-                       </t>
-                   </templates>
-                 </kanban>
-            </field>
-        </record>
-
-
-
-
-        <!--Vista Tree Tarea-->
-        <record id="view_tree_tarea" model="ir.ui.view">
-            <field name="name">view.tree.pm.tarea</field>
-            <field name="model">pm.tarea</field>
-            <field name="arch" type="xml">
-                <tree>
-                    <field name="nombre"/>
-                    <field name="estado_id"/>
-                   <field name="fecha_inicio" optional="hide"/>
-                    <field name="fecha_fin" optional="hide"/>
-                </tree>
-            </field>
-        </record>
-
-
-
-
-
-        <!--Vista de calendario Tarea-->
-        <record id="view_calendar_tarea" model="ir.ui.view">
-            <field name="name">view.calendar.pm.tarea</field>
-            <field name="model">pm.tarea</field>
-            <field name="arch" type="xml">
-                <calendar date_start="fecha_fin"  mode="month" color="user_id" event_limit="5">
-                    <field name="nombre"/>
-                    <field name="user_id" avatar_field="image_128"/>
-                </calendar>
-            </field>
-        </record>
-
-
-        <!--Accion de ventana Docente-->
-        <record id="action_view_usuario" model="ir.actions.act_window">
-            <field name="name">Docentes</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.users</field>
-            <field name="view_mode">kanban,tree,form,graph</field>
-            <field name="search_view_id" ref="pm1_app.view_docente_search_valoracion"/>
-            <field name="help" type="html">
-                <p class="o_view_nocontent_smiling_face">
-                    Crear un Usuario en el módulo Plan Mejoras
-                </p>
-            </field>
-        </record>
-
-
-        <!--Accion de ventana Docente kanban-->
-        <record id="action_view_docente_kanban" model="ir.actions.act_window.view">
-            <field name="sequence" eval="0"/>
-            <field name="view_mode">kanban</field>
-            <field name="view_id" ref="pm1_app.view_kanban_docente"/>
-            <field name="act_window_id" ref="action_view_usuario"/>
-        </record>
-
-
-        <!--Accion de ventana Docente tree-->
-        <record id="action_view_docente_tree" model="ir.actions.act_window.view">
-            <field name="sequence" eval="1"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="pm1_app.view_tree_docente"/>
-            <field name="act_window_id" ref="action_view_usuario"/>
-        </record>
-
-
-        <!--Accion de ventana Docente form-->
-        <record id="action_view_docente_form" model="ir.actions.act_window.view">
-            <field name="sequence" eval="2"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="pm1_app.view_form_docente"/>
-            <field name="act_window_id" ref="action_view_usuario"/>
         </record>
 
 
@@ -350,6 +534,71 @@
         </record>
 
 
+        <!--Accion de ventana Docente-->
+        <record id="action_view_usuario" model="ir.actions.act_window">
+            <field name="name">Docentes</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.users</field>
+            <field name="view_mode">kanban,tree,form,graph</field>
+            <field name="search_view_id" ref="pm1_app.view_docente_search_valoracion"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Crear un Usuario en el módulo Plan Mejoras
+                </p>
+            </field>
+        </record>
+
+
+        <!--Accion de ventana Docente kanban-->
+        <record id="action_view_docente_kanban" model="ir.actions.act_window.view">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="pm1_app.view_kanban_docente"/>
+            <field name="act_window_id" ref="action_view_usuario"/>
+        </record>
+
+
+        <!--Accion de ventana Docente tree-->
+        <record id="action_view_docente_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="pm1_app.view_tree_docente"/>
+            <field name="act_window_id" ref="action_view_usuario"/>
+        </record>
+
+
+        <!--Accion de ventana Docente form-->
+        <record id="action_view_docente_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="pm1_app.view_form_docente"/>
+            <field name="act_window_id" ref="action_view_usuario"/>
+        </record>
+
+
+
+        <!--Acciones de ventana categoria-->
+        <record id="action_view_categoria" model="ir.actions.act_window">
+            <field name="name">Estados</field>
+            <field name="res_model">pm.estado</field>
+            <field name="limit">10</field>
+            <!--<field name="view_mode">kanban,form</field>-->
+        </record>
+
+         <!--Acciones de ventana tag-->
+        <record id="action_view_tag" model="ir.actions.act_window">
+            <field name="name">Etiquetas</field>
+            <field name="res_model">pm.etiqueta</field>
+            <field name="limit">10</field>
+            <!--<field name="view_mode">kanban,form</field>-->
+        </record>
+
+        <!--Accion de ventana Plan-->
+        <record id="action_view_informe" model="ir.actions.act_window">
+            <field name="name">Plan Mejoras</field>
+            <field name="res_model">pm.plan</field>
+            <field name="view_mode">tree,form</field>
+        </record>
 
         <!--Menú-->
          <menuitem id="menu_main_pm_app"
@@ -369,6 +618,58 @@
                   sequence = "1"
                   parent="pm_app.menu_main_pm_app"
                   action="pm_app.action_view_tarea"/>
+
+        <menuitem id="menu_plan"
+                  name="Plan Mejoras"
+                  sequence = "2"
+                  parent="pm_app.menu_main_pm_app"
+                  action="pm_app.action_view_informe"/>
+
+        <menuitem id="menu_configuracion"
+                  name="Configuración"
+                  groups = "pm_app.res_groups_administrador,pm_app.res_groups_docente_consejo"
+                  parent="pm_app.menu_main_pm_app"/>
+
+        <menuitem id="menu_categoria"
+                  name="Estados Kanban"
+                  parent="pm_app.menu_configuracion"
+                  action="pm_app.action_view_categoria"/>
+
+        <menuitem id="menu_tag"
+                  name="Etiquetas"
+                  parent="pm_app.menu_configuracion"
+                  action="pm_app.action_view_tag"/>
+
+        <record model="ir.ui.view" id="confirm_wizard_form">
+            <field name="name">wizard.form</field>
+            <field name="model">cv.confirm_wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Comunicar Plan Mejoras">
+                    <field name="yes_no" readonly="1" />
+                    <footer>
+                        <button string="Ir a  comunicar el Plan Mejoras" class="oe_highlight" type="object" name="yes"/>
+                        <button string="Cancelar" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="confirm_wizard_formI">
+            <field name="name">wizard.formI</field>
+            <field name="model">cv.confirm_iniciar</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Inicializar Plan Mejoras">
+                    <field name="yes_no" readonly="1"/>
+                    <footer>
+                        <button string="Aceptar" class="oe_highlight" type="object" name="yes"/>
+                        <button string="Cancelar" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
 
     </data>
 </odoo>

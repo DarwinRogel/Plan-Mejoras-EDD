@@ -1,4 +1,5 @@
 <odoo>
+    <!-- Accesos al Grupo Administrador a la Tarea-->
     <record id="model_access_tarea" model="ir.model.access">
         <field name="name">model.access.tarea</field>
         <field name="model_id" ref="plan_mejoras.model_pm_tarea"/>
@@ -9,6 +10,7 @@
         <field name="perm_read" eval="1"/>
     </record>
 
+    <!-- Accesos al Grupo Consejo Consultivo a la Tarea-->
     <record id="model_access_tarea_consejo" model="ir.model.access">
         <field name="name">model.access.tarea_consejo</field>
         <field name="model_id" ref="plan_mejoras.model_pm_tarea"/>
@@ -19,6 +21,7 @@
         <field name="perm_read" eval="1"/>
     </record>
 
+    <!-- Accesos al Grupo Consejo Consultivo a Estados-->
     <record id="model_access_categoria_consejo" model="ir.model.access">
         <field name="name">model.access.categoria_consejo</field>
         <field name="model_id" ref="plan_mejoras.model_pm_estado"/>
@@ -26,6 +29,105 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_write" eval="1"/>
         <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <!-- Accesos al Grupo Consejo Consultivo a la Informe-->
+    <record id="model_access_informe_consejo" model="ir.model.access">
+        <field name="name">model.access.informe_consejo</field>
+        <field name="model_id" ref="plan_mejoras.model_pm_plan"/>
+        <field name="group_id" ref="plan_mejoras.res_groups_docente_consejo"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="0"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="0"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <!-- Accesos al Grupo Consejo Consutivo a la Evidencia-->
+    <record id="model_access_evidencia_consejo" model="ir.model.access">
+        <field name="name">model.access.evidencia_consejo</field>
+        <field name="model_id" ref="plan_mejoras.model_pm_evidencia"/>
+        <field name="group_id" ref="plan_mejoras.res_groups_docente_consejo"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="0"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <!-- Accesos al Grupo Administrador a la Estados-->
+     <record id="model_access_categoria" model="ir.model.access">
+        <field name="name">model.access.categoria</field>
+        <field name="model_id" ref="plan_mejoras.model_pm_estado"/>
+        <field name="group_id" ref="base.group_system"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <!-- Accesos al Grupo Administrador a la Etiqueta-->
+    <record id="model_access_tag" model="ir.model.access">
+        <field name="name">model.access.tag</field>
+        <field name="model_id" ref="plan_mejoras.model_pm_etiqueta"/>
+        <field name="group_id" ref="base.group_system"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <!-- Accesos al Grupo Administrador al Informe-->
+    <record id="model_access_informe" model="ir.model.access">
+        <field name="name">model.access.informe</field>
+        <field name="model_id" ref="plan_mejoras.model_pm_plan"/>
+        <field name="group_id" ref="base.group_system"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <!-- Accesos al Grupo Administrador a la Evidencia-->
+    <record id="model_access_evidencia" model="ir.model.access">
+        <field name="name">model.access.tag</field>
+        <field name="model_id" ref="plan_mejoras.model_pm_evidencia"/>
+        <field name="group_id" ref="base.group_system"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="0"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <!-- Accesos al Grupo Docente a la Evidencia-->
+    <record id="model_access_evidencia_docente" model="ir.model.access">
+        <field name="name">model.access.evidencia.docente</field>
+        <field name="model_id" ref="plan_mejoras.model_pm_evidencia"/>
+        <field name="group_id" ref="plan_mejoras.res_groups_docente"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+     <!--Acceso para usuario Docente-->
+
+    <record id="model_access_tarea_docente" model="ir.model.access">
+        <field name="name">model.access.tarea</field>
+        <field name="model_id" ref="plan_mejoras.model_pm_tarea"/>
+        <field name="group_id" ref="plan_mejoras.res_groups_docente"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="0"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="0"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <record id="model_access_categoria_docente" model="ir.model.access">
+        <field name="name">model.access.tarea</field>
+        <field name="model_id" ref="plan_mejoras.model_pm_estado"/>
+        <field name="group_id" ref="plan_mejoras.res_groups_docente"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="0"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
         <field name="perm_read" eval="1"/>
     </record>
 
