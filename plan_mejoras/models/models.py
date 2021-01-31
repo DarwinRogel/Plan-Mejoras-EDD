@@ -85,6 +85,7 @@ class Etiqueta(models.Model):
     _description = "Etiqueta"
 
     name = fields.Char(string='Nombre',required=True, translate=True)
+    description = fields.Char(string='Descripción', translate=True)
     color = fields.Integer(string='Color Index')
 
     _sql_constraints = [
@@ -100,6 +101,10 @@ class CriterioNombre(models.Model):
     porcentaje_ponderacion = fields.Integer(string="% Ponderación", required=True)
     total_val = fields.Float("Total Valoracion", compute="_compute_valoracion_porcentaje", store=True)
 
+    _sql_constraints = [
+        ('name_unique', 'unique(name)', "El nombre del Criterio ya existe!"),
+    ]
+
     @api.constrains('porcentaje_ponderacion')
     def _check_porcentaje_ponderacion(self):
         for record in self:
@@ -108,15 +113,15 @@ class CriterioNombre(models.Model):
 
     @api.depends("porcentaje_ponderacion")
     def _compute_valoracion_porcentaje(self):
-        for record in self:
-            record.total_val = sum(
-                record.mapped("porcentaje_ponderacion"))
-
-    @api.onchange('total_val')
-    def _check_calificacion(self):
-        for record in self:
-            if record.total_val > 100:
-                raise ValidationError("La suma del porcentaje de Ponderación supera el 100%.")
+        criterio = self.env["pm.criterionombre"].search([])
+        total = 0
+        for record in criterio:
+            total = total + record.porcentaje_ponderacion
+        self.total_val = total
+        if self.total_val > 100:
+            raise ValidationError(
+                "La Suma de las ponderaciones No debe superar el 100%")
+            # sum(record.mapped("porcentaje_ponderacion"))
 
 
 class Criterio(models.Model):

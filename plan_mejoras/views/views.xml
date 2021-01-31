@@ -48,6 +48,59 @@
             </field>
         </record>
 
+        <!--Vista Form Criterio de Evaluacion-->
+        <record id="view_form_criterion" model="ir.ui.view">
+            <field name="name">view.form.pm.criterionombre</field>
+            <field name="model">pm.criterionombre</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div class="oe_button_box d-flex justify-content-end" name="button_box">
+                        </div>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                            <group>
+                                <field name="porcentaje_ponderacion"/>
+                            </group>
+                        </group>
+                        <group>
+                              <field name="description"/>
+                              <!--<field name="total_val"/>-->
+                        </group>
+                    </sheet>
+
+                </form>
+            </field>
+        </record>
+
+        <!--Vista Form TAG-->
+        <record id="view_form_etiqueta" model="ir.ui.view">
+            <field name="name">view.form.pm.etiqueta</field>
+            <field name="model">pm.etiqueta</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div class="oe_button_box d-flex justify-content-end" name="button_box">
+                        </div>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                            <group>
+                                <field name="color"/>
+                            </group>
+                        </group>
+                        <group>
+                              <field name="description"/>
+                              <!--<field name="total_val"/>-->
+                        </group>
+                    </sheet>
+
+                </form>
+            </field>
+        </record>
 
         <!--Vista Form Estado-->
         <record id="view_form_estado" model="ir.ui.view">
@@ -332,6 +385,32 @@
             </field>
         </record>
 
+        <!--Vista Tree Criterio de Evaluacion-->
+        <record id="view_tree_criterion" model="ir.ui.view">
+            <field name="name">view.tree.pm.criterionombre</field>
+            <field name="model">pm.criterionombre</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="porcentaje_ponderacion"/>
+                   <field name="description"/>
+
+                </tree>
+            </field>
+        </record>
+
+        <!--Vista Tree TAG-->
+        <record id="view_tree_etiqueta" model="ir.ui.view">
+            <field name="name">view.tree.pm.etiqueta</field>
+            <field name="model">pm.etiqueta</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="description"/>
+                   <field name="color"/>
+                </tree>
+            </field>
+        </record>
 
         <!--Vista Tree Informe-->
         <record id="view_tree_informe" model="ir.ui.view">
@@ -534,6 +613,21 @@
             </field>
         </record>
 
+        <!--Accion de ventana Etiqueta-->
+        <record id="action_view_tag" model="ir.actions.act_window">
+            <field name="name">Etiqueta</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">pm.etiqueta</field>
+            <field name="view_mode">tree,form</field>
+            <!--<field name="search_view_id" ref="base.view_res_partner_filter"/>-->
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Crear Nueva Etiqueta para empezar a etiquetar sus tareas.
+                </p>
+                <p></p>
+            </field>
+        </record>
+
 
         <!--Accion de ventana tarea kanban-->
         <record id="action_view_tarea_kanban" model="ir.actions.act_window.view">
@@ -604,6 +698,19 @@
         </record>
 
 
+        <!--Acciones de ventana Criterio Evaluacion-->
+        <record id="action_view_criterion" model="ir.actions.act_window">
+            <field name="name">Criterios de Evaluación</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">pm.criterionombre</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Crear Nuevo Criterio de Evaluación  para empezar a Gestionar las calificaciones de los Docentes.
+                </p>
+                <p></p>
+            </field>
+        </record>
 
         <!--Acciones de ventana estado-->
         <record id="action_view_estado" model="ir.actions.act_window">
@@ -620,7 +727,22 @@
             </field>
         </record>
 
+        <!--Accion de ventana Criterio Evaluacion tree-->
+        <record id="action_view_criterion_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="plan_mejoras.view_tree_criterion"/>
+            <field name="act_window_id" ref="action_view_criterion"/>
+        </record>
 
+
+        <!--Accion de ventana Criterio Evaluacion form-->
+        <record id="action_view_criterion_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="plan_mejoras.view_form_criterion"/>
+            <field name="act_window_id" ref="action_view_criterion"/>
+        </record>
 
         <!--Accion de ventana estado tree-->
         <record id="action_view_estado_tree" model="ir.actions.act_window.view">
@@ -639,13 +761,21 @@
             <field name="act_window_id" ref="action_view_estado"/>
         </record>
 
+        <!--Accion de ventana TAG tree-->
+        <record id="action_view_tag_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="plan_mejoras.view_tree_etiqueta"/>
+            <field name="act_window_id" ref="action_view_tag"/>
+        </record>
 
-         <!--Acciones de ventana tag-->
-        <record id="action_view_tag" model="ir.actions.act_window">
-            <field name="name">Etiquetas</field>
-            <field name="res_model">pm.etiqueta</field>
-            <field name="limit">10</field>
-            <!--<field name="view_mode">kanban,form</field>-->
+
+        <!--Accion de ventana TAG form-->
+        <record id="action_view_tag_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="plan_mejoras.view_form_etiqueta"/>
+            <field name="act_window_id" ref="action_view_tag"/>
         </record>
 
         <!--Accion de ventana Plan-->
@@ -685,10 +815,16 @@
                   groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"
                   parent="plan_mejoras.menu_main_pm_app"/>
 
+        <menuitem id="menu_criterios"
+                  name="Criterios Evaluación"
+                  parent="plan_mejoras.menu_configuracion"
+                  action="plan_mejoras.action_view_criterion"/>
+
         <menuitem id="menu_categoria"
                   name="Estados Kanban"
                   parent="plan_mejoras.menu_configuracion"
                   action="plan_mejoras.action_view_estado"/>
+
 
         <menuitem id="menu_tag"
                   name="Etiquetas"
