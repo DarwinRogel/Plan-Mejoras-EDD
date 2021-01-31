@@ -98,8 +98,25 @@ class CriterioNombre(models.Model):
     name = fields.Char(string="Criterio de Evaluación", required=True)
     description = fields.Char(string="Descripción")
     porcentaje_ponderacion = fields.Integer(string="% Ponderación", required=True)
+    total_val = fields.Float("Total Valoracion", compute="_compute_valoracion_porcentaje", store=True)
 
+    @api.constrains('porcentaje_ponderacion')
+    def _check_porcentaje_ponderacion(self):
+        for record in self:
+            if record.porcentaje_ponderacion < 1:
+                raise ValidationError("El porcentaje de Ponderación debe ser mayor a 0.")
 
+    @api.depends("porcentaje_ponderacion")
+    def _compute_valoracion_porcentaje(self):
+        for record in self:
+            record.total_val = sum(
+                record.mapped("porcentaje_ponderacion"))
+
+    @api.onchange('total_val')
+    def _check_calificacion(self):
+        for record in self:
+            if record.total_val > 100:
+                raise ValidationError("La suma del porcentaje de Ponderación supera el 100%.")
 
 
 class Criterio(models.Model):
@@ -115,7 +132,7 @@ class Criterio(models.Model):
 
     user_id = fields.Many2one("res.users", string="Docente", required=True, default=lambda self: self.env.uid)
 
-    @api.constrains('calificacion', 'criterionombre_id')
+    @api.onchange('calificacion', 'criterionombre_id')
     def _check_calificacion(self):
         #for record in self:
         criterio = self.env["pm.criterionombre"].search([])
@@ -123,9 +140,10 @@ class Criterio(models.Model):
         lista_docentes = self.env["res.users"].search([])
         gg = 0
         for docente in lista_docentes:
-            if docente.id == self.env.uid:
+            if docente.id == self.id:
                 gg = gg + docente.criterio_ids.calificacion
         print(gg)
+        porcentaje=0
         for c in criterio:
             if self.criterionombre_id.id == c.id:
                 porcentaje = c.porcentaje_ponderacion
@@ -140,7 +158,7 @@ class Criterio(models.Model):
             raise ValidationError("Porcentaje de Valoración supera el 100%")
         else:
             if self.calificacion < 0:
-                raise ValidationError("Calificación no puede ser Negativo")
+                raise ValidationError("Calificación no puede ser Negativa")
             else:
                 if self.calificacion > porcentaje:
                     raise ValidationError("Calificación supera rango de Valoración")
@@ -201,7 +219,7 @@ class ResUser(models.Model):
                     print(len(movs))
                     record.count_tarea = len(movs)
 
-    @api.depends('total_val', 'criterio_ids', 'us_cat')
+    #@api.depends('total_val', 'criterio_ids', 'us_cat')
     def _compute_valoracion_docente(self):
         #nota = self.env["pm.criterio"].search([])
         #criterios = self.env["pm.criterionombre"].search([])
@@ -220,6 +238,7 @@ class ResUser(models.Model):
             us_cat = "destacado"
         else:
             raise ValidationError("El valor esta fuera de rango (0-100)")
+
         record.us_cat = us_cat
         record.total_val = total
 
