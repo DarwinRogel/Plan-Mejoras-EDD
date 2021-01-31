@@ -137,6 +137,7 @@ class Criterio(models.Model):
 
     user_id = fields.Many2one("res.users", string="Docente", required=True, default=lambda self: self.env.uid)
 
+
     @api.onchange('calificacion', 'criterionombre_id')
     def _check_calificacion(self):
         #for record in self:
@@ -169,7 +170,7 @@ class Criterio(models.Model):
                     raise ValidationError("Calificación supera rango de Valoración")
 
 
-
+    
     #Sobrecarga de Create
     '''
     @api.model

@@ -102,6 +102,29 @@
             </field>
         </record>
 
+        <!--Vista Form CRITERIO NOTA-->
+        <record id="view_form_criterionota" model="ir.ui.view">
+            <field name="name">view.form.pm.criterio</field>
+            <field name="model">pm.criterio</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div class="oe_button_box d-flex justify-content-end" name="button_box">
+                        </div>
+                        <group>
+                            <group>
+                                <field name="criterionombre_id" widget="one2many_tags"
+                                       options="{'no_quick_create':True, 'no_create_edit':True, 'no_open':True}"/>
+                            </group>
+                            <group>
+                                <field name="calificacion"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
         <!--Vista Form Estado-->
         <record id="view_form_estado" model="ir.ui.view">
             <field name="name">view.form.pm.estado</field>
@@ -459,6 +482,18 @@
             </field>
         </record>
 
+        <!--Vista Tree Criterio-->
+        <record id="view_tree_criterionota" model="ir.ui.view">
+            <field name="name">view.tree.pm.criterio</field>
+            <field name="model">pm.criterio</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="criterionombre_id"/>
+                    <field name="calificacion"/>
+                </tree>
+            </field>
+        </record>
+
 
         <!--  TAREA TAGS !
         <record id="view_tree_tag" model="ir.ui.view">
@@ -744,6 +779,24 @@
             <field name="act_window_id" ref="action_view_criterion"/>
         </record>
 
+
+
+        <!--Accion de ventana Criterio Nota tree-->
+        <record id="action_view_criterionota_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="plan_mejoras.view_tree_criterionota"/>
+        </record>
+
+
+        <!--Accion de ventana Criterio Nota form-->
+        <record id="action_view_criterionota_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="plan_mejoras.view_form_criterionota"/>
+        </record>
+
+
         <!--Accion de ventana estado tree-->
         <record id="action_view_estado_tree" model="ir.actions.act_window.view">
             <field name="sequence" eval="0"/>
@@ -751,6 +804,8 @@
             <field name="view_id" ref="plan_mejoras.view_tree_estado"/>
             <field name="act_window_id" ref="action_view_estado"/>
         </record>
+
+
 
 
         <!--Accion de ventana estado form-->
