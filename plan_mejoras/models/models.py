@@ -101,6 +101,8 @@ class CriterioNombre(models.Model):
     porcentaje_ponderacion = fields.Integer(string="% Ponderación", required=True)
     total_val = fields.Float("Total Valoracion", compute="_compute_valoracion_porcentaje", store=True)
 
+    criterios_ids = fields.One2many("pm.criterio", "criterionombre_id")
+
     _sql_constraints = [
         ('name_unique', 'unique(name)', "El nombre del Criterio ya existe!"),
     ]
@@ -142,32 +144,15 @@ class Criterio(models.Model):
     def _check_calificacion(self):
         #for record in self:
         criterio = self.env["pm.criterionombre"].search([])
-        p=0
-        lista_docentes = self.env["res.users"].search([])
-        gg = 0
-        for docente in lista_docentes:
-            if docente.id == self.id:
-                gg = gg + docente.criterio_ids.calificacion
-        print(gg)
-        porcentaje=0
         for c in criterio:
             if self.criterionombre_id.id == c.id:
                 porcentaje = c.porcentaje_ponderacion
-                print(porcentaje)
-            else:
-                p = p + c.porcentaje_ponderacion
 
-        print(p)
-        aux = p + self.calificacion
-        print(aux)
-        if aux > 100:
-            raise ValidationError("Porcentaje de Valoración supera el 100%")
+        if self.calificacion < 0:
+            raise ValidationError("Calificación no puede ser Negativa")
         else:
-            if self.calificacion < 0:
-                raise ValidationError("Calificación no puede ser Negativa")
-            else:
-                if self.calificacion > porcentaje:
-                    raise ValidationError("Calificación supera rango de Valoración")
+            if self.calificacion > porcentaje:
+                raise ValidationError("Calificación supera rango de Valoración")
 
 
     
@@ -201,10 +186,6 @@ class ResUser(models.Model):
             , ("satisfactorio", "Satisfactorio"), ("destacado", "Destacado")],
         string="Valoracion Cuantitativa", store=True, compute="_compute_valoracion_docente")
 
-    #pm_pedagogia = fields.Float(string="Valor Pedagogía", required=True)
-    #pm_etico = fields.Float(string="Valor Ético", required=True)
-    #pm_academico = fields.Float(string="Valor Académico", required=True)
-
     count_tarea = fields.Integer(string="Tareas por Ponderar", compute="_contador_tareas", store=True)
     tarea_ids = fields.One2many("pm.tarea", "user_id")
 
@@ -225,15 +206,16 @@ class ResUser(models.Model):
                     print(len(movs))
                     record.count_tarea = len(movs)
 
-    #@api.depends('total_val', 'criterio_ids', 'us_cat')
+    @api.depends('total_val', 'criterio_ids', 'us_cat')
     def _compute_valoracion_docente(self):
-        #nota = self.env["pm.criterio"].search([])
+        nota = self.env["pm.criterio"].search([])
         #criterios = self.env["pm.criterionombre"].search([])
         total = 0
-
-        for record in self:
-            total = total + 10
-
+        us_cat = ""
+        for record in nota:
+            if record.user_id.id == self._origin.id:
+                total = total + record.calificacion
+        print(total)
         if total >= 0 and total <= 40:
             us_cat = "insatisfactorio"
         elif total > 40 and total <= 60:
@@ -245,8 +227,8 @@ class ResUser(models.Model):
         else:
             raise ValidationError("El valor esta fuera de rango (0-100)")
 
-        record.us_cat = us_cat
-        record.total_val = total
+        self.us_cat = us_cat
+        self.total_val = total
 
     def vista_tree(self):
         return {
@@ -375,7 +357,7 @@ class confirm_wizardI(models.TransientModel):
                 if int(info_id) == int(tarea.plan_id):
                     print("Entro")
                     if docente.name != "Administrator":
-                        self.env["cv.tarea"].create({"name": tarea.name, "date_init": tarea.fecha_inicio,
+                        self.env["pm.tarea"].create({"name": tarea.name, "fecha_inicio": tarea.fecha_inicio,
                                                      "fecha_fin": tarea.fecha_fin,
                                                      "ponderacion": tarea.ponderacion, "estado_id": '1',
                                                      "user_id": docente.id, "plan_id": info_id})

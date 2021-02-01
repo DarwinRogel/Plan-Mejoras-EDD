@@ -54,6 +54,17 @@
         <field name="perm_read" eval="1"/>
     </record>
 
+    <!-- Accesos al Grupo Administrador a Debilidades-->
+    <record id="model_access_debilidades_administrador" model="ir.model.access">
+        <field name="name">model.access.debilidades_administrador</field>
+        <field name="model_id" ref="plan_mejoras.model_pm_debilidad"/>
+        <field name="group_id" ref="plan_mejoras.res_groups_administrador"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
     <!-- Accesos al Grupo Administrador a Criterio Nombre-->
     <record id="model_access_criterionombre_administrador" model="ir.model.access">
         <field name="name">model.access.criterionombre_administrador</field>
@@ -108,6 +119,8 @@
         <field name="perm_unlink" eval="1"/>
         <field name="perm_read" eval="1"/>
     </record>
+
+
 
     <!-- Accesos al Grupo Administrador al Informe-->
     <record id="model_access_informe" model="ir.model.access">
