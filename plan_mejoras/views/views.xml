@@ -15,9 +15,9 @@
                         <group>
                             <group>
                                 <field name="estado_id"/>
-                                <field name="debilidad_id"/>
+                                <field name="debilidad_id" groups = "plan_mejoras.res_groups_docente" readonly="1"/>
+                                <field name="debilidad_id" groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
                                 <field name="etiqueta_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
-
                             </group>
                             <group>
                                 <field name="name" required="1" groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>

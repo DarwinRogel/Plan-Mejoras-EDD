@@ -1,3 +1,5 @@
+from pip._vendor.six import print_
+
 from odoo import fields, models, api, SUPERUSER_ID
 from odoo.exceptions import ValidationError
 
@@ -73,7 +75,7 @@ class Evidencia(models.Model):
     name = fields.Char(string='Nombre', required=True, translate=True)
     evidencia = fields.Html(string="Evidencias")
 
-    tareas_ids = fields.Many2one("pm.tarea", string="Tareas")
+    tareas_ids = fields.Many2one("pm.tarea", string="Tareas", ondelete='cascade')
 
     _sql_constraints = [
         ('name_unique', 'unique (name)', "El nombre de la Evidencia ya existe!"),
@@ -142,7 +144,7 @@ class Criterio(models.Model):
 
     @api.onchange('calificacion', 'criterionombre_id')
     def _check_calificacion(self):
-        #for record in self:
+        porcentaje = 0
         criterio = self.env["pm.criterionombre"].search([])
         for c in criterio:
             if self.criterionombre_id.id == c.id:
@@ -187,23 +189,33 @@ class ResUser(models.Model):
         string="Valoracion Cuantitativa", store=True, compute="_compute_valoracion_docente")
 
     count_tarea = fields.Integer(string="Tareas por Ponderar", compute="_contador_tareas", store=True)
+
+    is_group_admin = fields.Boolean(
+        string='Es Administrador',
+        compute="_compute_is_group_admin",
+        store=True
+    )
+
     tarea_ids = fields.One2many("pm.tarea", "user_id")
 
     criterio_ids = fields.One2many("pm.criterio", "user_id")
+
     total_val = fields.Float("Total Valoracion", compute="_compute_valoracion_docente", store=True)
 
     plan_id = fields.One2many("pm.plan", "user_ids")
 
+    @api.depends("groups_id", "is_group_admin")
+    def _compute_is_group_admin(self):
+        self.is_group_admin = self._origin.has_group('plan_mejoras.res_groups_administrador')
+     
     @api.depends("tarea_ids.ponderacion")
     def _contador_tareas(self):
-        print("Hola")
         lista_plan = self.env["pm.plan"].search([])
         for plan in lista_plan:
             if plan.finalizado == False:
                 for record in self:
                     movs = record.tarea_ids.filtered(
                         lambda r: r.ponderacion == 'nulo')
-                    print(len(movs))
                     record.count_tarea = len(movs)
 
     @api.depends('total_val', 'criterio_ids', 'us_cat')
@@ -215,7 +227,6 @@ class ResUser(models.Model):
         for record in nota:
             if record.user_id.id == self._origin.id:
                 total = total + record.calificacion
-        print(total)
         if total >= 0 and total <= 40:
             us_cat = "insatisfactorio"
         elif total > 40 and total <= 60:
@@ -342,31 +353,25 @@ class confirm_wizardI(models.TransientModel):
         default='Las actividades se mostraran a los docentes y se enviará una notificación de la inicialización del Plan Mejoras.')
 
     def yes(self):
-
         info_id = self.env.context.get('id_ini')
-        print(info_id)
         lista_tareas = self.env["pm.tarea"].search([])
         lista_docentes = self.env["res.users"].search([])
-
-        print(len(lista_docentes))
-        print(len(lista_tareas))
         for tarea in lista_tareas:
-            print(tarea.plan_id)
-            print(info_id)
             for docente in lista_docentes:
                 if int(info_id) == int(tarea.plan_id):
-                    print("Entro")
-                    if docente.name != "Administrator":
-                        self.env["pm.tarea"].create({"name": tarea.name, "fecha_inicio": tarea.fecha_inicio,
+                    print(docente.name)
+                    print(docente.is_group_admin)
+                    if docente.is_group_admin == False:
+                        self.env["pm.tarea"].create({"name": tarea.name,
+                                                     "description": tarea.description,
+                                                     "fecha_inicio": tarea.fecha_inicio,
                                                      "fecha_fin": tarea.fecha_fin,
-                                                     "ponderacion": tarea.ponderacion, "estado_id": '1',
-                                                     "user_id": docente.id, "plan_id": info_id})
-                    else:
-                        print("Admin")
-                    # print(tarea.id)
-                    # print(tarea.name)
-                else:
-                    print("No Entro")
+                                                     "ponderacion": tarea.ponderacion,
+                                                     "estado_id": '1',
+                                                     "user_id": docente.id,
+                                                     "plan_id": info_id,
+                                                     "debilidad_id": tarea.debilidad_id.id,
+                                                     "etiqueta_ids": tarea.etiqueta_ids})
 
         self.env["pm.plan"].browse(info_id).write({"estado_Inicializar": True})
         self.env.cr.commit()

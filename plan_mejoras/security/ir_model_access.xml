@@ -65,6 +65,17 @@
         <field name="perm_read" eval="1"/>
     </record>
 
+    <!-- Accesos al Grupo Docente a Debilidades-->
+    <record id="model_access_debilidades_docente" model="ir.model.access">
+        <field name="name">model.access.debilidades_docente</field>
+        <field name="model_id" ref="plan_mejoras.model_pm_debilidad"/>
+        <field name="group_id" ref="plan_mejoras.res_groups_docente"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="0"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
     <!-- Accesos al Grupo Administrador a Criterio Nombre-->
     <record id="model_access_criterionombre_administrador" model="ir.model.access">
         <field name="name">model.access.criterionombre_administrador</field>
@@ -120,6 +131,16 @@
         <field name="perm_read" eval="1"/>
     </record>
 
+    <!-- Accesos al Grupo Docente a la Etiqueta-->
+    <record id="model_access_tag_docente" model="ir.model.access">
+        <field name="name">model.access.tag.docente</field>
+        <field name="model_id" ref="plan_mejoras.model_pm_etiqueta"/>
+        <field name="group_id" ref="plan_mejoras.res_groups_docente"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="0"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="0"/>
+        <field name="perm_read" eval="1"/>
+    </record>
 
 
     <!-- Accesos al Grupo Administrador al Informe-->
@@ -130,6 +151,17 @@
         <field name="perm_create" eval="1"/>
         <field name="perm_write" eval="1"/>
         <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <!-- Accesos al Grupo Docente al Informe-->
+    <record id="model_access_informe_docente" model="ir.model.access">
+        <field name="name">model.access.informe.docente</field>
+        <field name="model_id" ref="plan_mejoras.model_pm_plan"/>
+        <field name="group_id" ref="plan_mejoras.res_groups_docente"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="0"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
         <field name="perm_read" eval="1"/>
     </record>
 
