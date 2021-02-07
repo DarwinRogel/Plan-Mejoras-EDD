@@ -1,3 +1,5 @@
+import datetime
+
 from addons.website.models.res_users import ResUsers
 from odoo import fields, models, api, SUPERUSER_ID
 from odoo.exceptions import ValidationError
@@ -12,6 +14,7 @@ class Tarea(models.Model):
     description = fields.Html(string="Descripción", default="""<p>Tarea creada por: Administrador</p>""",
                               track_visibility="onchange")
     fecha_inicio = fields.Date(string="Fecha de Inicio", required=True)
+
     fecha_fin = fields.Date(string="Fecha Fin", required=True)
     expirado = fields.Selection(selection=[("no_expired", "No Expirado"), ("expired", "Expirado")],
                                string="Tiempo Límite",
@@ -55,6 +58,20 @@ class Tarea(models.Model):
         for tarea in lista_tareas:
             if tarea.expirado == "no_expired" and tarea.fecha_fin < today:
                 tarea.expirado = "expired"
+
+
+    def send_notification_tarea(self):
+        today = fields.Date.today()
+        tareas = self.env["pm.tarea"].search([])
+        for tarea in tareas:
+            aux7 = tarea.fecha_fin - datetime.timedelta(days=7)
+            aux3 = tarea.fecha_fin - datetime.timedelta(days=3)
+            if (tarea.user_id.has_group('plan_mejoras.res_groups_docente')):
+                if aux7 == today or aux3 == today:
+                    template_rec = self.env.ref('plan_mejoras.email_template_tarea')
+                    template_rec.write({'email_to': tarea.user_id.email})
+
+                    template_rec.send_mail(tarea.id, force_send=True)
 
 
 class Estado(models.Model):
@@ -191,7 +208,8 @@ class ResUser(models.Model):
 
     is_group_admin = fields.Boolean(
         string='Es Administrador',
-        compute="_compute_is_group_admin"
+        compute="_compute_is_group_admin",
+        store=True
     )
 
     tarea_ids = fields.One2many("pm.tarea", "user_id")
@@ -214,37 +232,27 @@ class ResUser(models.Model):
 
     def get_groups_usesr_email(self):
         emails = []
-        print("Llego Grupos")
-        #user_ids = self.get_users_from_groups('group_nl_finance_manager')
-        #emails = self.get_users_email('group_nl_finance_manager', user_ids)
         usuarios = self.env["res.users"].search([])
         for usuario in usuarios:
             if (usuario.has_group('plan_mejoras.res_groups_docente')):
                 emails.append(usuario.email)
-                print(usuario.email)
 
-        #user_ids = self.get_users_from_group('res_groups_docente')
-        #new_emails = self.get_users_email('res_groups_docente', user_ids)
-        #for email in new_emails:
-            #emails.append(email)
         return emails
 
     def action_send_email(self):
-        print("Llego antes")
         all_eamils = self.get_groups_usesr_email()
-        print("Llego despues")
 
         for email in all_eamils:
             template_rec = self.env.ref('plan_mejoras.email_template_inicializarPM')
             template_rec.write({'email_to': email})
 
             template_rec.send_mail(self.id, force_send=True)
-        #mail_template = self.env.ref('plan_mejoras.email_template_inicializarPM')
-        #mail_template.send_mail(self.id, force_send=True)
+
 
     @api.depends("groups_id", "is_group_admin")
     def _compute_is_group_admin(self):
-        self.is_group_admin = self._origin.has_group('plan_mejoras.res_groups_administrador')
+        for record in self:
+            record.is_group_admin = record._origin.has_group('plan_mejoras.res_groups_administrador')
      
     @api.depends("tarea_ids.ponderacion")
     def _contador_tareas(self):
