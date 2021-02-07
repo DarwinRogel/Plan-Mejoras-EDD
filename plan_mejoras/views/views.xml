@@ -476,14 +476,16 @@
                             type="object"
                             name="comunicar"
                             attrs="{'invisible':[('estado_Comunicar', '!=', False)]}"
-                            class="btn btn-primary"/>
+                            class="btn btn-primary"
+                            groups="plan_mejoras.res_groups_administrador"/>
 
                     <button
                             string="Inicializar Plan Mejoras"
                             type="object"
                             name="inicializar"
                             attrs="{'invisible':[('estado_Inicializar', '!=', False)]}"
-                            class="btn btn-primary"/>
+                            class="btn btn-primary"
+                            groups="plan_mejoras.res_groups_administrador"/>
 
                 </tree>
             </field>

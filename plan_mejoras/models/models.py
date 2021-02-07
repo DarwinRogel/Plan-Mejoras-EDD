@@ -191,8 +191,7 @@ class ResUser(models.Model):
 
     is_group_admin = fields.Boolean(
         string='Es Administrador',
-        compute="_compute_is_group_admin",
-        store=True
+        compute="_compute_is_group_admin"
     )
 
     tarea_ids = fields.One2many("pm.tarea", "user_id")
@@ -234,9 +233,11 @@ class ResUser(models.Model):
         print("Llego antes")
         all_eamils = self.get_groups_usesr_email()
         print("Llego despues")
+
         for email in all_eamils:
             template_rec = self.env.ref('plan_mejoras.email_template_inicializarPM')
             template_rec.write({'email_to': email})
+
             template_rec.send_mail(self.id, force_send=True)
         #mail_template = self.env.ref('plan_mejoras.email_template_inicializarPM')
         #mail_template.send_mail(self.id, force_send=True)
@@ -412,7 +413,7 @@ class confirm_wizardI(models.TransientModel):
 
         self.env["pm.plan"].browse(info_id).write({"estado_Inicializar": True})
         self.env.cr.commit()
-        ResUser.action_send_email(self.env['res.users'])
+        ResUser.action_send_email(self.env.user)
 
         return {
             "type": "ir.actions.client",
