@@ -1,5 +1,4 @@
-from pip._vendor.six import print_
-
+from addons.website.models.res_users import ResUsers
 from odoo import fields, models, api, SUPERUSER_ID
 from odoo.exceptions import ValidationError
 
@@ -204,6 +203,44 @@ class ResUser(models.Model):
 
     plan_id = fields.One2many("pm.plan", "user_ids")
 
+    #def get_users_from_group(self, group_id):
+    #    users_ids = []
+    #    sql_query = """select uid from res_groups_users_rel where gid = %s"""
+    #    params = (group_id,)
+    #    self.env.cr.execute(sql_query, params)
+    #    results = self.env.cr.fetchall()
+    #    for users_id in results:
+    #        users_ids.append(users_id[0])
+    #    return users_ids
+
+    def get_groups_usesr_email(self):
+        emails = []
+        print("Llego Grupos")
+        #user_ids = self.get_users_from_groups('group_nl_finance_manager')
+        #emails = self.get_users_email('group_nl_finance_manager', user_ids)
+        usuarios = self.env["res.users"].search([])
+        for usuario in usuarios:
+            if (usuario.has_group('plan_mejoras.res_groups_docente')):
+                emails.append(usuario.email)
+                print(usuario.email)
+
+        #user_ids = self.get_users_from_group('res_groups_docente')
+        #new_emails = self.get_users_email('res_groups_docente', user_ids)
+        #for email in new_emails:
+            #emails.append(email)
+        return emails
+
+    def action_send_email(self):
+        print("Llego antes")
+        all_eamils = self.get_groups_usesr_email()
+        print("Llego despues")
+        for email in all_eamils:
+            template_rec = self.env.ref('plan_mejoras.email_template_inicializarPM')
+            template_rec.write({'email_to': email})
+            template_rec.send_mail(self.id, force_send=True)
+        #mail_template = self.env.ref('plan_mejoras.email_template_inicializarPM')
+        #mail_template.send_mail(self.id, force_send=True)
+
     @api.depends("groups_id", "is_group_admin")
     def _compute_is_group_admin(self):
         self.is_group_admin = self._origin.has_group('plan_mejoras.res_groups_administrador')
@@ -375,6 +412,7 @@ class confirm_wizardI(models.TransientModel):
 
         self.env["pm.plan"].browse(info_id).write({"estado_Inicializar": True})
         self.env.cr.commit()
+        ResUser.action_send_email(self.env['res.users'])
 
         return {
             "type": "ir.actions.client",

@@ -16,6 +16,7 @@
     "depends": ["base", "mail"],
     "data": [
         "data/quotation_expiration_cron.xml",
+        "data/mail_template_inicializarPM.xml",
         "security/res_groups.xml",
         "security/ir_rule.xml",
         "security/ir_model_access.xml",
