@@ -80,4 +80,46 @@
             </field>
         </record>
     </data>
+
+    <data noupdate="1">
+        <!--Email template -->
+        <record id="control_tareas_consejo50" model="mail.template">
+            <field name="name">Notificación de Tarea Seguimiento</field>
+            <field name="model_id" ref="plan_mejoras.model_pm_plan"/>
+            <field name="email_from">${(object.user_ids.company_id.email | safe)}</field>
+            <!--<field name="email_to" >${}</field>-->
+            <field name="subject">NOTIFICACION DE LA seguimiento a revision de tareas EL PLAN MEJORAS EDD 50%</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="lang">${object.lang}</field>
+            <field name="body_html"><![CDATA[
+                <p>Estimado ${(object.user_ids.name)}</p>
+                <br/>
+                <p>La tarea "${(object.name)}", Ha sido ponderada, se le recomienda revisar las tareas en su
+                tablero Kanban</p>
+                <br/>
+            ]]>
+            </field>
+        </record>
+    </data>
+
+    <data>
+        <!--Email template -->
+        <record id="control_tareas_consejo75" model="mail.template">
+            <field name="name">Notificación de Tarea Ponderada</field>
+            <field name="model_id" ref="plan_mejoras.model_pm_plan"/>
+            <field name="email_from">${(object.user_ids.company_id.email | safe)}</field>
+            <!--<field name="email_to" >${}</field>-->
+            <field name="subject">NOTIFICACION DE LA seguimiento a revision de tareas EL PLAN MEJORAS EDD 75%</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="lang">${object.lang}</field>
+            <field name="body_html"><![CDATA[
+                <p>Estimado ${(object.user_ids.name)}</p>
+                <br/>
+                <p>La tarea "${(object.name)}", Ha sido ponderada, se le recomienda revisar las tareas en su
+                tablero Kanban</p>
+                <br/>
+            ]]>
+            </field>
+        </record>
+    </data>
 </odoo>

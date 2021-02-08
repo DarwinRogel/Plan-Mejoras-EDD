@@ -16,17 +16,32 @@
 
 
    <data noupdate="1">
-   <record id="control_tareas" model="ir.cron">
+        <record id="control_tareas" model="ir.cron">
+            <field name="state">code</field>
+            <field name="code">model.send_notification_tarea()</field>
+            <field name="interval_type">days</field>
+            <field name="name">Notificación tarea por culminar</field>
+            <field name="numbercall">-1</field>
+            <field name="doall">False</field>
+            <field name="active">True</field>
+            <field name="interval_number">1</field>
+            <field name="model_id" ref="plan_mejoras.model_pm_tarea"/>
+        </record>
+   </data>
+
+    <data>
+   <record id="control_tareas_consejo" model="ir.cron">
      <field name="state">code</field>
-     <field name="code">model.send_notification_tarea()</field>
+     <field name="code">model.send_notification_tarea_consejo()</field>
      <field name="interval_type">days</field>
-     <field name="name">Notificación tarea por culminar</field>
+     <field name="name">Notificación para revisar Tareas del Plan Mejoras lleva el 50%</field>
      <field name="numbercall">-1</field>
      <field name="doall">False</field>
      <field name="active">True</field>
      <field name="interval_number">1</field>
-     <field name="model_id" ref="plan_mejoras.model_pm_tarea"/>
+     <field name="model_id" ref="plan_mejoras.model_pm_plan"/>
    </record>
  </data>
+
 
 </odoo>

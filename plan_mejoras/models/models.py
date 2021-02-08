@@ -1,4 +1,7 @@
 import datetime
+from _ast import expr
+
+from docutils.nodes import section
 
 from addons.website.models.res_users import ResUsers
 from odoo import fields, models, api, SUPERUSER_ID
@@ -11,7 +14,7 @@ class Tarea(models.Model):
     _inherit = "mail.thread"
 
     name = fields.Char(string="Tarea", required=True)
-    description = fields.Html(string="Descripción", default="""<p>Tarea creada por: Administrador</p>""",
+    description = fields.Html(string="Descripción", default="Tarea creada por: Administrador",
                               track_visibility="onchange")
     fecha_inicio = fields.Date(string="Fecha de Inicio", required=True)
 
@@ -22,7 +25,7 @@ class Tarea(models.Model):
 
     ponderacion = fields.Selection(
         selection=[("nulo", "Sin Calificar"), ("noc", "No Cumple"), ("cep", "Cumple en parte"), ("cum", "Cumple")],
-        string="Ponderación", default="nulo", required=True)
+        string="Ponderación", default="nulo")
 
     estado = fields.Boolean(default=False)
 
@@ -73,15 +76,21 @@ class Tarea(models.Model):
                 if aux7 == today or aux3 == today:
                     template_rec = self.env.ref('plan_mejoras.email_template_tarea')
                     template_rec.write({'email_to': tarea.user_id.email})
-
                     template_rec.send_mail(tarea.id, force_send=True)
 
-    @api.onchange("ponderacion")
+    @api.onchange('ponderacion')
     def send_notification_tarea_ponderada(self):
         if self.ponderacion != 'nulo':
+            print(self.user_id.email)
+            print(self._origin.id)
+            aux = self.ponderacion
             template_rec = self.env.ref('plan_mejoras.email_template_tarea_ponderada')
             template_rec.write({'email_to': self.user_id.email})
             template_rec.send_mail(self._origin.id, force_send=True)
+            self.ponderacion = aux
+            self.estado = True
+
+
 
 class Estado(models.Model):
     _name = "pm.estado"
@@ -364,6 +373,29 @@ class Plan(models.Model):
             "domain": [["plan_id", "=", self.id], ["user_id", "=", id_def]]
         }
 
+    def send_notification_tarea_consejo(self):
+        emails = []
+        today = fields.Date.today()
+        planes = self.env["pm.plan"].search([])
+        for plan in planes:
+            if plan.finalizado == False:
+                fecha_inicio = plan.fecha_inicio
+                fecha_fin = plan.fecha_fin
+                dias = abs(fecha_inicio - fecha_fin).days
+                aux50 = plan.fecha_fin - datetime.timedelta(days=dias / 2)
+                aux75 = plan.fecha_fin - datetime.timedelta(days=dias / 3)
+                for docente in plan.user_ids:
+                    if (docente.has_group('plan_mejoras.res_groups_docente_consejo')):
+                        if aux50 == today:
+                            template_rec = self.env.ref('plan_mejoras.control_tareas_consejo50')
+                            template_rec.write({'email_to': docente.email})
+                            template_rec.send_mail(plan.id, force_send=True)
+                        elif aux75 == today:
+                            template_rec = self.env.ref('plan_mejoras.control_tareas_consejo75')
+                            template_rec.write({'email_to': docente.email})
+                            template_rec.send_mail(plan.id, force_send=True)
+
+
 
 class Debilidad(models.Model):
     _name = "pm.debilidad"
@@ -405,8 +437,6 @@ class confirm_wizardI(models.TransientModel):
         for tarea in lista_tareas:
             for docente in lista_docentes:
                 if int(info_id) == int(tarea.plan_id):
-                    print(docente.name)
-                    print(docente.is_group_admin)
                     if docente.is_group_admin == False:
                         self.env["pm.tarea"].create({"name": tarea.name,
                                                      "description": tarea.description,
@@ -421,6 +451,13 @@ class confirm_wizardI(models.TransientModel):
 
         self.env["pm.plan"].browse(info_id).write({"estado_Inicializar": True})
         self.env.cr.commit()
+        lista_planes = self.env["pm.tarea"].search([])
+        lista_docentes = self.env["res.users"].search([])
+        for plan in lista_planes:
+            if plan.id == info_id:
+                for docente in lista_docentes:
+                    self.env["pm.plan"].browse(info_id).write({"user_ids": docente.id})
+
         ResUser.action_send_email(self.env.user)
         return {
             "type": "ir.actions.client",

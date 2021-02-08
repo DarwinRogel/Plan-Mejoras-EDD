@@ -3,7 +3,7 @@
     <record id="model_access_tarea" model="ir.model.access">
         <field name="name">model.access.tarea</field>
         <field name="model_id" ref="plan_mejoras.model_pm_tarea"/>
-        <field name="group_id" ref="base.group_system"/><!--Administracion/Ajustes-->
+        <field name="group_id" ref="plan_mejoras.res_groups_administrador"/><!--Administracion/Ajustes-->
         <field name="perm_create" eval="1"/>
         <field name="perm_write" eval="1"/>
         <field name="perm_unlink" eval="1"/>
@@ -14,7 +14,7 @@
     <record id="model_access_criterio" model="ir.model.access">
         <field name="name">model.access.criterio</field>
         <field name="model_id" ref="plan_mejoras.model_pm_criterio"/>
-        <field name="group_id" ref="base.group_system"/><!--Administracion/Ajustes-->
+        <field name="group_id" ref="plan_mejoras.res_groups_administrador"/><!--Administracion/Ajustes-->
         <field name="perm_create" eval="1"/>
         <field name="perm_write" eval="1"/>
         <field name="perm_unlink" eval="1"/>
@@ -167,9 +167,9 @@
 
     <!-- Accesos al Grupo Administrador a la Evidencia-->
     <record id="model_access_evidencia" model="ir.model.access">
-        <field name="name">model.access.tag</field>
+        <field name="name">model.access.evidencia</field>
         <field name="model_id" ref="plan_mejoras.model_pm_evidencia"/>
-        <field name="group_id" ref="base.group_system"/><!--Administracion/Ajustes-->
+        <field name="group_id" ref="plan_mejoras.res_groups_administrador"/><!--Administracion/Ajustes-->
         <field name="perm_create" eval="0"/>
         <field name="perm_write" eval="0"/>
         <field name="perm_unlink" eval="0"/>
