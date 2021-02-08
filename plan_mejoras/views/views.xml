@@ -1014,7 +1014,7 @@
                   action="plan_mejoras.action_view_tarea"/>
 
         <menuitem id="menu_tarea_docente"
-                  name="Tareas Doentes"
+                  name="Tareas Docentes"
                   parent="plan_mejoras.menu_main_pm_app"
                   groups="plan_mejoras.res_groups_docente"
                   action="plan_mejoras.action_view_tarea_docente"/>
