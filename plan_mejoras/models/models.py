@@ -32,7 +32,7 @@ class Tarea(models.Model):
 
     user_id = fields.Many2one("res.users", string="Docente", required=True, default=lambda self: self.env.uid)
 
-    plan_id = fields.Many2one("pm.plan", string="Plan Mejoras")
+    plan_id = fields.Many2one("pm.plan", string="Plan Mejoras", ondelete="cascade")
 
     debilidad_id = fields.Many2one("pm.debilidad", string="Debilidades")
 
@@ -58,7 +58,10 @@ class Tarea(models.Model):
         for tarea in lista_tareas:
             if tarea.expirado == "no_expired" and tarea.fecha_fin < today:
                 tarea.expirado = "expired"
-
+                if (tarea.user_id.has_group('plan_mejoras.res_groups_docente')):
+                    template_rec = self.env.ref('plan_mejoras.email_template_tarea_expirada')
+                    template_rec.write({'email_to': tarea.user_id.email})
+                    template_rec.send_mail(tarea.id, force_send=True)
 
     def send_notification_tarea(self):
         today = fields.Date.today()
@@ -73,6 +76,12 @@ class Tarea(models.Model):
 
                     template_rec.send_mail(tarea.id, force_send=True)
 
+    @api.onchange("ponderacion")
+    def send_notification_tarea_ponderada(self):
+        if self.ponderacion != 'nulo':
+            template_rec = self.env.ref('plan_mejoras.email_template_tarea_ponderada')
+            template_rec.write({'email_to': self.user_id.email})
+            template_rec.send_mail(self._origin.id, force_send=True)
 
 class Estado(models.Model):
     _name = "pm.estado"
@@ -220,15 +229,6 @@ class ResUser(models.Model):
 
     plan_id = fields.One2many("pm.plan", "user_ids")
 
-    #def get_users_from_group(self, group_id):
-    #    users_ids = []
-    #    sql_query = """select uid from res_groups_users_rel where gid = %s"""
-    #    params = (group_id,)
-    #    self.env.cr.execute(sql_query, params)
-    #    results = self.env.cr.fetchall()
-    #    for users_id in results:
-    #        users_ids.append(users_id[0])
-    #    return users_ids
 
     def get_groups_usesr_email(self):
         emails = []
@@ -321,7 +321,7 @@ class Plan(models.Model):
 
     finalizado = fields.Boolean(default=False)
 
-    tarea_ids = fields.One2many("pm.tarea", "plan_id")
+    tarea_ids = fields.One2many("pm.tarea", "plan_id",  ondelete="cascade")
 
     user_ids = fields.Many2one("res.users", string="Docente")
 
@@ -422,7 +422,6 @@ class confirm_wizardI(models.TransientModel):
         self.env["pm.plan"].browse(info_id).write({"estado_Inicializar": True})
         self.env.cr.commit()
         ResUser.action_send_email(self.env.user)
-
         return {
             "type": "ir.actions.client",
             "tag": "mail.discuss",

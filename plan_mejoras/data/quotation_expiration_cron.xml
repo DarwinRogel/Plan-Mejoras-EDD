@@ -28,4 +28,5 @@
      <field name="model_id" ref="plan_mejoras.model_pm_tarea"/>
    </record>
  </data>
+
 </odoo>
