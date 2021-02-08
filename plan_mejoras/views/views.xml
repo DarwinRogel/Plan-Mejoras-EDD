@@ -48,6 +48,52 @@
             </field>
         </record>
 
+        <!--Vista Form Tarea Docente-->
+        <record id="view_form_tarea_docente" model="ir.ui.view">
+            <field name="name">view.form.pm.tarea</field>
+            <field name="model">pm.tarea</field>
+            <field name="arch" type="xml">
+                <form>
+                    <!--<header>
+                    <field name="categoria_id" widget="statusbar" options="{'clickable': '1'}"/>
+                    </header>-->
+                    <sheet>
+                        <div class="oe_button_box d-flex justify-content-end" name="button_box">
+                        </div>
+                        <group>
+                            <group>
+                                <field name="estado_id"/>
+                                <field name="debilidad_id" groups = "plan_mejoras.res_groups_docente" readonly="1"/>
+                                <field name="etiqueta_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                            </group>
+                            <group>
+                                <field name="name" groups = "plan_mejoras.res_groups_docente" readonly="1"/>
+                                <field name="ponderacion" groups = "plan_mejoras.res_groups_docente" readonly="1"/>
+                                <field name="expirado" groups = "plan_mejoras.res_groups_docente" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="fecha_inicio" required="1" groups = "plan_mejoras.res_groups_docente" readonly="1"/>
+                                <field name="fecha_fin" required="1" groups = "plan_mejoras.res_groups_docente" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="user_id" invisible="1"/>
+                                <field name="evicencia_id" groups="plan_mejoras.res_groups_docente"/>
+                            </group>
+
+                        </group>
+                        <group>
+                                <field name="description"  required="1" groups = "plan_mejoras.res_groups_docente" readonly="1"/>
+                        </group>
+                        <notebook>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                            <field name="message_ids" widget="mail_thread" groups="plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
         <!--Vista Form Criterio de Evaluacion-->
         <record id="view_form_criterion" model="ir.ui.view">
             <field name="name">view.form.pm.criterionombre</field>
@@ -420,6 +466,7 @@
         </record>
 
 
+
         <!--Vista Tree Tarea-->
         <record id="view_tree_estado" model="ir.ui.view">
             <field name="name">view.tree.pm.estado</field>
@@ -686,6 +733,21 @@
             </field>
         </record>
 
+        <!--Accion de ventana tarea-->
+        <record id="action_view_tarea_docente" model="ir.actions.act_window">
+            <field name="name">Tareas</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">pm.tarea</field>
+            <field name="view_mode">kanban,tree,form,calendar,graph</field>
+            <!--<field name="search_view_id" ref="base.view_res_partner_filter"/>-->
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Usted No tiene Tareas Vinculadas al Plan Mejoras.
+                </p>
+                <p></p>
+            </field>
+        </record>
+
         <!--Accion de ventana Etiqueta-->
         <record id="action_view_tag" model="ir.actions.act_window">
             <field name="name">Etiqueta</field>
@@ -710,6 +772,14 @@
             <field name="act_window_id" ref="action_view_tarea"/>
         </record>
 
+        <!--Accion de ventana tarea kanban-->
+        <record id="action_view_tarea_kanban_docente" model="ir.actions.act_window.view">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="plan_mejoras.view_kanban_tarea"/>
+            <field name="act_window_id" ref="action_view_tarea_docente"/>
+        </record>
+
 
         <!--Accion de ventana tarea tree-->
         <record id="action_view_tarea_tree" model="ir.actions.act_window.view">
@@ -719,6 +789,14 @@
             <field name="act_window_id" ref="action_view_tarea"/>
         </record>
 
+        <!--Accion de ventana tarea tree Docente-->
+        <record id="action_view_tarea_tree_docente" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="plan_mejoras.view_tree_tarea"/>
+            <field name="act_window_id" ref="action_view_tarea_docente"/>
+        </record>
+
 
         <!--Accion de ventana tarea form-->
         <record id="action_view_tarea_form" model="ir.actions.act_window.view">
@@ -726,6 +804,14 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="plan_mejoras.view_form_tarea"/>
             <field name="act_window_id" ref="action_view_tarea"/>
+        </record>
+
+        <!--Accion de ventana tarea form Docente-->
+        <record id="action_view_tarea_form_docente" model="ir.actions.act_window.view">
+            <field name="sequence" eval="5"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="plan_mejoras.view_form_tarea_docente"/>
+            <field name="act_window_id" ref="action_view_tarea_docente"/>
         </record>
 
 
@@ -923,9 +1009,16 @@
 
         <menuitem id="menu_tarea"
                   name="Tareas"
-                  sequence = "2"
                   parent="plan_mejoras.menu_main_pm_app"
+                  groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"
                   action="plan_mejoras.action_view_tarea"/>
+
+        <menuitem id="menu_tarea_docente"
+                  name="Tareas Doentes"
+                  parent="plan_mejoras.menu_main_pm_app"
+                  groups="plan_mejoras.res_groups_docente"
+                  action="plan_mejoras.action_view_tarea_docente"/>
+
 
         <menuitem id="menu_plan"
                   name="Plan Mejoras"
