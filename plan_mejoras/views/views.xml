@@ -5,7 +5,7 @@
             <field name="name">view.form.pm.tarea</field>
             <field name="model">pm.tarea</field>
             <field name="arch" type="xml">
-                <form>
+                <form  create="false" >
                     <!--<header>
                     <field name="categoria_id" widget="statusbar" options="{'clickable': '1'}"/>
                     </header>-->
@@ -29,14 +29,15 @@
                                 <field name="fecha_fin" required="1" groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
                             </group>
                             <group>
-                                <field name="user_id" invisible="1"/>
+                                <field name="user_id" invisible="1" groups="plan_mejoras.res_groups_administrador"/>
+                                <field name="plan_id" invisible="1" groups="plan_mejoras.res_groups_administrador"/>
                                 <field name="evicencia_id" groups="plan_mejoras.res_groups_administrador, plan_mejoras.res_groups_docente"/>
                             </group>
 
                         </group>
                         <group>
-                                <field name="description"  required="1" groups = "plan_mejoras.res_groups_docente"/>
-                                <field name="description"  required="1" groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo" invisible="1"/>
+                                <field name="description"  required="1"/>
+
                         </group>
                         <notebook>
                         </notebook>
@@ -77,12 +78,59 @@
                             </group>
                             <group>
                                 <field name="user_id" invisible="1"/>
-                                <field name="evicencia_id" groups="plan_mejoras.res_groups_docente"/>
+                                <field name="evicencia_id" groups="plan_mejoras.res_groups_docente" attrs="{'invisible':[('expirado', '==', 'expired')]}"/>
                             </group>
 
                         </group>
                         <group>
                                 <field name="description"  required="1" groups = "plan_mejoras.res_groups_docente" readonly="1"/>
+                        </group>
+                        <notebook>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                            <field name="message_ids" widget="mail_thread" groups="plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!--Vista Form Tarea Invidual Admin-->
+        <record id="view_form_tarea_individual" model="ir.ui.view">
+            <field name="name">view.form.pm.tarea</field>
+            <field name="model">pm.tarea</field>
+            <field name="arch" type="xml">
+                <form  create="false" >
+                    <!--<header>
+                    <field name="categoria_id" widget="statusbar" options="{'clickable': '1'}"/>
+                    </header>-->
+                    <sheet>
+                        <div class="oe_button_box d-flex justify-content-end" name="button_box">
+                        </div>
+                        <group>
+                            <group>
+                                <field name="estado_id"/>
+                                <field name="debilidad_id" groups = "plan_mejoras.res_groups_docente" readonly="1"/>
+                                <field name="debilidad_id" groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
+                                <field name="etiqueta_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                            </group>
+                            <group>
+                                <field name="name" required="1" groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
+                                <field name="ponderacion" required="1" groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
+                                <field name="expirado" groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
+                            </group>
+                            <group>
+                                <field name="fecha_inicio" required="1" groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
+                                <field name="fecha_fin" required="1" groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
+                            </group>
+                            <group>
+                                <field name="user_id" widget="one2many_tags" options="{'no_quick_create':True, 'no_create_edit':True, 'no_open':True}" required="1" groups="plan_mejoras.res_groups_administrador"/>
+                                <field name="plan_id" widget="one2many_tags" options="{'no_quick_create':True, 'no_create_edit':True, 'no_open':True}" required="1" groups="plan_mejoras.res_groups_administrador"/>                            </group>
+
+                        </group>
+                        <group>
+                                <field name="description"  required="1"/>
+
                         </group>
                         <notebook>
                         </notebook>
@@ -277,7 +325,7 @@
             <field name="model">pm.tarea</field>
             <field name="type">kanban</field>
             <field name="arch" type="xml">
-                 <kanban  default_group_by = "estado_id" class="o_kanban_small_column o_kanban_project_tasks">
+                 <kanban  create="false" default_group_by = "estado_id" class="o_kanban_small_column o_kanban_project_tasks">
                      <field name="name"/>
                      <field name="estado_id" options='{"group_by_tooltip": {"description": "Description"}}'/>
                      <field name="create_uid"/>
@@ -748,6 +796,15 @@
             </field>
         </record>
 
+        <!--Accion de ventana tarea-->
+        <record id="action_view_tarea_individual" model="ir.actions.act_window">
+            <field name="name">Tareas Nueva Individual</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">pm.tarea</field>
+            <field name="view_mode">form</field>
+            <!--<field name="search_view_id" ref="base.view_res_partner_filter"/>-->
+        </record>
+
         <!--Accion de ventana Etiqueta-->
         <record id="action_view_tag" model="ir.actions.act_window">
             <field name="name">Etiqueta</field>
@@ -812,6 +869,14 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="plan_mejoras.view_form_tarea_docente"/>
             <field name="act_window_id" ref="action_view_tarea_docente"/>
+        </record>
+
+        <!--Accion de ventana tarea form Individual Admin-->
+        <record id="action_view_tarea_form_individual" model="ir.actions.act_window.view">
+            <field name="sequence" eval="5"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="plan_mejoras.view_form_tarea_individual"/>
+            <field name="act_window_id" ref="action_view_tarea_individual"/>
         </record>
 
 
@@ -1051,6 +1116,12 @@
                   name="Etiquetas"
                   parent="plan_mejoras.menu_configuracion"
                   action="plan_mejoras.action_view_tag"/>
+
+        <menuitem id="menu_tarea_individual"
+                  name="Crear Tarea Individual"
+                  parent="plan_mejoras.menu_configuracion"
+                  groups = "plan_mejoras.res_groups_administrador"
+                  action="plan_mejoras.action_view_tarea_individual"/>
 
         <record model="ir.ui.view" id="confirm_wizard_form">
             <field name="name">wizard.form</field>

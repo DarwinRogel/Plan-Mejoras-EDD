@@ -1,3 +1,64 @@
 <odoo>
+    <template id="plan_mejoras.report_detalle_plan_mejoras">
+        <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="obj">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <span t-esc="fecha"/>
+                            <h1 align="center"><t t-esc="obj.name"/></h1>
+                            <br/>
+                            <span><b>Periodo Académico:</b>
+                            <t t-esc="obj.fecha_inicio"/> /
 
+                            <t t-esc="obj.fecha_fin"/></span>
+                            <br/>
+                            <span><b>Introducción:</b> <t t-raw="obj.introduccion"/></span>
+                            <br/>
+                            <span><b>Objetivo:</b> <t t-raw="obj.objetivo"/></span>
+                            <br/>
+
+                            <h2 align="left">Detalle de las Tarea Realizadas por docentes de la CIS-UNL</h2>
+                            <t t-foreach="request.env['res.users'].search([])" t-as="doc1">
+                                <t t-if="doc1.is_group_admin == False">
+                                        <!--<div style="width:20px;height:20px;background-color:green"/>-->
+
+                                    <h3 align="center">Docente <span t-esc="doc1.name"/> </h3>
+                                    <t t-if="doc1.count_tarea == 0">
+                                        <span>No existen Tareas que Mostrar :)</span>
+                                            <!--<div style="width:20px;height:20px;background-color:green"/>-->
+                                    </t>
+                                    <t t-foreach="request.env['pm.tarea'].search([('user_id', '=', doc1.id)])" t-as="doc">
+
+                                        <span><b>Titulo:</b> <t t-esc="doc.name"></t></span>
+                                        <br/>
+                                        <span><b>Descripcion:</b> <span t-raw="doc.description"></span></span>
+                                        <br/>
+                                        <span><b>Ponderacion:</b> <span t-field="doc.ponderacion"/> <!--<span t-esc="doc.type_mov"/>--></span>
+                                        <!--<t t-if="doc.type_mov == 'ingreso'">
+                                            <div style="width:20px;height:20px;background-color:green"/>
+                                        </t>-->
+                                        <!--<br/>
+                                        <t t-if="doc.type_mov == 'gasto'">
+                                            <div style="width:20px;height:20px;background-color:red"/>
+                                        </t>-->
+                                        <br/>
+                                        <span><b>Fecha Inicio:</b> <span t-field="doc.fecha_inicio"/></span>
+                                        <br/>
+                                        <span><b>Fecha Fin:</b> <span t-field="doc.fecha_fin"/></span>
+                                        <br/>
+                                        <span><b>Estado:</b> <span t-field="doc.estado_id"/> <!--<<span t-esc="doc.category_id"/>--></span>
+                                        <br/>
+
+                                    </t>
+                                </t>
+                            </t>
+                            <span><b>Conclusiones:</b> <span t-raw="obj.conclusion"/></span>
+
+                            <span><b>Recomendaciones:</b> <span t-raw="obj.recomendacion"/></span>
+                        </div>
+                    </t>
+                </t>
+            </t>
+
+    </template>
 </odoo>
