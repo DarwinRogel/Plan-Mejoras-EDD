@@ -6,13 +6,11 @@
             <field name="default" eval="False" />
             <field name="dpi" eval="90"/>
             <field name="margin_top" eval="40"/>
-            <field name="margin_right" eval="7"/>
-            <field name="margin_bottom" eval="20"/>
-            <field name="margin_left" eval="7"/>
+            <field name="margin_right" eval="20"/>
+            <field name="margin_bottom" eval="30"/>
+            <field name="margin_left" eval="20"/>
             <field name="header_line" eval="False" />
-            <field name="header_spacing" eval="35"/>
-            <!--<field name="page_height">0</field>
-            <field name="page_width">0</field>-->
+            <field name="header_spacing" eval="30"/>
         </record>
 
     <report id="plan_mejoras.action_report_detalle_plan_mejoras"
