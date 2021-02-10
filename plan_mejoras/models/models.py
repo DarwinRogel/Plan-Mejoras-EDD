@@ -67,6 +67,7 @@ class Tarea(models.Model):
                     template_rec.send_mail(tarea.id, force_send=True)
 
     def send_notification_tarea(self):
+        error = False
         today = fields.Date.today()
         tareas = self.env["pm.tarea"].search([])
         for tarea in tareas:
@@ -74,22 +75,31 @@ class Tarea(models.Model):
             aux3 = tarea.fecha_fin - datetime.timedelta(days=3)
             if (tarea.user_id.has_group('plan_mejoras.res_groups_docente')):
                 if aux7 == today or aux3 == today:
-                    template_rec = self.env.ref('plan_mejoras.email_template_tarea')
-                    template_rec.write({'email_to': tarea.user_id.email})
-                    template_rec.send_mail(tarea.id, force_send=True)
+                    try:
+                        template_rec = self.env.ref('plan_mejoras.email_template_tarea')
+                        template_rec.write({'email_to': tarea.user_id.email})
+                        template_rec.send_mail(tarea.id, force_send=True)
+                    except:
+                        error = True
+        if error==True:
+            self.env.user.notify_danger(message='Se produjo un error al enviar la Notificación al correo electrónico')
 
     @api.onchange('ponderacion')
     def send_notification_tarea_ponderada(self):
+        error = False
         if self.ponderacion != 'nulo':
-            print(self.user_id.email)
-            print(self._origin.id)
             aux = self.ponderacion
-            template_rec = self.env.ref('plan_mejoras.email_template_tarea_ponderada')
-            template_rec.write({'email_to': self.user_id.email})
-            template_rec.send_mail(self._origin.id, force_send=True)
-            self.ponderacion = aux
-            self.estado = True
-
+            try:
+                template_rec = self.env.ref('plan_mejoras.email_template_tarea_ponderada')
+                template_rec.write({'email_to': self.user_id.email})
+                template_rec.send_mail(self._origin.id, force_send=True)
+                self.ponderacion = aux
+                self.estado = True
+            except:
+                error = True
+            if error==True:
+                self.env.user.notify_danger(
+                    message='Se produjo un error al enviar la Notificación al correo electrónico')
 
 
 class Estado(models.Model):
@@ -159,7 +169,6 @@ class CriterioNombre(models.Model):
         if self.total_val > 100:
             raise ValidationError(
                 "La Suma de las ponderaciones No debe superar el 100%")
-            # sum(record.mapped("porcentaje_ponderacion"))
 
 
 class Criterio(models.Model):
@@ -189,29 +198,6 @@ class Criterio(models.Model):
         else:
             if self.calificacion > porcentaje:
                 raise ValidationError("Calificación supera rango de Valoración")
-
-
-    
-    #Sobrecarga de Create
-    '''
-    @api.model
-    def create(self, vals):
-        name = vals.get("name","-")
-        amount = vals.get("amount","0")
-        type_mov = vals.get("type_mov","")
-        date = vals.get("date", "")
-
-        #para la cantidad de movimientos del usuario
-        user = self.env.user
-        count_movs = user.count_mov
-        #Condicion para controlar los 5 movimientos de usuarios Free
-        if count_movs >= 5 and user.has_group("saldo_app.res_groups_user_free"):
-            raise ValidationError("Tu cuenta permite creacion de 5 movimientos")
-
-        notas = """<p>Tipo de Movimiento: {}</p><p>Nombre: {}</p><p>Monto: {}</p><p>Fecha: {}<br></p>"""
-        vals["notas"] = notas.format(type_mov, name, amount, date)
-        return super(Movimiento, self).create(vals)
-    '''
 
 
 class ResUser(models.Model):
