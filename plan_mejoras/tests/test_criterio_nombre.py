@@ -9,10 +9,8 @@ class TestModuloPlanMejoras(common.TransactionCase):
 
         self.criterio_nombre_obj = self.env['pm.criterionombre']
 
-
-
         self.criterio_nombre1 = self.criterio_nombre_obj.create({
-            'name': 'Etico',
+            'name': 'Etico1',
             'porcentaje_ponderacion': 30.0})
 
     def test_criterio_nombre_existe(self):
@@ -20,27 +18,27 @@ class TestModuloPlanMejoras(common.TransactionCase):
 
     def test_criterio_nombre_crear_datos_validos(self):
         criterio_nombre = self.criterio_nombre_obj.create({
-            'name': 'Pedagogico',
+            'name': 'Pedagogico1',
             'porcentaje_ponderacion': 30.0})
         self.assertTrue(bool(self.criterio_nombre_obj.search([('id', '=', criterio_nombre.id)], limit=1)))
 
     @unittest.skip("Es Positivo")
     def test_criterio_nombre_metodo_check_porcentaje_ponderacion_neg(self):
         self.criterio_nombre_obj.create({
-            'name': 'Pedagogico',
+            'name': 'Pedagogico1',
             'porcentaje_ponderacion': -1})
         self.fail()
 
     def test_criterio_nombre_metodo_check_porcentaje_ponderacion_pos(self):
         criterio_nombre = self.criterio_nombre_obj.create({
-            'name': 'Pedagogico',
+            'name': 'Pedagogico1',
             'porcentaje_ponderacion': 1})
         self.assertGreater(criterio_nombre.porcentaje_ponderacion, 0,'Es Positivo')
 
     @unittest.skip("Es Cero")
     def test_criterio_nombre_metodo_check_porcentaje_ponderacion_cero(self):
         self.criterio_nombre_obj.create({
-            'name': 'Pedagogico',
+            'name': 'Pedagogico1',
             'porcentaje_ponderacion': 0})
         self.fail()
 
@@ -48,9 +46,9 @@ class TestModuloPlanMejoras(common.TransactionCase):
     def test_criterio_nombre_metodo_compute_valoracion_porcentaje_suma_correcta(self):
         criterio_nombre2 = self.criterio_nombre_obj.create({
             'name': 'Etico2',
-            'porcentaje_ponderacion': 40})
+            'porcentaje_ponderacion': 30})
         criterio_nombre3 = self.criterio_nombre_obj.create({
-            'name': 'Academico',
+            'name': 'Academico1',
             'porcentaje_ponderacion': 30})
         criterio_nombre3._compute_valoracion_porcentaje()
         self.assertEqual(criterio_nombre3.total_val, 100)

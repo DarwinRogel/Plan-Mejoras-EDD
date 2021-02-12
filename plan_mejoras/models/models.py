@@ -70,17 +70,19 @@ class Tarea(models.Model):
         error = False
         today = fields.Date.today()
         tareas = self.env["pm.tarea"].search([])
+        notificacion = self.env["pm.notificaciond"].search([])
         for tarea in tareas:
-            aux7 = tarea.fecha_fin - datetime.timedelta(days=7)
-            aux3 = tarea.fecha_fin - datetime.timedelta(days=3)
             if (tarea.user_id.has_group('plan_mejoras.res_groups_docente')):
-                if aux7 == today or aux3 == today:
-                    try:
-                        template_rec = self.env.ref('plan_mejoras.email_template_tarea')
-                        template_rec.write({'email_to': tarea.user_id.email})
-                        template_rec.send_mail(tarea.id, force_send=True)
-                    except:
-                        error = True
+                for noti in notificacion:
+                    dia = noti.dias_notificacion
+                    aux = tarea.fecha_fin - datetime.timedelta(days=dia)
+                    if aux == today:
+                        try:
+                            template_rec = self.env.ref('plan_mejoras.email_template_tarea')
+                            template_rec.write({'email_to': tarea.user_id.email})
+                            template_rec.send_mail(tarea.id, force_send=True)
+                        except:
+                            error = True
         if error==True:
             self.env.user.notify_danger(message='Se produjo un error al enviar la Notificación al correo electrónico')
 
@@ -147,7 +149,7 @@ class CriterioNombre(models.Model):
     porcentaje_ponderacion = fields.Integer(string="% Ponderación", required=True)
     total_val = fields.Float("Total Valoracion", compute="_compute_valoracion_porcentaje", store=True)
 
-    criterios_ids = fields.One2many("pm.criterio", "criterionombre_id")
+    criterios_ids = fields.One2many("pm.criterio", "criterionombre_id", ondelete="cascade")
 
     _sql_constraints = [
         ('name_unique', 'unique(name)', "El nombre del Criterio ya existe!"),
@@ -177,10 +179,10 @@ class Criterio(models.Model):
 
     calificacion = fields.Float(string="Calificación", required=True)
 
-    criterionombre_id = fields.Many2one("pm.criterionombre", string="Nombre del Criterio", ondelete='restrict',
+    criterionombre_id = fields.Many2one("pm.criterionombre", string="Nombre del Criterio",
                                         required=True,
                                         default=lambda self: self.env['pm.criterionombre'].search([], limit=1),
-                                        group_expand='_group_expand_stage_ids', track_visibility="onchange")
+                                        group_expand='_group_expand_stage_ids', track_visibility="onchange", ondelete="cascade")
 
     user_id = fields.Many2one("res.users", string="Docente", required=True, default=lambda self: self.env.uid)
 
@@ -231,17 +233,20 @@ class ResUser(models.Model):
         for usuario in usuarios:
             if (usuario.has_group('plan_mejoras.res_groups_docente')):
                 emails.append(usuario.email)
-
         return emails
 
     def action_send_email(self):
         all_eamils = self.get_groups_usesr_email()
-
-        for email in all_eamils:
-            template_rec = self.env.ref('plan_mejoras.email_template_inicializarPM')
-            template_rec.write({'email_to': email})
-
-            template_rec.send_mail(self.id, force_send=True)
+        error = False
+        try:
+            for email in all_eamils:
+                template_rec = self.env.ref('plan_mejoras.email_template_inicializarPM')
+                template_rec.write({'email_to': email})
+                template_rec.send_mail(self.id, force_send=True)
+        except:
+            error = True
+        if error==True:
+            self.env.user.notify_danger(message='Se produjo un error al enviar la Notificación al correo electrónico')
 
 
     @api.depends("groups_id", "is_group_admin")
@@ -262,7 +267,6 @@ class ResUser(models.Model):
     @api.depends('total_val', 'criterio_ids', 'us_cat')
     def _compute_valoracion_docente(self):
         nota = self.env["pm.criterio"].search([])
-        #criterios = self.env["pm.criterionombre"].search([])
         total = 0
         us_cat = ""
         for record in nota:
@@ -361,6 +365,7 @@ class Plan(models.Model):
 
     def send_notification_tarea_consejo(self):
         emails = []
+        error = False
         today = fields.Date.today()
         planes = self.env["pm.plan"].search([])
         for plan in planes:
@@ -370,17 +375,22 @@ class Plan(models.Model):
                 dias = abs(fecha_inicio - fecha_fin).days
                 aux50 = plan.fecha_fin - datetime.timedelta(days=dias / 2)
                 aux75 = plan.fecha_fin - datetime.timedelta(days=dias / 3)
-                for docente in plan.user_ids:
-                    if (docente.has_group('plan_mejoras.res_groups_docente_consejo')):
-                        if aux50 == today:
-                            template_rec = self.env.ref('plan_mejoras.control_tareas_consejo50')
-                            template_rec.write({'email_to': docente.email})
-                            template_rec.send_mail(plan.id, force_send=True)
-                        elif aux75 == today:
-                            template_rec = self.env.ref('plan_mejoras.control_tareas_consejo75')
-                            template_rec.write({'email_to': docente.email})
-                            template_rec.send_mail(plan.id, force_send=True)
-
+                try:
+                    for docente in plan.user_ids:
+                        if (docente.has_group('plan_mejoras.res_groups_docente_consejo')):
+                            if aux50 == today:
+                                template_rec = self.env.ref('plan_mejoras.control_tareas_consejo50')
+                                template_rec.write({'email_to': docente.email})
+                                template_rec.send_mail(plan.id, force_send=True)
+                            elif aux75 == today:
+                                template_rec = self.env.ref('plan_mejoras.control_tareas_consejo75')
+                                template_rec.write({'email_to': docente.email})
+                                template_rec.send_mail(plan.id, force_send=True)
+                except:
+                    error = True
+                if error == True:
+                    self.env.user.notify_danger(
+                        message='Se produjo un error al enviar la Notificación al correo electrónico')
 
 
 class Debilidad(models.Model):
@@ -392,6 +402,12 @@ class Debilidad(models.Model):
 
     tarea_ids = fields.One2many("pm.tarea", "debilidad_id")
 
+class NotificacionDias(models.Model):
+    _name = "pm.notificaciond"
+    _description = "Notificación Días"
+
+    name = fields.Char(translate=True, string="Descripción")
+    dias_notificacion = fields.Integer(required=True, translate=True, string="Nro. de días para Notificar la culminacion de las Tareas")
 
 class confirm_wizard(models.TransientModel):
     _name = 'pm.confirm_wizard'

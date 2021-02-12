@@ -15,7 +15,7 @@ class TestModuloPlanMejoras(common.TransactionCase):
 
         self.docente = self.Users.create({
             'name': 'Robin Cordova',
-            'login': 'robin',
+            'login': 'robin2',
             'email': 'r.c@example.com',
             'signature': 'SignBert',
             'notification_type': 'email',

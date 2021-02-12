@@ -220,6 +220,29 @@
             </field>
         </record>
 
+        <!--Vista Form Notificaion D-->
+        <record id="view_form_notificacionD" model="ir.ui.view">
+            <field name="name">view.form.pm.notificaciond</field>
+            <field name="model">pm.notificaciond</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div class="oe_button_box d-flex justify-content-end" name="button_box">
+                        </div>
+                        <group>
+                            <group>
+                                <field name="dias_notificacion"/>
+                            </group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                        </group>
+                    </sheet>
+
+                </form>
+            </field>
+        </record>
+
         <!--Vista Form CRITERIO NOTA-->
         <record id="view_form_criterionota" model="ir.ui.view">
             <field name="name">view.form.pm.criterio</field>
@@ -550,6 +573,18 @@
                     <field name="name"/>
                     <field name="description"/>
                    <field name="color"/>
+                </tree>
+            </field>
+        </record>
+
+        <!--Vista Tree Notificacion Dias-->
+        <record id="view_tree_notificacionD" model="ir.ui.view">
+            <field name="name">view.tree.pm.notificaciond</field>
+            <field name="model">pm.notificaciond</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="dias_notificacion" type="text" />
+                    <field name="name"/>
                 </tree>
             </field>
         </record>
@@ -965,6 +1000,39 @@
             </field>
         </record>
 
+        <!--Acciones de ventana estado-->
+        <record id="action_view_notificacioD" model="ir.actions.act_window">
+            <field name="name">Dias para Notificacion</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">pm.notificaciond</field>
+            <field name="view_mode">tree,form</field>
+            <!--<field name="search_view_id" ref="base.view_res_partner_filter"/>-->
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Crear registros de días para Notificar la culminacion de las Tareas!
+                </p>
+                <p></p>
+            </field>
+        </record>
+
+        <!--Accion de ventana Notificacion D tree-->
+        <record id="action_view_notificacionD_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="plan_mejoras.view_tree_notificacionD"/>
+            <field name="act_window_id" ref="action_view_notificacioD"/>
+        </record>
+
+
+        <!--Accion de ventana Notificacion D  form-->
+        <record id="action_view_notificacionD_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="plan_mejoras.view_form_notificacionD"/>
+            <field name="act_window_id" ref="action_view_notificacioD"/>
+        </record>
+
+
         <!--Accion de ventana Criterio Evaluacion tree-->
         <record id="action_view_criterion_tree" model="ir.actions.act_window.view">
             <field name="sequence" eval="0"/>
@@ -1096,32 +1164,58 @@
                   groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"
                   parent="plan_mejoras.menu_main_pm_app"/>
 
+
+        <menuitem id="menu_planM"
+                  name="Plan Mejoras"
+                  sequence = "1"
+                  parent="plan_mejoras.menu_configuracion"/>
+
         <menuitem id="menu_criterios"
                   name="Criterios Evaluación"
-                  parent="plan_mejoras.menu_configuracion"
+                  parent="plan_mejoras.menu_planM"
                   action="plan_mejoras.action_view_criterion"/>
 
         <menuitem id="menu_debilidad"
                   name="Debilidades"
-                  parent="plan_mejoras.menu_configuracion"
+                  parent="plan_mejoras.menu_planM"
                   action="plan_mejoras.action_view_debilidad"/>
+
+        <menuitem id="menu_navegabilidad"
+                  name="Navegabilidad"
+                  sequence = "3"
+                  parent="plan_mejoras.menu_configuracion"/>
 
         <menuitem id="menu_categoria"
                   name="Estados Kanban"
-                  parent="plan_mejoras.menu_configuracion"
+                  parent="plan_mejoras.menu_navegabilidad"
                   action="plan_mejoras.action_view_estado"/>
-
 
         <menuitem id="menu_tag"
                   name="Etiquetas"
-                  parent="plan_mejoras.menu_configuracion"
+                  parent="plan_mejoras.menu_navegabilidad"
                   action="plan_mejoras.action_view_tag"/>
+
+        <menuitem id="menu_tareaI"
+                  name="Tareas"
+                  sequence = "2"
+                  parent="plan_mejoras.menu_configuracion"/>
 
         <menuitem id="menu_tarea_individual"
                   name="Crear Tarea Individual"
-                  parent="plan_mejoras.menu_configuracion"
+                  parent="plan_mejoras.menu_tareaI"
                   groups = "plan_mejoras.res_groups_administrador"
                   action="plan_mejoras.action_view_tarea_individual"/>
+
+
+        <menuitem id="menu_notificacion"
+                  name="Notificaciones"
+                  sequence = "4"
+                  parent="plan_mejoras.menu_configuracion"/>
+
+        <menuitem id="menu_notificacionD"
+                  name="Notificacion Tareas"
+                  parent="plan_mejoras.menu_notificacion"
+                  action="plan_mejoras.action_view_notificacioD"/>
 
         <record model="ir.ui.view" id="confirm_wizard_form">
             <field name="name">wizard.form</field>

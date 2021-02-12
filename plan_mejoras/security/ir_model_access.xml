@@ -113,7 +113,7 @@
      <record id="model_access_categoria" model="ir.model.access">
         <field name="name">model.access.categoria</field>
         <field name="model_id" ref="plan_mejoras.model_pm_estado"/>
-        <field name="group_id" ref="base.group_system"/><!--Administracion/Ajustes-->
+        <field name="group_id" ref="plan_mejoras.res_groups_administrador"/><!--Administracion/Ajustes-->
         <field name="perm_create" eval="1"/>
         <field name="perm_write" eval="1"/>
         <field name="perm_unlink" eval="1"/>
@@ -124,7 +124,7 @@
     <record id="model_access_tag" model="ir.model.access">
         <field name="name">model.access.tag</field>
         <field name="model_id" ref="plan_mejoras.model_pm_etiqueta"/>
-        <field name="group_id" ref="base.group_system"/><!--Administracion/Ajustes-->
+        <field name="group_id" ref="plan_mejoras.res_groups_administrador"/><!--Administracion/Ajustes-->
         <field name="perm_create" eval="1"/>
         <field name="perm_write" eval="1"/>
         <field name="perm_unlink" eval="1"/>
@@ -147,7 +147,7 @@
     <record id="model_access_informe" model="ir.model.access">
         <field name="name">model.access.informe</field>
         <field name="model_id" ref="plan_mejoras.model_pm_plan"/>
-        <field name="group_id" ref="base.group_system"/><!--Administracion/Ajustes-->
+        <field name="group_id" ref="plan_mejoras.res_groups_administrador"/><!--Administracion/Ajustes-->
         <field name="perm_create" eval="1"/>
         <field name="perm_write" eval="1"/>
         <field name="perm_unlink" eval="1"/>
@@ -212,7 +212,17 @@
     <record id="model_access_res_user" model="ir.model.access">
         <field name="name">model.access.res.user</field>
         <field name="model_id" ref="base.model_res_users"/>
-        <field name="group_id" ref="base.group_system"/><!--Administracion/Ajustes-->
+        <field name="group_id" ref="plan_mejoras.res_groups_administrador"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <record id="model_access_pm_notificacionD" model="ir.model.access">
+        <field name="name">model.access.notificaciond</field>
+        <field name="model_id" ref="plan_mejoras.model_pm_notificaciond"/>
+        <field name="group_id" ref="plan_mejoras.res_groups_administrador"/><!--Administracion/Ajustes-->
         <field name="perm_create" eval="1"/>
         <field name="perm_write" eval="1"/>
         <field name="perm_unlink" eval="1"/>
