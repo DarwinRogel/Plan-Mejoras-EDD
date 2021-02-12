@@ -2,6 +2,7 @@ import datetime
 from _ast import expr
 
 from docutils.nodes import section
+from pip._vendor.six import print_
 
 from addons.website.models.res_users import ResUsers
 from odoo import fields, models, api, SUPERUSER_ID
@@ -367,30 +368,46 @@ class Plan(models.Model):
         emails = []
         error = False
         today = fields.Date.today()
+        print(today)
         planes = self.env["pm.plan"].search([])
         for plan in planes:
+            print(plan.user_ids)
             if plan.finalizado == False:
+                registro = self.env["pm.notificacionc"].search([])
                 fecha_inicio = plan.fecha_inicio
                 fecha_fin = plan.fecha_fin
                 dias = abs(fecha_inicio - fecha_fin).days
-                aux50 = plan.fecha_fin - datetime.timedelta(days=dias / 2)
-                aux75 = plan.fecha_fin - datetime.timedelta(days=dias / 3)
-                try:
-                    for docente in plan.user_ids:
-                        if (docente.has_group('plan_mejoras.res_groups_docente_consejo')):
-                            if aux50 == today:
-                                template_rec = self.env.ref('plan_mejoras.control_tareas_consejo50')
-                                template_rec.write({'email_to': docente.email})
-                                template_rec.send_mail(plan.id, force_send=True)
-                            elif aux75 == today:
-                                template_rec = self.env.ref('plan_mejoras.control_tareas_consejo75')
-                                template_rec.write({'email_to': docente.email})
-                                template_rec.send_mail(plan.id, force_send=True)
-                except:
-                    error = True
-                if error == True:
-                    self.env.user.notify_danger(
-                        message='Se produjo un error al enviar la Notificación al correo electrónico')
+                print(dias)
+                if len(registro) > 0:
+                    numero = registro[0].nro_notificacion
+
+                    d = round(dias/(numero+1))
+                    print(d)
+                    aux1 = d
+                    for i in range(numero):
+                        aux = plan.fecha_fin - datetime.timedelta(days=d)
+                        print(aux)
+                        d = d + aux1
+                        print(d)
+                        print(i)
+                        #aux50 = plan.fecha_fin - datetime.timedelta(days=dias / 2)
+                        #aux75 = plan.fecha_fin - datetime.timedelta(days=dias / 3)
+                        try:
+                            print("TRY")
+                            for docente in plan.user_ids:
+                                print("DOcentes")
+                                if (docente.has_group('plan_mejoras.res_groups_docente_consejo')):
+                                    if aux == today:
+                                        print("Envio")
+                                        print(aux)
+                                        template_rec = self.env.ref('plan_mejoras.control_tareas_consejo50')
+                                        template_rec.write({'email_to': docente.email})
+                                        template_rec.send_mail(plan.id, force_send=True)
+                        except:
+                            error = True
+                        if error == True:
+                            self.env.user.notify_danger(
+                                message='Se produjo un error al enviar la Notificación al correo electrónico')
 
 
 class Debilidad(models.Model):
@@ -408,6 +425,29 @@ class NotificacionDias(models.Model):
 
     name = fields.Char(translate=True, string="Descripción")
     dias_notificacion = fields.Integer(required=True, translate=True, string="Nro. de días para Notificar la culminacion de las Tareas")
+
+class NotificacionControl(models.Model):
+    _name = "pm.notificacionc"
+    _description = "Notificación Control"
+
+    name = fields.Char(translate=True, string="Descripción")
+    nro_notificacion = fields.Integer(required=True, translate=True, string="Nro. de Notificaciones a ejecutar al Consejo Consultivo")
+
+    # Sobrecarga de Create
+    @api.model
+    def create(self, vals):
+        registros = self.env["pm.notificacionc"].search([])
+        if len(registros) > 0:
+            raise ValidationError("Ya existe un registro, modifique el actual para el número de "
+                                  "Notificaciones al Consejo Consultivo.")
+
+        return super(NotificacionControl, self).create(vals)
+
+    @api.constrains('nro_notificacion')
+    def check_numero_notificaion(self):
+        if self.nro_notificacion > 5:
+            raise ValidationError("El número no puede ser mayor a 5")
+
 
 class confirm_wizard(models.TransientModel):
     _name = 'pm.confirm_wizard'
@@ -453,11 +493,17 @@ class confirm_wizardI(models.TransientModel):
 
         self.env["pm.plan"].browse(info_id).write({"estado_Inicializar": True})
         self.env.cr.commit()
-        lista_planes = self.env["pm.tarea"].search([])
+        lista_planes = self.env["pm.plan"].search([])
         lista_docentes = self.env["res.users"].search([])
         for plan in lista_planes:
+            print(plan.name)
+            print(plan.id)
+            print(info_id)
             if plan.id == info_id:
+                print(plan.name)
+                print(plan.id)
                 for docente in lista_docentes:
+                    print(docente.name)
                     self.env["pm.plan"].browse(info_id).write({"user_ids": docente.id})
 
         ResUser.action_send_email(self.env.user)

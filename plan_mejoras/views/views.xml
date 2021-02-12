@@ -243,6 +243,29 @@
             </field>
         </record>
 
+        <!--Vista Form Notificaion Consejo-->
+        <record id="view_form_notificacionC" model="ir.ui.view">
+            <field name="name">view.form.pm.notificaciond</field>
+            <field name="model">pm.notificacionc</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div class="oe_button_box d-flex justify-content-end" name="button_box">
+                        </div>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                            <group>
+                                <field name="nro_notificacion"/>
+                            </group>
+                        </group>
+                    </sheet>
+
+                </form>
+            </field>
+        </record>
+
         <!--Vista Form CRITERIO NOTA-->
         <record id="view_form_criterionota" model="ir.ui.view">
             <field name="name">view.form.pm.criterio</field>
@@ -585,6 +608,19 @@
                 <tree>
                     <field name="dias_notificacion" type="text" />
                     <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <!--Vista Tree Notificacion Dias-->
+        <record id="view_tree_notificacionC" model="ir.ui.view">
+            <field name="name">view.tree.pm.notificacionc</field>
+            <field name="model">pm.notificacionc</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="nro_notificacion" type="text" />
                 </tree>
             </field>
         </record>
@@ -1002,7 +1038,7 @@
 
         <!--Acciones de ventana estado-->
         <record id="action_view_notificacioD" model="ir.actions.act_window">
-            <field name="name">Dias para Notificacion</field>
+            <field name="name">Días para Notificación</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">pm.notificaciond</field>
             <field name="view_mode">tree,form</field>
@@ -1010,6 +1046,21 @@
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     Crear registros de días para Notificar la culminacion de las Tareas!
+                </p>
+                <p></p>
+            </field>
+        </record>
+
+        <!--Acciones de ventana Notificación COntrol-->
+        <record id="action_view_notificacioC" model="ir.actions.act_window">
+            <field name="name">Nro. Notificación Consejo Consultivo</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">pm.notificacionc</field>
+            <field name="view_mode">tree,form</field>
+            <!--<field name="search_view_id" ref="base.view_res_partner_filter"/>-->
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Crear registros con el número de notificaiones para llevar el Control del PLan Mejoras!
                 </p>
                 <p></p>
             </field>
@@ -1032,6 +1083,23 @@
             <field name="act_window_id" ref="action_view_notificacioD"/>
         </record>
 
+
+        <!--Accion de ventana Notificacion C tree-->
+        <record id="action_view_notificacionC_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="plan_mejoras.view_tree_notificacionC"/>
+            <field name="act_window_id" ref="action_view_notificacioC"/>
+        </record>
+
+
+        <!--Accion de ventana Notificacion D  form-->
+        <record id="action_view_notificacionC_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="plan_mejoras.view_form_notificacionC"/>
+            <field name="act_window_id" ref="action_view_notificacioC"/>
+        </record>
 
         <!--Accion de ventana Criterio Evaluacion tree-->
         <record id="action_view_criterion_tree" model="ir.actions.act_window.view">
@@ -1213,9 +1281,14 @@
                   parent="plan_mejoras.menu_configuracion"/>
 
         <menuitem id="menu_notificacionD"
-                  name="Notificacion Tareas"
+                  name="Notificación Tareas"
                   parent="plan_mejoras.menu_notificacion"
                   action="plan_mejoras.action_view_notificacioD"/>
+
+        <menuitem id="menu_notificacionC"
+                  name="Notificación CC."
+                  parent="plan_mejoras.menu_notificacion"
+                  action="plan_mejoras.action_view_notificacioC"/>
 
         <record model="ir.ui.view" id="confirm_wizard_form">
             <field name="name">wizard.form</field>
