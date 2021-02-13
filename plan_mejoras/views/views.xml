@@ -6,9 +6,6 @@
             <field name="model">pm.tarea</field>
             <field name="arch" type="xml">
                 <form  create="false" >
-                    <!--<header>
-                    <field name="categoria_id" widget="statusbar" options="{'clickable': '1'}"/>
-                    </header>-->
                     <sheet>
                         <div class="oe_button_box d-flex justify-content-end" name="button_box">
                         </div>
@@ -22,7 +19,7 @@
                             <group>
                                 <field name="name" required="1" groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
                                 <field name="ponderacion" required="1" groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
-                                <field name="expirado" groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
+                                <field name="expirado" readonly="1"/>
                             </group>
                             <group>
                                 <field name="fecha_inicio" required="1" groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
@@ -31,7 +28,7 @@
                             <group>
                                 <field name="user_id" invisible="1" groups="plan_mejoras.res_groups_administrador"/>
                                 <field name="plan_id" invisible="1" groups="plan_mejoras.res_groups_administrador"/>
-                                <field name="evicencia_id" groups="plan_mejoras.res_groups_administrador, plan_mejoras.res_groups_docente"/>
+                                <field name="evicencia_id" groups="plan_mejoras.res_groups_administrador, plan_mejoras.res_groups_docente_consejo, plan_mejoras.res_groups_docente"/>
                             </group>
 
                         </group>
@@ -55,9 +52,6 @@
             <field name="model">pm.tarea</field>
             <field name="arch" type="xml">
                 <form>
-                    <!--<header>
-                    <field name="categoria_id" widget="statusbar" options="{'clickable': '1'}"/>
-                    </header>-->
                     <sheet>
                         <div class="oe_button_box d-flex justify-content-end" name="button_box">
                         </div>
@@ -78,7 +72,8 @@
                             </group>
                             <group>
                                 <field name="user_id" invisible="1"/>
-                                <field name="evicencia_id" groups="plan_mejoras.res_groups_docente" attrs="{'invisible':[('expirado', '==', 'expired')]}"/>
+                                <field name="estado" invisible="1"/>
+                                <field name="evicencia_id" groups="plan_mejoras.res_groups_docente" attrs="{'invisible':['|',('expirado', '==', 'expired'), ('estado','==', True)]}"/>
                             </group>
 
                         </group>
@@ -630,8 +625,9 @@
             <field name="name">view.tree.pm.plan</field>
             <field name="model">pm.plan</field>
             <field name="arch" type="xml">
-                <tree>
+                <tree decoration-success="finalizado == False" decoration-danger="finalizado == True">
                     <field name="name"/>
+                    <field name="finalizado" invisible="1"/>
                     <field name="fecha_inicio"/>
                     <field name="fecha_fin"/>
                     <field name="estado_Inicializar" invisible="1"/>
@@ -1278,6 +1274,7 @@
         <menuitem id="menu_notificacion"
                   name="Notificaciones"
                   sequence = "4"
+                  groups = "plan_mejoras.res_groups_administrador"
                   parent="plan_mejoras.menu_configuracion"/>
 
         <menuitem id="menu_notificacionD"

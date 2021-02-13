@@ -1,7 +1,9 @@
 <odoo>
+    <!-- PERMISOS DEL USUARIO ADMINISTRADOR -->
+
     <!-- Accesos al Grupo Administrador a la Tarea-->
-    <record id="model_access_tarea" model="ir.model.access">
-        <field name="name">model.access.tarea</field>
+    <record id="model_access_tarea_admin" model="ir.model.access">
+        <field name="name">model.access.tarea_admin</field>
         <field name="model_id" ref="plan_mejoras.model_pm_tarea"/>
         <field name="group_id" ref="plan_mejoras.res_groups_administrador"/><!--Administracion/Ajustes-->
         <field name="perm_create" eval="1"/>
@@ -11,13 +13,133 @@
     </record>
 
     <!-- Accesos al Grupo Administrador a la Tarea-->
-    <record id="model_access_criterio" model="ir.model.access">
-        <field name="name">model.access.criterio</field>
+    <record id="model_access_criterio_admin" model="ir.model.access">
+        <field name="name">model.access.criterio_admin</field>
         <field name="model_id" ref="plan_mejoras.model_pm_criterio"/>
         <field name="group_id" ref="plan_mejoras.res_groups_administrador"/><!--Administracion/Ajustes-->
         <field name="perm_create" eval="1"/>
         <field name="perm_write" eval="1"/>
         <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <!-- Accesos al Grupo Administrador a Criterios-->
+    <record id="model_access_criterio_admin" model="ir.model.access">
+        <field name="name">model.access.criterio_admin</field>
+        <field name="model_id" ref="plan_mejoras.model_pm_criterio"/>
+        <field name="group_id" ref="plan_mejoras.res_groups_administrador"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <!-- Accesos al Grupo Administrador a Debilidades-->
+    <record id="model_access_debilidades_admin" model="ir.model.access">
+        <field name="name">model.access.debilidades_admin</field>
+        <field name="model_id" ref="plan_mejoras.model_pm_debilidad"/>
+        <field name="group_id" ref="plan_mejoras.res_groups_administrador"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <!-- Accesos al Grupo Administrador a Criterio Nombre-->
+    <record id="model_access_criterionombre_admin" model="ir.model.access">
+        <field name="name">model.access.criterionombre_admin</field>
+        <field name="model_id" ref="plan_mejoras.model_pm_criterionombre"/>
+        <field name="group_id" ref="plan_mejoras.res_groups_administrador"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <!-- Accesos al Grupo Administrador a la Estados-->
+     <record id="model_access_categoria_admin" model="ir.model.access">
+        <field name="name">model.access.categoria_admin</field>
+        <field name="model_id" ref="plan_mejoras.model_pm_estado"/>
+        <field name="group_id" ref="plan_mejoras.res_groups_administrador"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <!-- Accesos al Grupo Administrador a la Etiqueta-->
+    <record id="model_access_tag_admin" model="ir.model.access">
+        <field name="name">model.access.tag_admin</field>
+        <field name="model_id" ref="plan_mejoras.model_pm_etiqueta"/>
+        <field name="group_id" ref="plan_mejoras.res_groups_administrador"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <!-- Accesos al Grupo Administrador al Informe-->
+    <record id="model_access_informe_admin" model="ir.model.access">
+        <field name="name">model.access.informe_admin</field>
+        <field name="model_id" ref="plan_mejoras.model_pm_plan"/>
+        <field name="group_id" ref="plan_mejoras.res_groups_administrador"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <!-- Accesos al Grupo Administrador a la Evidencia-->
+    <record id="model_access_evidencia_admin" model="ir.model.access">
+        <field name="name">model.access.evidencia_admin</field>
+        <field name="model_id" ref="plan_mejoras.model_pm_evidencia"/>
+        <field name="group_id" ref="plan_mejoras.res_groups_administrador"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="0"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <record id="model_access_res_user" model="ir.model.access">
+        <field name="name">model.access.res.user</field>
+        <field name="model_id" ref="base.model_res_users"/>
+        <field name="group_id" ref="plan_mejoras.res_groups_administrador"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <record id="model_access_pm_notificaciond_admin" model="ir.model.access">
+        <field name="name">model.access.notificaciond</field>
+        <field name="model_id" ref="plan_mejoras.model_pm_notificaciond"/>
+        <field name="group_id" ref="plan_mejoras.res_groups_administrador"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <record id="model_access_pm_notificacionc_admin" model="ir.model.access">
+        <field name="name">model.access.notificacionc_admin</field>
+        <field name="model_id" ref="plan_mejoras.model_pm_notificacionc"/>
+        <field name="group_id" ref="plan_mejoras.res_groups_administrador"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <!-- PERMISOS USUARIO CONSEJO CONSULTIVO -->
+
+    <!-- Accesos al Grupo Consejo Consultivo a la Informe-->
+    <record id="model_access_informe_consejo" model="ir.model.access">
+        <field name="name">model.access.informe_consejo</field>
+        <field name="model_id" ref="plan_mejoras.model_pm_plan"/>
+        <field name="group_id" ref="plan_mejoras.res_groups_docente_consejo"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="0"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="0"/>
         <field name="perm_read" eval="1"/>
     </record>
 
@@ -39,61 +161,6 @@
         <field name="group_id" ref="plan_mejoras.res_groups_docente_consejo"/><!--Administracion/Ajustes-->
         <field name="perm_create" eval="1"/>
         <field name="perm_write" eval="1"/>
-        <field name="perm_unlink" eval="1"/>
-        <field name="perm_read" eval="1"/>
-    </record>
-
-    <!-- Accesos al Grupo Administrador a Criterios-->
-    <record id="model_access_criterio_administrador" model="ir.model.access">
-        <field name="name">model.access.criterio_administrador</field>
-        <field name="model_id" ref="plan_mejoras.model_pm_criterio"/>
-        <field name="group_id" ref="plan_mejoras.res_groups_administrador"/><!--Administracion/Ajustes-->
-        <field name="perm_create" eval="1"/>
-        <field name="perm_write" eval="1"/>
-        <field name="perm_unlink" eval="1"/>
-        <field name="perm_read" eval="1"/>
-    </record>
-
-    <!-- Accesos al Grupo Administrador a Debilidades-->
-    <record id="model_access_debilidades_administrador" model="ir.model.access">
-        <field name="name">model.access.debilidades_administrador</field>
-        <field name="model_id" ref="plan_mejoras.model_pm_debilidad"/>
-        <field name="group_id" ref="plan_mejoras.res_groups_administrador"/><!--Administracion/Ajustes-->
-        <field name="perm_create" eval="1"/>
-        <field name="perm_write" eval="1"/>
-        <field name="perm_unlink" eval="1"/>
-        <field name="perm_read" eval="1"/>
-    </record>
-
-    <!-- Accesos al Grupo Docente a Debilidades-->
-    <record id="model_access_debilidades_docente" model="ir.model.access">
-        <field name="name">model.access.debilidades_docente</field>
-        <field name="model_id" ref="plan_mejoras.model_pm_debilidad"/>
-        <field name="group_id" ref="plan_mejoras.res_groups_docente"/><!--Administracion/Ajustes-->
-        <field name="perm_create" eval="0"/>
-        <field name="perm_write" eval="0"/>
-        <field name="perm_unlink" eval="0"/>
-        <field name="perm_read" eval="1"/>
-    </record>
-
-    <!-- Accesos al Grupo Administrador a Criterio Nombre-->
-    <record id="model_access_criterionombre_administrador" model="ir.model.access">
-        <field name="name">model.access.criterionombre_administrador</field>
-        <field name="model_id" ref="plan_mejoras.model_pm_criterionombre"/>
-        <field name="group_id" ref="plan_mejoras.res_groups_administrador"/><!--Administracion/Ajustes-->
-        <field name="perm_create" eval="1"/>
-        <field name="perm_write" eval="1"/>
-        <field name="perm_unlink" eval="1"/>
-        <field name="perm_read" eval="1"/>
-    </record>
-
-    <!-- Accesos al Grupo Consejo Consultivo a la Informe-->
-    <record id="model_access_informe_consejo" model="ir.model.access">
-        <field name="name">model.access.informe_consejo</field>
-        <field name="model_id" ref="plan_mejoras.model_pm_plan"/>
-        <field name="group_id" ref="plan_mejoras.res_groups_docente_consejo"/><!--Administracion/Ajustes-->
-        <field name="perm_create" eval="0"/>
-        <field name="perm_write" eval="1"/>
         <field name="perm_unlink" eval="0"/>
         <field name="perm_read" eval="1"/>
     </record>
@@ -109,25 +176,60 @@
         <field name="perm_read" eval="1"/>
     </record>
 
-    <!-- Accesos al Grupo Administrador a la Estados-->
-     <record id="model_access_categoria" model="ir.model.access">
-        <field name="name">model.access.categoria</field>
-        <field name="model_id" ref="plan_mejoras.model_pm_estado"/>
-        <field name="group_id" ref="plan_mejoras.res_groups_administrador"/><!--Administracion/Ajustes-->
+    <!-- Permisos para Criterios Evaluacion -->
+    <record id="model_access_pm_critero_consejo" model="ir.model.access">
+        <field name="name">model.access.criterio_consejo</field>
+        <field name="model_id" ref="plan_mejoras.model_pm_criterio"/>
+        <field name="group_id" ref="plan_mejoras.res_groups_docente_consejo"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="0"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <!-- Permisos para Criterios Evaluacion Nombres -->
+    <record id="model_access_pm_criterionombre_consejo" model="ir.model.access">
+        <field name="name">model.access.criterionombre_consejo</field>
+        <field name="model_id" ref="plan_mejoras.model_pm_criterionombre"/>
+        <field name="group_id" ref="plan_mejoras.res_groups_docente_consejo"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="0"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <!-- Permisos para Etiquetas -->
+    <record id="model_access_pm_etiqueta_consejo" model="ir.model.access">
+        <field name="name">model.access.etiqueta_consejo</field>
+        <field name="model_id" ref="plan_mejoras.model_pm_debilidad"/>
+        <field name="group_id" ref="plan_mejoras.res_groups_docente_consejo"/><!--Administracion/Ajustes-->
         <field name="perm_create" eval="1"/>
         <field name="perm_write" eval="1"/>
         <field name="perm_unlink" eval="1"/>
         <field name="perm_read" eval="1"/>
     </record>
 
-    <!-- Accesos al Grupo Administrador a la Etiqueta-->
-    <record id="model_access_tag" model="ir.model.access">
-        <field name="name">model.access.tag</field>
+    <!-- Permisos para Etiquetas -->
+    <record id="model_access_pm_debilidades_consejo" model="ir.model.access">
+        <field name="name">model.access.debilidades_consejo</field>
         <field name="model_id" ref="plan_mejoras.model_pm_etiqueta"/>
-        <field name="group_id" ref="plan_mejoras.res_groups_administrador"/><!--Administracion/Ajustes-->
+        <field name="group_id" ref="plan_mejoras.res_groups_docente_consejo"/><!--Administracion/Ajustes-->
         <field name="perm_create" eval="1"/>
         <field name="perm_write" eval="1"/>
         <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <!-- PERMISOS USUARIOS DOCENTES -->
+
+    <!-- Accesos al Grupo Docente a Debilidades-->
+    <record id="model_access_debilidades_docente" model="ir.model.access">
+        <field name="name">model.access.debilidades_docente</field>
+        <field name="model_id" ref="plan_mejoras.model_pm_debilidad"/>
+        <field name="group_id" ref="plan_mejoras.res_groups_docente"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="0"/>
+        <field name="perm_write" eval="0"/>
+        <field name="perm_unlink" eval="0"/>
         <field name="perm_read" eval="1"/>
     </record>
 
@@ -142,34 +244,11 @@
         <field name="perm_read" eval="1"/>
     </record>
 
-
-    <!-- Accesos al Grupo Administrador al Informe-->
-    <record id="model_access_informe" model="ir.model.access">
-        <field name="name">model.access.informe</field>
-        <field name="model_id" ref="plan_mejoras.model_pm_plan"/>
-        <field name="group_id" ref="plan_mejoras.res_groups_administrador"/><!--Administracion/Ajustes-->
-        <field name="perm_create" eval="1"/>
-        <field name="perm_write" eval="1"/>
-        <field name="perm_unlink" eval="1"/>
-        <field name="perm_read" eval="1"/>
-    </record>
-
     <!-- Accesos al Grupo Docente al Informe-->
     <record id="model_access_informe_docente" model="ir.model.access">
         <field name="name">model.access.informe.docente</field>
         <field name="model_id" ref="plan_mejoras.model_pm_plan"/>
         <field name="group_id" ref="plan_mejoras.res_groups_docente"/><!--Administracion/Ajustes-->
-        <field name="perm_create" eval="0"/>
-        <field name="perm_write" eval="0"/>
-        <field name="perm_unlink" eval="0"/>
-        <field name="perm_read" eval="1"/>
-    </record>
-
-    <!-- Accesos al Grupo Administrador a la Evidencia-->
-    <record id="model_access_evidencia" model="ir.model.access">
-        <field name="name">model.access.evidencia</field>
-        <field name="model_id" ref="plan_mejoras.model_pm_evidencia"/>
-        <field name="group_id" ref="plan_mejoras.res_groups_administrador"/><!--Administracion/Ajustes-->
         <field name="perm_create" eval="0"/>
         <field name="perm_write" eval="0"/>
         <field name="perm_unlink" eval="0"/>
@@ -206,36 +285,6 @@
         <field name="perm_create" eval="0"/>
         <field name="perm_write" eval="0"/>
         <field name="perm_unlink" eval="0"/>
-        <field name="perm_read" eval="1"/>
-    </record>
-
-    <record id="model_access_res_user" model="ir.model.access">
-        <field name="name">model.access.res.user</field>
-        <field name="model_id" ref="base.model_res_users"/>
-        <field name="group_id" ref="plan_mejoras.res_groups_administrador"/><!--Administracion/Ajustes-->
-        <field name="perm_create" eval="1"/>
-        <field name="perm_write" eval="1"/>
-        <field name="perm_unlink" eval="1"/>
-        <field name="perm_read" eval="1"/>
-    </record>
-
-    <record id="model_access_pm_notificacionD" model="ir.model.access">
-        <field name="name">model.access.notificaciond</field>
-        <field name="model_id" ref="plan_mejoras.model_pm_notificaciond"/>
-        <field name="group_id" ref="plan_mejoras.res_groups_administrador"/><!--Administracion/Ajustes-->
-        <field name="perm_create" eval="1"/>
-        <field name="perm_write" eval="1"/>
-        <field name="perm_unlink" eval="1"/>
-        <field name="perm_read" eval="1"/>
-    </record>
-
-    <record id="model_access_pm_notificacionC" model="ir.model.access">
-        <field name="name">model.access.notificacionc</field>
-        <field name="model_id" ref="plan_mejoras.model_pm_notificacionc"/>
-        <field name="group_id" ref="plan_mejoras.res_groups_administrador"/><!--Administracion/Ajustes-->
-        <field name="perm_create" eval="1"/>
-        <field name="perm_write" eval="1"/>
-        <field name="perm_unlink" eval="1"/>
         <field name="perm_read" eval="1"/>
     </record>
 

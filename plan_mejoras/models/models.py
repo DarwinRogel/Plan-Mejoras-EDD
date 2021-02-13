@@ -62,10 +62,24 @@ class Tarea(models.Model):
         for tarea in lista_tareas:
             if tarea.expirado == "no_expired" and tarea.fecha_fin < today:
                 tarea.expirado = "expired"
+                tarea.estado = True
                 if (tarea.user_id.has_group('plan_mejoras.res_groups_docente')):
                     template_rec = self.env.ref('plan_mejoras.email_template_tarea_expirada')
                     template_rec.write({'email_to': tarea.user_id.email})
                     template_rec.send_mail(tarea.id, force_send=True)
+            elif tarea.expirado == "expired" and today < tarea.fecha_fin:
+                tarea.expirado = "no_expired"
+                tarea.estado = False
+
+    @api.constrains('fecha_fin')
+    def fecha_fin_modificada(self):
+        today = fields.Date.today()
+        if self.fecha_fin < today:
+            self.estado = True
+            self.expirado = "expired"
+        elif today < self.fecha_fin:
+            self.estado = False
+            self.expirado = "no_expired"
 
     def send_notification_tarea(self):
         error = False
@@ -87,17 +101,18 @@ class Tarea(models.Model):
         if error==True:
             self.env.user.notify_danger(message='Se produjo un error al enviar la Notificación al correo electrónico')
 
-    @api.onchange('ponderacion')
+
+    @api.constrains('ponderacion')
     def send_notification_tarea_ponderada(self):
         error = False
         if self.ponderacion != 'nulo':
-            aux = self.ponderacion
+            self.estado = True
+            #aux = self.ponderacion
             try:
                 template_rec = self.env.ref('plan_mejoras.email_template_tarea_ponderada')
                 template_rec.write({'email_to': self.user_id.email})
                 template_rec.send_mail(self._origin.id, force_send=True)
-                self.ponderacion = aux
-                self.estado = True
+                #self.ponderacion = aux
             except:
                 error = True
             if error==True:
@@ -328,6 +343,17 @@ class Plan(models.Model):
     _sql_constraints = [
         ('name_uniq', 'unique (name)', "El Plan Mejoras ya existe!"),
     ]
+
+    # Sobrecarga de Create
+    @api.model
+    def create(self, vals):
+        registros = self.env["pm.plan"].search([])
+        for record in registros:
+            if record.finalizado == False:
+                raise ValidationError(
+                    "Ya existe un Plan Mejoras vigente en este Periodo!")
+                break
+        return super(Plan, self).create(vals)
 
     def inicializar(self):
         return {
