@@ -1,10 +1,5 @@
 import datetime
-from _ast import expr
 
-from docutils.nodes import section
-from pip._vendor.six import print_
-
-from addons.website.models.res_users import ResUsers
 from odoo import fields, models, api, SUPERUSER_ID
 from odoo.exceptions import ValidationError
 
@@ -74,12 +69,13 @@ class Tarea(models.Model):
     @api.constrains('fecha_fin')
     def fecha_fin_modificada(self):
         today = fields.Date.today()
-        if self.fecha_fin < today:
-            self.estado = True
-            self.expirado = "expired"
-        elif today < self.fecha_fin:
-            self.estado = False
-            self.expirado = "no_expired"
+        for record in self:
+            if record.fecha_fin < today:
+                record.estado = True
+                record.expirado = "expired"
+            elif today < record.fecha_fin:
+                record.estado = False
+                record.expirado = "no_expired"
 
     def send_notification_tarea(self):
         error = False
@@ -104,20 +100,21 @@ class Tarea(models.Model):
 
     @api.constrains('ponderacion')
     def send_notification_tarea_ponderada(self):
-        error = False
-        if self.ponderacion != 'nulo':
-            self.estado = True
-            #aux = self.ponderacion
-            try:
-                template_rec = self.env.ref('plan_mejoras.email_template_tarea_ponderada')
-                template_rec.write({'email_to': self.user_id.email})
-                template_rec.send_mail(self._origin.id, force_send=True)
-                #self.ponderacion = aux
-            except:
-                error = True
-            if error==True:
-                self.env.user.notify_danger(
-                    message='Se produjo un error al enviar la Notificación al correo electrónico')
+        for record in self:
+            error = False
+            if record.ponderacion != 'nulo':
+                record.estado = True
+                #aux = self.ponderacion
+                try:
+                    template_rec = record.env.ref('plan_mejoras.email_template_tarea_ponderada')
+                    template_rec.write({'email_to': record.user_id.email})
+                    template_rec.send_mail(record._origin.id, force_send=True)
+                    #self.ponderacion = aux
+                except:
+                    error = True
+                if error==True:
+                    record.check_expiryenv.user.notify_danger(
+                        message='Se produjo un error al enviar la Notificación al correo electrónico')
 
 
 class Estado(models.Model):
@@ -240,7 +237,8 @@ class ResUser(models.Model):
 
     total_val = fields.Float("Total Valoracion", compute="_compute_valoracion_docente", store=True)
 
-    plan_id = fields.One2many("pm.plan", "user_ids")
+    plan_id = fields.Many2one("pm.plan", string="Plan Mejoras")
+
 
 
     def get_groups_usesr_email(self):
@@ -338,7 +336,7 @@ class Plan(models.Model):
 
     tarea_ids = fields.One2many("pm.tarea", "plan_id",  ondelete="cascade")
 
-    user_ids = fields.Many2one("res.users", string="Docente")
+    user_ids = fields.One2many("res.users", "plan_id")
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)', "El Plan Mejoras ya existe!"),
@@ -354,6 +352,15 @@ class Plan(models.Model):
                     "Ya existe un Plan Mejoras vigente en este Periodo!")
                 break
         return super(Plan, self).create(vals)
+
+    @api.constrains('fecha_fin')
+    def fecha_fin_modificada(self):
+        today = fields.Date.today()
+        if self.fecha_fin < today:
+            self.finalizado = True
+        elif today < self.fecha_fin:
+            self.finalizado = False
+
 
     def inicializar(self):
         return {
@@ -434,6 +441,36 @@ class Plan(models.Model):
                         if error == True:
                             self.env.user.notify_danger(
                                 message='Se produjo un error al enviar la Notificación al correo electrónico')
+
+
+    def chek_finalizado(self):
+        error = False
+        today = fields.Date.today()
+        lista_plan = self.env["pm.plan"].search([])
+        for plan in lista_plan:
+            print(plan.user_ids)
+            if plan.finalizado == False and plan.fecha_fin < today:
+                plan.finalizado = True
+                try:
+                    print(plan.user_ids)
+                    for docente in plan.user_ids:
+                        print(docente.name)
+                        if (docente.has_group('plan_mejoras.res_groups_docente_consejo')
+                                or docente.has_group('plan_mejoras.res_groups_docente')):
+                            print("if")
+                            print(docente.name)
+                            print("end_if")
+                            template_rec = self.env.ref('plan_mejoras.email_template_plan_finalizado')
+                            template_rec.write({'email_to': docente.email})
+                            template_rec.send_mail(plan.id, force_send=True)
+                except:
+                    error = True
+                if error == True:
+                    self.env.user.notify_danger(
+                        message='Se produjo un error al enviar la Notificación al correo electrónico')
+            elif plan.finalizado == True and today < plan.fecha_fin:
+                plan.finalizado = False
+
 
 
 class Debilidad(models.Model):
@@ -522,15 +559,21 @@ class confirm_wizardI(models.TransientModel):
         lista_planes = self.env["pm.plan"].search([])
         lista_docentes = self.env["res.users"].search([])
         for plan in lista_planes:
+            print(self.env["pm.plan"].browse(plan.id))
             print(plan.name)
             print(plan.id)
             print(info_id)
             if plan.id == info_id:
                 print(plan.name)
                 print(plan.id)
+                plan_list = []
+                print(lista_docentes.ids)
                 for docente in lista_docentes:
                     print(docente.name)
-                    self.env["pm.plan"].browse(info_id).write({"user_ids": docente.id})
+                    docente.write({'plan_id': plan})
+                    #print(self.env["pm.plan"].browse(plan.id))
+                #self.env["pm.plan"].browse(info_id).write({"user_ids": [2, 269, 32, 31]})
+                self.env.cr.commit()
 
         ResUser.action_send_email(self.env.user)
         return {

@@ -43,5 +43,19 @@
    </record>
  </data>
 
+    <data>
+   <record id="control_plan_finalizado" model="ir.cron">
+     <field name="state">code</field>
+     <field name="code">model.chek_finalizado()</field>
+     <field name="interval_type">days</field>
+     <field name="name">Finalización Plan Mejoras</field>
+     <field name="numbercall">-1</field>
+     <field name="doall">False</field>
+     <field name="active">True</field>
+     <field name="interval_number">1</field>
+     <field name="model_id" ref="plan_mejoras.model_pm_plan"/>
+   </record>
+ </data>
+
 
 </odoo>

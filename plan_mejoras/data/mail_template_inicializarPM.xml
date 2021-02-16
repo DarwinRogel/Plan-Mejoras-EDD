@@ -6,13 +6,14 @@
             <field name="model_id" ref="plan_mejoras.model_res_users"/>
             <field name="email_from">${(object.company_id.email | safe)}</field>
             <!--<field name="email_to" >${}</field>-->
-            <field name="subject">Inicio del Plan Mejoas</field>
+            <field name="subject">INICIALIZACIÓN DEL PLAN MEJORAS DE LA EVALUACIÓN AL DESEMPEÑO DOCENTE</field>
             <field name="auto_delete" eval="True"/>
             <field name="lang">${object.lang}</field>
             <field name="body_html"><![CDATA[
-                <p>Hola</p>
+                <p>Estimado ${object.name}, el Plan Mejoras de la Evaluación al desempeño DOcente acaba de Inicializar.
+                Por favor, revise su planificación en la Plataforma de Odoo</p>
                 <br/>
-                <p>Plan Mejoras Va a Inicializar</p>
+                <p></p>
                 <br/>
             ]]>
             </field>
@@ -117,6 +118,25 @@
                 <br/>
                 <p>La tarea "${(object.name)}", Ha sido ponderada, se le recomienda revisar las tareas en su
                 tablero Kanban</p>
+                <br/>
+            ]]>
+            </field>
+        </record>
+    </data>
+
+    <data noupdate="1">
+        <!--Email template -->
+        <record id="email_template_plan_finalizado" model="mail.template">
+            <field name="name">Notificación de Plan Finalizado</field>
+            <field name="model_id" ref="plan_mejoras.model_pm_plan"/>
+            <field name="email_from">${(object.user_ids.company_id.email | safe)}</field>
+            <!--<field name="email_to" >${}</field>-->
+            <field name="subject">FINALIZACIÓN DEL PLAN MEJORAS DE LA EVALUACIÓN AL DESEMPEÑO DOCENTE</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="lang">${object.lang}</field>
+            <field name="body_html"><![CDATA[
+                <p>El Plan Mejoras denominado:" ${(object.name)} a finalizado, si presenta algún inconveniente
+                comuníquese con el Director de la carrera <<${(object.user_ids.company_id.email)}>>"</p>
                 <br/>
             ]]>
             </field>
