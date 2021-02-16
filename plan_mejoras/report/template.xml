@@ -52,25 +52,28 @@
                                             <br/>
                                             <t t-if="doc1.is_group_admin == False">
                                                 <b align="center">Docente:</b> <span t-esc="doc1.name"/>
-                                                <t t-foreach="request.env['pm.tarea'].search([('user_id', '=', doc1.id)])" t-as="doc">
-                                                    <br/>
-                                                    <br/>
-                                                    <span><b>Título:</b> <t t-esc="doc.name"></t></span>
-                                                    <br/>
-                                                    <span><b>Descripción:</b> <span t-raw="doc.description"></span></span>
-                                                    <span><b>Ponderación:</b> <span t-field="doc.ponderacion"/></span>
-                                                    <br/>
-                                                    <span><b>Fecha Inicio:</b> <span t-field="doc.fecha_inicio"/></span>
-                                                    <br/>
-                                                    <span><b>Fecha Fin:</b> <span t-field="doc.fecha_fin"/></span>
-                                                    <br/>
-                                                    <span><b>Estado:</b> <span t-field="doc.estado_id"/> <!--<<span t-esc="doc.category_id"/>--></span>
-                                                    <br/>
-
-                                                </t>
+                                                <table class="table table-condensed table-bordered">
+                                                    <thead>
+                                                        <th style="width: 65%">Título</th>
+                                                        <th class="text-center" style="width: 15%">Descripción</th>
+                                                        <th class="text-center" style="width: 20%">Ponderación</th>
+                                                        <th class="text-center" style="width: 20%">Fecha Inicio</th>
+                                                        <th class="text-center" style="width: 20%">Fecha Fin</th>
+                                                        <th class="text-center" style="width: 20%">Estado</th>
+                                                    </thead>
+                                                    <t t-foreach="request.env['pm.tarea'].search([('user_id', '=', doc1.id)])" t-as="doc">
+                                                        <tbody>
+                                                            <td class="text-center"><span t-esc="doc.name"/></td>
+                                                            <td class="text-center"><span t-raw="doc.description"/></td>
+                                                            <td class="text-center"><span t-field="doc.ponderacion"/></td>
+                                                            <td class="text-center"><span t-field="doc.fecha_inicio"/></td>
+                                                            <td class="text-center"><span t-field="doc.fecha_fin"/></td>
+                                                            <td class="text-center"><span t-field="doc.estado_id"/></td>
+                                                        </tbody>
+                                                    </t>
+                                                </table>
                                             </t>
                                         </t>
-
                                         <t t-if="obj.add_resultados == True">
                                             <div class="page"/>
                                             <p style="page-break-after:always;">   </p>
@@ -81,12 +84,18 @@
                                                     <br/>
                                                     <span><b>Docente:</b> <t t-esc="doc2.name"></t></span>
                                                     <br/>
-                                                    <span><b>Criterios Evaluación:</b></span><br/>
-                                                    <t t-foreach="request.env['pm.criterio'].search([('user_id', '=', doc2.id)])" t-as="crt">
-                                                            <span><t t-esc="crt.criterionombre_id.name"></t> =
-                                                                <t t-esc="crt.calificacion"></t></span>
-                                                            <br/>
-                                                    </t>
+                                                    <table class="table table-condensed table-bordered">
+                                                        <thead>
+                                                            <th class="text-center" style="width: 65%">Criterios Evaluación</th>
+                                                            <th class="text-center" style="width: 65%">Calificación</th>
+                                                        </thead>
+                                                        <t t-foreach="request.env['pm.criterio'].search([('user_id', '=', doc2.id)])" t-as="crt">
+                                                            <tbody>
+                                                                <td class="text-left"><span t-esc="crt.criterionombre_id.name"/></td>
+                                                                <td class="text-left"><span t-esc="crt.calificacion"/></td>
+                                                            </tbody>
+                                                        </t>
+                                                    </table>
                                                     <span><b>Valoración Cuantitativa:</b> <t t-esc="doc2.us_cat"></t></span>
                                                     <br/>
                                                 </t>
@@ -108,6 +117,5 @@
                     </t>
                 </t>
             </t>
-
     </template>
 </odoo>

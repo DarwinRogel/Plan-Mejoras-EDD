@@ -14,6 +14,7 @@
 
     "version": "1.0",
     "depends": ["base", "mail"],
+    "images": ['static/description/CIS.png'],
     "data": [
         "data/quotation_expiration_cron.xml",
         "data/mail_template_inicializarPM.xml",

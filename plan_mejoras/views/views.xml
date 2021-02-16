@@ -319,13 +319,13 @@
                             <field name="name" required="1"/>
                             </group>
                             <group>
-                            <field name="image_128" string="Foto" widget="image"/>
+                            <field name="image_1920" widget="image" class="oe_avatar" options="{&quot;preview_image&quot;: &quot;image_128&quot;}"/>
                             </group>
                         </group>
                         <group>
                             <group>
                                 <field name="phone" required="1"/>
-                                <field name="password" value="docente2020" required="1"/>
+                                <field name="password"/>
                                 <field name="login"/>
                             </group>
                             <group>
@@ -371,14 +371,21 @@
                      <field name="estado_id" options='{"group_by_tooltip": {"description": "Description"}}'/>
                      <field name="create_uid"/>
                      <field name="user_id" />
+                     <field name="estado" invisible="1"/>
                      <progressbar field="ponderacion" colors='{"nulo": "muted", "noc": "danger", "cep": "warning", "cum": "success"}'/>
                    <templates>
                        <t t-name="kanban-box">
                            <div t-attf-class="oe_kanban_global_click">
                                <div class="o_kanban_image">
-
+                                   <img t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)" class="oe_module_icon" alt="Docente"/>
                                </div>
                                <div class="oe_kanban_details">
+                                   <strong>
+                                       <ul>
+                                           <li class="text-danger float-right mb4" t-if="record.estado.raw_value"><i class="fa fa-circle" role="img" aria-label="Finalizado" title="Finalizado"></i></li>
+                                           <li class="text-success float-right mb4" t-if="!record.estado.raw_value"><i class="fa fa-circle" role="img" aria-label="Pendiente" title="Pendiente"></i></li>
+                                       </ul>
+                                   </strong>
                                    <t class="o_kanban_record_title">
                                        <strong t-esc="record.name.value"/>
                                    </t>
@@ -408,14 +415,14 @@
                    <field name="email"/>
                      <field name="count_tarea"/>
                    <field name="us_cat" optional="hide"/>
+                     <field name="image_128" invisible="1"/>
+                     <field name="id" invisible="1"/>
                    <!--<field name="us_cat" invisible="1"/>-->
                    <templates>
                        <t t-name="kanban-box">
                            <div t-attf-class="oe_kanban_global_click">
                                <div class="o_kanban_image">
-                                   <img src="https://thumbs.dreamstime.com/b/icono-del-var%C3%B3n-del-usuario-ninguna-cara-43652345.jpg"
-                                         width="80"
-                                         height="80"/>
+                                   <img t-att-src="kanban_image('res.users', 'image_128', record.id.raw_value)" class="oe_module_icon" alt="Docente"/>
                                </div>
                                <div class="oe_kanban_details">
                                    <t class="o_kanban_record_title">
@@ -455,7 +462,7 @@
             <field name="model">pm.plan</field>
             <field name="type">kanban</field>
             <field name="arch" type="xml">
-                 <kanban> <!--decoration-success="total_val == 100" decoration-danger="total_val == 0">-->
+                 <kanban>
                    <field name="name"/>
                    <field name="fecha_inicio"/>
                      <field name="fecha_fin"/>
@@ -465,9 +472,7 @@
                        <t t-name="kanban-box">
                            <div t-attf-class="oe_kanban_global_click">
                                <div class="o_kanban_image">
-                                   <img src="https://thumbs.dreamstime.com/b/icono-del-var%C3%B3n-del-usuario-ninguna-cara-43652345.jpg"
-                                         width="80"
-                                         height="80"/>
+                                   <img src='/plan_mejoras/static/src/img/CISC.jpeg' alt="Plan Actividades"/>
                                </div>
                                <div class="oe_kanban_details">
                                        <strong>
