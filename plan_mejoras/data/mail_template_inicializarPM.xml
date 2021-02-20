@@ -10,11 +10,20 @@
             <field name="auto_delete" eval="True"/>
             <field name="lang">${object.lang}</field>
             <field name="body_html"><![CDATA[
-                <p>Estimado ${object.name}, el Plan Mejoras de la Evaluación al desempeño DOcente acaba de Inicializar.
-                Por favor, revise su planificación en la Plataforma de Odoo</p>
+                <p>Estimado <b>${object.name},</b></p>
                 <br/>
-                <p></p>
+                <p>El Plan Mejoras de la Evaluación al desempeño Docente acaba de Inicializar.
+                Por favor, revise su planificación en el módulo del Plan Mejoras dentro del Sistema Odoo ERP.</p>
                 <br/>
+                <p>Saludos cordiales.</p>
+                <br/>
+                <p><b>${object.company_id.name}<b/> </p>
+                <p><b>Correo:</b> ${object.company_id.email}</p>
+                <p><b>Teléfono:</b> ${(object.company_id.phone)}</p>
+                <p><b>Dirección:</b> ${(object.company_id.street)}”</p>
+                <p><b>Sitio Web:</b> ${(object.company_id.website)}”</p>
+                <p><img src=" data:image/png;base64, ${object.company_id.logo}" height="100px" width="100px"/></p>
+
             ]]>
             </field>
         </record>
@@ -27,14 +36,24 @@
             <field name="model_id" ref="plan_mejoras.model_pm_tarea"/>
             <field name="email_from">${(object.user_id.company_id.email | safe)}</field>
             <!--<field name="email_to" >${}</field>-->
-            <field name="subject">CONTROL DEL CRONOGRAMA DE TAREAS PLAN MEJORAS EDD</field>
+            <field name="subject">CONTROL DEL CRONOGRAMA DE TAREAS PARA EL PLAN MEJORAS DE LA EDD</field>
             <field name="auto_delete" eval="True"/>
             <field name="lang">${object.lang}</field>
             <field name="body_html"><![CDATA[
-                <p>Estimado ${(object.user_id.name)}</p>
+                <p>Estimado <b>${(object.user_id.name)},</b></p>
                 <br/>
-                <p>La tarea "${(object.name)}", esta a punto de culminar, por favor revisar sus tareas.</p>
+                <p>La tarea "${(object.name)}", está a punto de culminar, por favor revisar sus tareas.</p>
                 <br/>
+                <button type="button" class="btn btn-outline-info" onclick='${(object.user_id.company_id.website)}'>Ver Tareas<button/>
+                <br/>
+                <p>Saludos cordiales.</p>
+                <br/>
+                <p><b>${object.user_id.company_id.name}<b/> </p>
+                <p><b>Correo:</b> ${object.user_id.company_id.email}</p>
+                <p><b>Teléfono:</b> ${(object.user_id.company_id.phone)}</p>
+                <p><b>Dirección:</b> ${(object.user_id.company_id.street)}”</p>
+                <p><b>Sitio Web:</b> ${(object.user_id.company_id.website)}”</p
+                <p><img src=" data:image/png;base64, ${object.user_id.company_id.logo}" height="100px" width="100px"/></p>
             ]]>
             </field>
         </record>
@@ -47,15 +66,23 @@
             <field name="model_id" ref="plan_mejoras.model_pm_tarea"/>
             <field name="email_from">${(object.user_id.company_id.email | safe)}</field>
             <!--<field name="email_to" >${}</field>-->
-            <field name="subject">CONTROL DEL EXPIRACION DE TAREAS PLAN MEJORAS EDD</field>
+            <field name="subject">CONTROL DE EXPIRACIÓN DE LAS TAREAS DEL PLAN MEJORAS DE LA EDD</field>
             <field name="auto_delete" eval="True"/>
             <field name="lang">${object.lang}</field>
             <field name="body_html"><![CDATA[
-                <p>Estimado ${(object.user_id.name)}</p>
+                <p>Estimado <b>${(object.user_id.name)},</b></p>
                 <br/>
                 <p>La tarea "${(object.name)}", Ha expirado, se le recomienda ponerse en contacto con el Gestor de la
-                CIS\C para Justificar la misma</p>
+                CIS\C para Justificar.</p>
                 <br/>
+                <p>Saludos cordiales.</p>
+                <br/>
+                <p><b>${object.user_id.company_id.name}<b/> </p>
+                <p><b>Correo:</b> ${object.user_id.company_id.email}</p>
+                <p><b>Teléfono:</b> ${(object.user_id.company_id.phone)}</p>
+                <p><b>Dirección:</b> ${(object.user_id.company_id.street)}”</p>
+                <p><b>Sitio Web:</b> ${(object.user_id.company_id.website)}”</p
+                <p><img src=" data:image/png;base64, ${object.user_id.company_id.logo}" height="100px" width="100px"/></p>
             ]]>
             </field>
         </record>
@@ -68,15 +95,27 @@
             <field name="model_id" ref="plan_mejoras.model_pm_tarea"/>
             <field name="email_from">${(object.user_id.company_id.email | safe)}</field>
             <!--<field name="email_to" >${}</field>-->
-            <field name="subject">NOTIFICACION DE LA PONDERACION DE LAS TAREAS DEL PLAN MEJORAS EDD</field>
+            <field name="subject">NOTIFICACIÓN DE LA PONDERACIÓN DE LAS TAREAS DEL PLAN MEJORAS DE LA EDD</field>
             <field name="auto_delete" eval="True"/>
             <field name="lang">${object.lang}</field>
             <field name="body_html"><![CDATA[
-                <p>Estimado ${(object.user_id.name)}</p>
+                <p>Estimado <b>${(object.user_id.name)},</b></p>
                 <br/>
-                <p>La tarea "${(object.name)}", Ha sido ponderada, se le recomienda revisar las tareas en su
-                tablero Kanban</p>
+                <p>La tarea "${(object.name)}", ha sido ponderada, se le recomienda revisar las tareas en su
+                tablero Kanban.</p>
                 <br/>
+                <form action="http://google.com">
+                    <input type="submit" value="Ver Tareas" />
+                </form>
+                <br/>
+                <p>Saludos cordiales.</p>
+                <br/>
+                <p><b>${object.user_id.company_id.name}<b/> </p>
+                <p><b>Correo:</b> ${object.user_id.company_id.email}</p>
+                <p><b>Teléfono:</b> ${(object.user_id.company_id.phone)}</p>
+                <p><b>Dirección:</b> ${(object.user_id.company_id.street)}”</p>
+                <p><b>Sitio Web:</b>${(object.user_id.company_id.website)}”</p
+                <p><img src=" data:image/png;base64, ${object.user_id.company_id.logo}" height="100px" width="100px"/></p>
             ]]>
             </field>
         </record>
@@ -89,40 +128,30 @@
             <field name="model_id" ref="plan_mejoras.model_pm_plan"/>
             <field name="email_from">${(object.user_ids.company_id.email | safe)}</field>
             <!--<field name="email_to" >${}</field>-->
-            <field name="subject">NOTIFICACION DE LA seguimiento a revision de tareas EL PLAN MEJORAS EDD 50%</field>
+            <field name="subject">NOTIFICACIÓN PARA EL SEGUIMIENTO DE LAS TAREAS DEL PLAN MEJORAS DE LA EDD</field>
             <field name="auto_delete" eval="True"/>
             <field name="lang">${object.lang}</field>
             <field name="body_html"><![CDATA[
-                <p>Estimado ${(object.user_ids.name)}</p>
+                <p><b>Estimado ${(object.user_ids.name)},</b></p>
                 <br/>
-                <p>La tarea "${(object.name)}", Ha sido ponderada, se le recomienda revisar las tareas en su
-                tablero Kanban</p>
+                <p>Como parte del Consejo Consultivo, debe realizar la revisión de la Tareas del Plan Mejoras de la Evalución
+                al Desempeño Docente. Por favor diríjase al módulo del Plan Mejoras dentro del Sistema Odoo ERP</p>
                 <br/>
+                <button type="button" class="btn btn-outline-info" onclick='${(object.user_ids.company_id.website)}'>Revisar<button/>
+                <br/>
+                <p>Saludos cordiales.</p>
+                <br/>
+                <p><b>${object.user_ids.company_id.name}</b></p>
+                <p><b>Correo:</b> ${object.user_ids.company_id.email}</p>
+                <p><b>Teléfono:</b> ${(object.user_ids.company_id.phone)}</p>
+                <p><b>Dirección:</b>${(object.user_ids.company_id.street)}”</p>
+                <p><b>Sitio Web:</b> ${(object.user_ids.company_id.website)}”</p
+                <p><img src=" data:image/png;base64, ${object.user_ids.company_id.logo}" height="100px" width="100px"/></p>
             ]]>
             </field>
         </record>
     </data>
 
-    <data>
-        <!--Email template -->
-        <record id="control_tareas_consejo75" model="mail.template">
-            <field name="name">Notificación de Tarea Ponderada</field>
-            <field name="model_id" ref="plan_mejoras.model_pm_plan"/>
-            <field name="email_from">${(object.user_ids.company_id.email | safe)}</field>
-            <!--<field name="email_to" >${}</field>-->
-            <field name="subject">NOTIFICACION DE LA seguimiento a revision de tareas EL PLAN MEJORAS EDD 75%</field>
-            <field name="auto_delete" eval="True"/>
-            <field name="lang">${object.lang}</field>
-            <field name="body_html"><![CDATA[
-                <p>Estimado ${(object.user_ids.name)}</p>
-                <br/>
-                <p>La tarea "${(object.name)}", Ha sido ponderada, se le recomienda revisar las tareas en su
-                tablero Kanban</p>
-                <br/>
-            ]]>
-            </field>
-        </record>
-    </data>
 
     <data noupdate="1">
         <!--Email template -->
@@ -135,9 +164,17 @@
             <field name="auto_delete" eval="True"/>
             <field name="lang">${object.lang}</field>
             <field name="body_html"><![CDATA[
-                <p>El Plan Mejoras denominado:" ${(object.name)} a finalizado, si presenta algún inconveniente
-                comuníquese con el Director de la carrera <<${(object.user_ids.company_id.email)}>>"</p>
+                <p>El Plan Mejoras denominado: <b>"${(object.name)}"</b> a finalizado, si presenta algún inconveniente
+                comuníquese con la carrera al siguiente correo: ${(object.user_ids.company_id.email)}</p>
                 <br/>
+                <p>Saludos cordiales.</p>
+                <br/>
+                <p><b>${object.user_ids.company_id.name}</b> </p>
+                <p><b>Correo:</b> ${object.user_ids.company_id.email}</p>
+                <p><b>Teléfono:</b> ${(object.user_ids.company_id.phone)}</p>
+                <p><b>Dirección:</b> ${(object.user_ids.company_id.street)}”</p>
+                <p><b>Sitio Web:</b> ${(object.user_ids.company_id.website)}”</p
+                <p><img src=" data:image/png;base64, ${object.user_ids.company_id.logo}" height="100px" width="100px"/></p>
             ]]>
             </field>
         </record>

@@ -43,6 +43,29 @@ class Tarea(models.Model):
         'pm.etiqueta', 'pm_etiqueta_rel',
         'etiqueta_id', 'tarea_id', string='Etiquetas')
 
+    @api.constrains('fecha_inicio')
+    def _validar_fecha_tarea(self):
+        today = fields.Date.today()
+        lista_tareas = self.env["pm.tarea"].search([])
+        for record in lista_tareas:
+            aux = record.fecha_inicio
+            aux1 = record.fecha_fin
+            fecha_ini = datetime.datetime.strptime(str(aux), "%Y-%m-%d")
+            fecha_fin = datetime.datetime.strptime(str(aux1), "%Y-%m-%d")
+            if fecha_fin.date() < today or fecha_ini.date() > fecha_fin.date():
+                raise ValidationError(("Verifique las Fechas ingresadas para la tarea: %s") % record.name)
+
+    @api.constrains('fecha_fin')
+    def fecha_fin_modificada(self):
+        today = fields.Date.today()
+        for record in self:
+            if record.fecha_fin < today:
+                record.estado = True
+                record.expirado = "expired"
+            elif today < record.fecha_fin:
+                record.estado = False
+                record.expirado = "no_expired"
+
     @api.model
     def _group_expand_stage_ids(self, stages, domain, order):
         """ Read group customization in order to display all the stages in the
@@ -58,24 +81,13 @@ class Tarea(models.Model):
             if tarea.expirado == "no_expired" and tarea.fecha_fin < today:
                 tarea.expirado = "expired"
                 tarea.estado = True
-                if (tarea.user_id.has_group('plan_mejoras.res_groups_docente')):
+                if (tarea.user_id.has_group('plan_mejoras.res_groups_docente')) and tarea.ponderacion != 'nulo':
                     template_rec = self.env.ref('plan_mejoras.email_template_tarea_expirada')
                     template_rec.write({'email_to': tarea.user_id.email})
                     template_rec.send_mail(tarea.id, force_send=True)
             elif tarea.expirado == "expired" and today < tarea.fecha_fin:
                 tarea.expirado = "no_expired"
                 tarea.estado = False
-
-    @api.constrains('fecha_fin')
-    def fecha_fin_modificada(self):
-        today = fields.Date.today()
-        for record in self:
-            if record.fecha_fin < today:
-                record.estado = True
-                record.expirado = "expired"
-            elif today < record.fecha_fin:
-                record.estado = False
-                record.expirado = "no_expired"
 
     def send_notification_tarea(self):
         error = False
@@ -126,6 +138,10 @@ class Estado(models.Model):
     description = fields.Char(string="Descripción")
     sequence = fields.Integer()
 
+    _sql_constraints = [
+        ('name_unique', 'unique (name)',
+         "El nombre del Estado ya existe!"),
+    ]
 
 class Evidencia(models.Model):
     _name = "pm.evidencia"
@@ -251,12 +267,14 @@ class ResUser(models.Model):
 
     def action_send_email(self):
         all_eamils = self.get_groups_usesr_email()
+        usuarios = self.env["res.users"].search([])
         error = False
         try:
-            for email in all_eamils:
-                template_rec = self.env.ref('plan_mejoras.email_template_inicializarPM')
-                template_rec.write({'email_to': email})
-                template_rec.send_mail(self.id, force_send=True)
+            for usuario in usuarios:
+                if (usuario.has_group('plan_mejoras.res_groups_docente')):
+                    template_rec = usuario.env.ref('plan_mejoras.email_template_inicializarPM')
+                    template_rec.write({'email_to': usuario.email})
+                    template_rec.send_mail(usuario.id, force_send=True)
         except:
             error = True
         if error==True:
@@ -346,11 +364,20 @@ class Plan(models.Model):
     @api.model
     def create(self, vals):
         registros = self.env["pm.plan"].search([])
-        for record in registros:
-            if record.finalizado == False:
-                raise ValidationError(
-                    "Ya existe un Plan Mejoras vigente en este Periodo!")
-                break
+        aux = vals.get('fecha_inicio')
+        aux1 = vals.get('fecha_fin')
+        fecha_ini = datetime.datetime.strptime(str(aux), "%Y-%m-%d")
+        fecha_fin = datetime.datetime.strptime(str(aux1), "%Y-%m-%d")
+        today = fields.Date.today()
+        if fecha_fin.date() > today and fecha_ini.date() < fecha_fin.date():
+            for record in registros:
+                if record.finalizado == False:
+                    raise ValidationError(
+                        "Ya existe un Plan Mejoras vigente en este Periodo!")
+                    break
+        else:
+            raise ValidationError(
+                "Verifique las Fechas ingresadas para el Plan Mejoras!")
         return super(Plan, self).create(vals)
 
     @api.constrains('fecha_fin')
@@ -482,6 +509,11 @@ class Debilidad(models.Model):
 
     tarea_ids = fields.One2many("pm.tarea", "debilidad_id")
 
+    _sql_constraints = [
+        ('name_unique', 'unique (name)',
+         "El nombre de la Debilidad ya existe!"),
+    ]
+
 class NotificacionDias(models.Model):
     _name = "pm.notificaciond"
     _description = "Notificación Días"
@@ -542,7 +574,7 @@ class confirm_wizardI(models.TransientModel):
         for tarea in lista_tareas:
             for docente in lista_docentes:
                 if int(info_id) == int(tarea.plan_id):
-                    if docente.is_group_admin == False:
+                    if docente.is_group_admin == False and docente.has_group('plan_mejoras.res_groups_docente'):
                         self.env["pm.tarea"].create({"name": tarea.name,
                                                      "description": tarea.description,
                                                      "fecha_inicio": tarea.fecha_inicio,
@@ -559,20 +591,10 @@ class confirm_wizardI(models.TransientModel):
         lista_planes = self.env["pm.plan"].search([])
         lista_docentes = self.env["res.users"].search([])
         for plan in lista_planes:
-            print(self.env["pm.plan"].browse(plan.id))
-            print(plan.name)
-            print(plan.id)
-            print(info_id)
             if plan.id == info_id:
-                print(plan.name)
-                print(plan.id)
-                plan_list = []
-                print(lista_docentes.ids)
                 for docente in lista_docentes:
-                    print(docente.name)
-                    docente.write({'plan_id': plan})
-                    #print(self.env["pm.plan"].browse(plan.id))
-                #self.env["pm.plan"].browse(info_id).write({"user_ids": [2, 269, 32, 31]})
+                    if docente.has_group('plan_mejoras.res_groups_docente'):
+                        docente.write({'plan_id': plan})
                 self.env.cr.commit()
 
         ResUser.action_send_email(self.env.user)

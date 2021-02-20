@@ -801,8 +801,29 @@
                     <group expand="0" string="Group By">
                         <filter string="Ponderación" name="group_stage_id"
                         context="{'group_by': 'ponderacion'}"/>
+                        <separator/>
                         <filter string="Docentes" name="group_user_id"
                         context="{'group_by': 'user_id'}"/>
+                        <separator/>
+                        <filter string="Tarea Activa"
+                                name="group_estado_tarea_ini"
+                                domain="[('estado', '=' ,False)]"/>
+                        <filter string="Tarea Finalizada"
+                                name="group_estado_tarea_fin"
+                                domain="[('estado', '=' ,True)]"/>
+                        <separator/>
+                        <filter name="filter_today"
+                                string="Hoy"
+                                domain="[('fecha_fin','&gt;=',datetime.datetime.now().strftime('%Y-%m-%d 00:00:00')),
+                                ('fecha_fin','&lt;=',datetime.datetime.now().strftime('%Y-%m-%d 23:59:59'))]"/>
+                        <filter name="filter_this_week"
+                                string="Semana"
+                                domain="[('fecha_fin','&lt;=',context_today().strftime('%Y-%m-%d 23:59:59')),
+                                ('fecha_fin','&gt;=',(context_today()-datetime.timedelta(days=7)).strftime('%Y-%m-%d 00:00:00'))]"/>
+                        <filter name="filter_this_month"
+                                string="Mes"
+                                domain="[('fecha_fin','&lt;=',context_today().strftime('%Y-%m-%d 23:59:59')),
+                                ('fecha_fin','&gt;=',(context_today()-datetime.timedelta(days=30)).strftime('%Y-%m-%d 00:00:00'))]"/>
                     </group>
                 </search>
             </field>
@@ -820,6 +841,26 @@
                         <filter string="Valoracion"
                                 name="group_valoracion_docente"
                                 context="{'group_by':'us_cat'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!--Filtro por Plan Mejoras por estado-->
+        <record model="ir.ui.view" id="view_plan_search_estado">
+            <field name="name">pm.plan.view.search</field>
+            <field name="model">pm.plan</field>
+            <field name="arch" type="xml">
+                <search string="Plan Mejoras">
+                    <field name="name"/>
+                    <group string="Group By">
+                        <filter string="Activo"
+                                name="group_estado_plan_activo"
+                                domain="[('finalizado', '=' ,False)]"/>
+                        <separator/>
+                        <filter string="Finalizado"
+                                name="group_estado_plan_fin"
+                                domain="[('finalizado', '=' ,True)]"/>
                     </group>
                 </search>
             </field>
