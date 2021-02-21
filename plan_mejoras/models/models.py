@@ -45,6 +45,12 @@ class Tarea(models.Model):
 
     @api.constrains('fecha_inicio')
     def _validar_fecha_tarea(self):
+        '''
+            Verificar que las fecha inicio y fin de la clase Tareas cumplan el siguiente control:
+            La fecha fin de la Tarea sea mayor que la fecha inicio.
+            La fecha fin de la Tarea sea mayor a la fecha actual.
+        '''
+
         today = fields.Date.today()
         lista_tareas = self.env["pm.tarea"].search([])
         for record in lista_tareas:
@@ -57,6 +63,11 @@ class Tarea(models.Model):
 
     @api.constrains('fecha_fin')
     def fecha_fin_modificada(self):
+        """
+            Verificar si la fecha fin de una Tarea es mayor al día actual, cambiar estado de la Tarea a True(Finalizada)
+            y el atributo expirado a 'expired(Expirado)'
+        """
+
         today = fields.Date.today()
         for record in self:
             if record.fecha_fin < today:
@@ -75,6 +86,11 @@ class Tarea(models.Model):
         return stages.browse(stage_ids)
 
     def check_expiry(self):
+        """
+            Método ejecutado con acción planificada 'cron', para notificar mediante correo electrónico a los
+            usuarios sobre la expiración de una Tarea en específico y cambio del estado de la tarea.
+        """
+
         today = fields.Date.today()
         lista_tareas = self.env["pm.tarea"].search([])
         for tarea in lista_tareas:
@@ -90,6 +106,12 @@ class Tarea(models.Model):
                 tarea.estado = False
 
     def send_notification_tarea(self):
+        """
+            Método ejecutado con acción planificada 'cron', para poder controlar el cumplimiento de una Tarea, mediante
+            el envío de una notificación mediante correo electrónico en tiempos dinamicos, determinados
+            por el administrador.
+        """
+
         error = False
         today = fields.Date.today()
         tareas = self.env["pm.tarea"].search([])
@@ -112,16 +134,19 @@ class Tarea(models.Model):
 
     @api.constrains('ponderacion')
     def send_notification_tarea_ponderada(self):
+        """
+            Método ejecutado con acción planificada 'cron', para notificar mediante correo electrónico
+            que una tarea en específico ha sido calificada..
+        """
+
         for record in self:
             error = False
             if record.ponderacion != 'nulo':
                 record.estado = True
-                #aux = self.ponderacion
                 try:
                     template_rec = record.env.ref('plan_mejoras.email_template_tarea_ponderada')
                     template_rec.write({'email_to': record.user_id.email})
                     template_rec.send_mail(record._origin.id, force_send=True)
-                    #self.ponderacion = aux
                 except:
                     error = True
                 if error==True:
@@ -186,12 +211,20 @@ class CriterioNombre(models.Model):
 
     @api.constrains('porcentaje_ponderacion')
     def _check_porcentaje_ponderacion(self):
+        """
+            Controlar que la variable porcentaje_ponderacion, sea mayor a 0
+        """
+
         for record in self:
             if record.porcentaje_ponderacion < 1:
                 raise ValidationError("El porcentaje de Ponderación debe ser mayor a 0.")
 
     @api.depends("porcentaje_ponderacion")
     def _compute_valoracion_porcentaje(self):
+        """
+            Controlar que la suma de poderaciones no supere el 100%
+        """
+
         criterio = self.env["pm.criterionombre"].search([])
         total = 0
         for record in criterio:
@@ -218,6 +251,12 @@ class Criterio(models.Model):
 
     @api.onchange('calificacion', 'criterionombre_id')
     def _check_calificacion(self):
+        """
+            Controlar que la calificacion de un criterio de evaluacion no sea negativo y,
+            validar que no supere el porcentaje de ponderacion detinado a ese criterio de
+            evaluacion.
+        """
+
         porcentaje = 0
         criterio = self.env["pm.criterionombre"].search([])
         for c in criterio:
@@ -258,6 +297,11 @@ class ResUser(models.Model):
 
 
     def get_groups_usesr_email(self):
+        """
+            Obtener los emails de los usuarios pertenecientes al grupo docentes(res_groups_docente).
+            :return: Una lista con los emails de los docentes.
+        """
+
         emails = []
         usuarios = self.env["res.users"].search([])
         for usuario in usuarios:
@@ -266,7 +310,11 @@ class ResUser(models.Model):
         return emails
 
     def action_send_email(self):
-        all_eamils = self.get_groups_usesr_email()
+        """
+            Notificar mediante correo electrónico el inicio del Plan Mejoras de la Evaluación al
+            Desempeño Docente, solo para el grupo deocente.
+        """
+
         usuarios = self.env["res.users"].search([])
         error = False
         try:
@@ -283,11 +331,22 @@ class ResUser(models.Model):
 
     @api.depends("groups_id", "is_group_admin")
     def _compute_is_group_admin(self):
+        """
+            Calcular si un usuario pertenece al grupo Administrador.
+        """
+
         for record in self:
             record.is_group_admin = record._origin.has_group('plan_mejoras.res_groups_administrador')
      
     @api.depends("tarea_ids.ponderacion")
+
+
     def _contador_tareas(self):
+        """
+            Calcular el número de Tareas por usuario pendientes a calificar o que se encuentran
+            sin asignar alguna ponderación.
+        """
+
         lista_plan = self.env["pm.plan"].search([])
         for plan in lista_plan:
             if plan.finalizado == False:
@@ -298,6 +357,11 @@ class ResUser(models.Model):
 
     @api.depends('total_val', 'criterio_ids', 'us_cat')
     def _compute_valoracion_docente(self):
+        """
+            Calcular la valoración cualitativa, respecto a la suma de los criterio de calificación.
+            Asignación de la suma a la variable total_val.
+        """
+
         nota = self.env["pm.criterio"].search([])
         total = 0
         us_cat = ""
@@ -319,6 +383,12 @@ class ResUser(models.Model):
         self.total_val = total
 
     def vista_tree(self):
+        """
+            Redireccionar desde vista Docentes al Plan de Mejoras, mostrando el Plan de Actividades según
+            el estado.
+            :returns: Acción de ventana que contiene la vista Kanban del Plan de Actividades.
+        """
+
         return {
             "type": "ir.actions.act_window",
             "name": "Plan Actividades",
@@ -360,9 +430,17 @@ class Plan(models.Model):
         ('name_uniq', 'unique (name)', "El Plan Mejoras ya existe!"),
     ]
 
-    # Sobrecarga de Create
+
     @api.model
     def create(self, vals):
+        """
+            Sobrecarga del método create del Plan Mejoras para controlar la creación de un solo registro activo vigente,
+            además de validar que la fecha de finalización del Plan sea mayor a la fecha actual y la fecha inicio del
+            Plan menor a la fecha de finalización.
+            :param vals: Campos del modelo, como una lista de diccionarios.
+            :returns: La creación de un nuevo Plan.
+        """
+
         registros = self.env["pm.plan"].search([])
         aux = vals.get('fecha_inicio')
         aux1 = vals.get('fecha_fin')
@@ -382,6 +460,11 @@ class Plan(models.Model):
 
     @api.constrains('fecha_fin')
     def fecha_fin_modificada(self):
+        """
+            Controlar estado finalizado del Plan, dependiendo de que la fecha fin mayor a fecha actual o
+            viceversa.
+        """
+
         today = fields.Date.today()
         if self.fecha_fin < today:
             self.finalizado = True
@@ -390,6 +473,11 @@ class Plan(models.Model):
 
 
     def inicializar(self):
+        """
+            Mostrar un cuadro de dialogo para la confirmación del Inicio del Plan Mejoras.
+            :returns: Acción de ventana que contiene el cuadro de dialogo.
+        """
+
         return {
             'name': 'Inicializar Plan Mejoras',
             'type': 'ir.actions.act_window',
@@ -399,10 +487,13 @@ class Plan(models.Model):
             'target': 'new',
             "context": {"id_ini": self.id}
         }
-        # raise Warning('Las actividades se mostraran a los docentes y se enviará una '
-        #             'notificación de la inicialización del Plan Mejoras.')
 
     def comunicar(self):
+        """
+            Mostrar un cuadro de dialogo para la confirmación de la comunicación del Plan Mejoras.
+            :returns: Acción de ventana que contiene el cuadro de dialogo.
+        """
+
         return {
             'name': 'Comunicar Plan Mejoras',
             'type': 'ir.actions.act_window',
@@ -414,6 +505,11 @@ class Plan(models.Model):
         }
 
     def vista_tree_tareas(self):
+        """
+            Redireccionar desde vista Kanban de Plan de Actividades a Tareas.
+            :returns: Acción de ventana que contiene las vistas Kanban, form y tree de la clase Tarea.
+        """
+
         id_def = self.env.context.get('id_def')
         return {
             "type": "ir.actions.act_window",
@@ -425,41 +521,33 @@ class Plan(models.Model):
         }
 
     def send_notification_tarea_consejo(self):
+        """
+            Notificacion mediante correo electronico a los usuarios del grupo Consejo Consultivo
+            (res_group_docenrte_consejo), solicitando la revision del Plan Mejoras de cada uno de los docentes integrantes.
+        """
+
         emails = []
         error = False
         today = fields.Date.today()
-        print(today)
         planes = self.env["pm.plan"].search([])
         for plan in planes:
-            print(plan.user_ids)
             if plan.finalizado == False:
                 registro = self.env["pm.notificacionc"].search([])
                 fecha_inicio = plan.fecha_inicio
                 fecha_fin = plan.fecha_fin
                 dias = abs(fecha_inicio - fecha_fin).days
-                print(dias)
                 if len(registro) > 0:
                     numero = registro[0].nro_notificacion
-
                     d = round(dias/(numero+1))
-                    print(d)
+
                     aux1 = d
                     for i in range(numero):
                         aux = plan.fecha_fin - datetime.timedelta(days=d)
-                        print(aux)
                         d = d + aux1
-                        print(d)
-                        print(i)
-                        #aux50 = plan.fecha_fin - datetime.timedelta(days=dias / 2)
-                        #aux75 = plan.fecha_fin - datetime.timedelta(days=dias / 3)
                         try:
-                            print("TRY")
                             for docente in plan.user_ids:
-                                print("DOcentes")
                                 if (docente.has_group('plan_mejoras.res_groups_docente_consejo')):
                                     if aux == today:
-                                        print("Envio")
-                                        print(aux)
                                         template_rec = self.env.ref('plan_mejoras.control_tareas_consejo50')
                                         template_rec.write({'email_to': docente.email})
                                         template_rec.send_mail(plan.id, force_send=True)
@@ -471,22 +559,21 @@ class Plan(models.Model):
 
 
     def chek_finalizado(self):
+        """
+            Método ejecutado con acción planificada 'cron', para notificar mediante correo electrónico a los
+            usuarios sobre la finalizacion del Plan Mejoras y cambio del estado del Plan.
+        """
+
         error = False
         today = fields.Date.today()
         lista_plan = self.env["pm.plan"].search([])
         for plan in lista_plan:
-            print(plan.user_ids)
             if plan.finalizado == False and plan.fecha_fin < today:
                 plan.finalizado = True
                 try:
-                    print(plan.user_ids)
                     for docente in plan.user_ids:
-                        print(docente.name)
                         if (docente.has_group('plan_mejoras.res_groups_docente_consejo')
                                 or docente.has_group('plan_mejoras.res_groups_docente')):
-                            print("if")
-                            print(docente.name)
-                            print("end_if")
                             template_rec = self.env.ref('plan_mejoras.email_template_plan_finalizado')
                             template_rec.write({'email_to': docente.email})
                             template_rec.send_mail(plan.id, force_send=True)
@@ -528,9 +615,15 @@ class NotificacionControl(models.Model):
     name = fields.Char(translate=True, string="Descripción")
     nro_notificacion = fields.Integer(required=True, translate=True, string="Nro. de Notificaciones a ejecutar al Consejo Consultivo")
 
-    # Sobrecarga de Create
     @api.model
+
     def create(self, vals):
+        """
+            Sobrecarga del método create del NotificacionControl para controlar la creación de un solo registro activo.
+            :param vals: Campos del modelo, como una lista de diccionarios.
+            :returns: La creación de un nuevo NotificacionControl.
+        """
+
         registros = self.env["pm.notificacionc"].search([])
         if len(registros) > 0:
             raise ValidationError("Ya existe un registro, modifique el actual para el número de "
@@ -540,6 +633,11 @@ class NotificacionControl(models.Model):
 
     @api.constrains('nro_notificacion')
     def check_numero_notificaion(self):
+        """
+            Controlar que nro_notificacion no supere de 5, ya que son las veces quye se
+            debe notificar al consejo consultivo.
+        """
+
         if self.nro_notificacion > 5:
             raise ValidationError("El número no puede ser mayor a 5")
 
@@ -550,6 +648,12 @@ class confirm_wizard(models.TransientModel):
     yes_no = fields.Char(default='Está seguro que desea comunicar el Plan Mejoras? \n Recuerde que debe socializarlo.')
 
     def yes(self):
+        """
+            Redireccionar a la vista Conversaciones en caso se elija la opcion "Ir a comunicar el Plan Mejoras".
+            Además de controlar la visibilidad de los botoner Comunicar e Inicializar en la vista Tree del Plan Mejoras.
+            :returns: Acción de ventana que redirecciona al módulo de Conversaciones.
+        """
+
         id_def = self.env.context.get('id_infor')
         self.env["pm.plan"].browse(id_def).write({"estado_Inicializar": False})
         self.env["pm.plan"].browse(id_def).write({"estado_Comunicar": True})
@@ -568,6 +672,13 @@ class confirm_wizardI(models.TransientModel):
         default='Las actividades se mostraran a los docentes y se enviará una notificación de la inicialización del Plan Mejoras.')
 
     def yes(self):
+        """
+            Redireccionar a la vista Conversaciones en caso se elija la opcion "Aceptar".
+            Además de controlar la visibilidad de los botoner Comunicar e Inicializar en la vista Tree del Plan Mejoras y
+            llamar al método para el envío de las notificaciones del inicio del Plan Mejoras.
+            :returns: Acción de ventana que redirecciona al módulo de Conversaciones.
+        """
+
         info_id = self.env.context.get('id_ini')
         lista_tareas = self.env["pm.tarea"].search([])
         lista_docentes = self.env["res.users"].search([])
