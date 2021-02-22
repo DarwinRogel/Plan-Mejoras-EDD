@@ -552,14 +552,14 @@
             <field name="arch" type="xml">
                 <tree>
                     <field name="name"/>
+                    <field name="user_id"/>
                     <field name="estado_id"/>
                    <field name="fecha_inicio" optional="hide"/>
                     <field name="fecha_fin" optional="hide"/>
                 </tree>
             </field>
         </record>
-
-
+        
 
         <!--Vista Tree Tarea-->
         <record id="view_tree_estado" model="ir.ui.view">

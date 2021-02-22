@@ -276,7 +276,7 @@ class ResUser(models.Model):
     us_cat = fields.Selection(
         selection=[("insatisfactorio", "Insatisfactorio"), ("poco_satisfactorio", "Poco Satisfactorio")
             , ("satisfactorio", "Satisfactorio"), ("destacado", "Destacado")],
-        string="Valoracion Cuantitativa", store=True, compute="_compute_valoracion_docente")
+        string="Valoracion Cualitativa", store=True, compute="_compute_valoracion_docente")
 
     count_tarea = fields.Integer(string="Tareas por Ponderar", compute="_contador_tareas", store=True)
 
