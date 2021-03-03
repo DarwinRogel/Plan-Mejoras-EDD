@@ -24,6 +24,7 @@ class Tarea(models.Model):
         string="Ponderación", default="nulo")
 
     estado = fields.Boolean(default=False)
+    tiene_evidencia = fields.Boolean(default=False, string="Posee Evidencia")
 
     estado_id = fields.Many2one("pm.estado", string="Estado", ondelete='restrict', required=True,
                                    default=lambda self: self.env['pm.estado'].search([], limit=1),
@@ -54,12 +55,18 @@ class Tarea(models.Model):
         today = fields.Date.today()
         lista_tareas = self.env["pm.tarea"].search([])
         for record in lista_tareas:
-            aux = record.fecha_inicio
-            aux1 = record.fecha_fin
-            fecha_ini = datetime.datetime.strptime(str(aux), "%Y-%m-%d")
-            fecha_fin = datetime.datetime.strptime(str(aux1), "%Y-%m-%d")
-            if fecha_fin.date() < today or fecha_ini.date() > fecha_fin.date():
-                raise ValidationError(("Verifique las Fechas ingresadas para la tarea: %s") % record.name)
+            if record.plan_id.finalizado == False:
+                fecha_ini_tarea = record.fecha_inicio
+                fecha_fin_tarea = record.fecha_fin
+                fecha_fin_plan =  record.plan_id.fecha_fin
+                fecha_ini = datetime.datetime.strptime(str(fecha_ini_tarea), "%Y-%m-%d")
+                fecha_fin = datetime.datetime.strptime(str(fecha_fin_tarea), "%Y-%m-%d")
+                fecha_plan = datetime.datetime.strptime(str(fecha_fin_plan), "%Y-%m-%d")
+                if fecha_plan.date() > fecha_fin.date():
+                    if fecha_fin.date() < today or fecha_ini.date() > fecha_fin.date():
+                        raise ValidationError(("Verifique las Fechas ingresadas para la tarea: %s") % record.name)
+                else:
+                    raise ValidationError(("la Fecha de Finalización ingresadas para la tarea: %s No Puede ser mayor a la de Finalización del Plan Mejoras de la EDD") % record.name)
 
     @api.constrains('fecha_fin')
     def fecha_fin_modificada(self):
@@ -153,6 +160,17 @@ class Tarea(models.Model):
                     record.check_expiryenv.user.notify_danger(
                         message='Se produjo un error al enviar la Notificación al correo electrónico')
 
+    @api.constrains("evidencia_id.id")
+    def _contador_evidencia(self):
+        print("Entro")
+        for record in self:
+            mes = datetime.now().year
+            aux = False
+            movs = record.evidencia_id.filtered(
+                lambda r: r.create_date.year == mes)
+            if len(movs) > 0:
+                aux = True
+            record.tiene_evidencia = aux
 
 class Estado(models.Model):
     _name = "pm.estado"
@@ -339,8 +357,6 @@ class ResUser(models.Model):
             record.is_group_admin = record._origin.has_group('plan_mejoras.res_groups_administrador')
      
     @api.depends("tarea_ids.ponderacion")
-
-
     def _contador_tareas(self):
         """
             Calcular el número de Tareas por usuario pendientes a calificar o que se encuentran
@@ -402,7 +418,7 @@ class ResUser(models.Model):
 
 class Plan(models.Model):
     _name = "pm.plan"
-    _description = "Plan Mejoras"
+    _description = "Plan Mejoras de la Evaluación al Desempeño Docente"
 
     name = fields.Char(required=True, translate=True, string="Nombre")
     fecha_inicio = fields.Date(string="Fecha de Inicio", required=True)
@@ -584,7 +600,6 @@ class Plan(models.Model):
                         message='Se produjo un error al enviar la Notificación al correo electrónico')
             elif plan.finalizado == True and today < plan.fecha_fin:
                 plan.finalizado = False
-
 
 
 class Debilidad(models.Model):
