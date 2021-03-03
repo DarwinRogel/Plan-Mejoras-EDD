@@ -24,6 +24,7 @@ class Tarea(models.Model):
         string="Ponderación", default="nulo")
 
     estado = fields.Boolean(default=False)
+    tiene_evidencia = fields.Boolean(default=False, string="Posee Evidencia")
 
     estado_id = fields.Many2one("pm.estado", string="Estado", ondelete='restrict', required=True,
                                    default=lambda self: self.env['pm.estado'].search([], limit=1),
@@ -153,6 +154,17 @@ class Tarea(models.Model):
                     record.check_expiryenv.user.notify_danger(
                         message='Se produjo un error al enviar la Notificación al correo electrónico')
 
+    @api.constrains("evidencia_id.id")
+    def _contador_evidencia(self):
+        print("Entro")
+        for record in self:
+            mes = datetime.now().year
+            aux = False
+            movs = record.evidencia_id.filtered(
+                lambda r: r.create_date.year == mes)
+            if len(movs) > 0:
+                aux = True
+            record.tiene_evidencia = aux
 
 class Estado(models.Model):
     _name = "pm.estado"
@@ -402,7 +414,7 @@ class ResUser(models.Model):
 
 class Plan(models.Model):
     _name = "pm.plan"
-    _description = "Plan Mejoras"
+    _description = "Plan Mejoras de la Evaluación al Desempeño Docente"
 
     name = fields.Char(required=True, translate=True, string="Nombre")
     fecha_inicio = fields.Date(string="Fecha de Inicio", required=True)
@@ -584,7 +596,6 @@ class Plan(models.Model):
                         message='Se produjo un error al enviar la Notificación al correo electrónico')
             elif plan.finalizado == True and today < plan.fecha_fin:
                 plan.finalizado = False
-
 
 
 class Debilidad(models.Model):

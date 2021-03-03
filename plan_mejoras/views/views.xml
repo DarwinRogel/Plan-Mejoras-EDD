@@ -28,7 +28,7 @@
                             <group>
                                 <field name="user_id" invisible="1" groups="plan_mejoras.res_groups_administrador"/>
                                 <field name="plan_id" invisible="1" groups="plan_mejoras.res_groups_administrador"/>
-                                <field name="evicencia_id" groups="plan_mejoras.res_groups_administrador, plan_mejoras.res_groups_docente_consejo, plan_mejoras.res_groups_docente"/>
+                                <field name="evicencia_id" string="Evidencia" groups="plan_mejoras.res_groups_administrador, plan_mejoras.res_groups_docente_consejo, plan_mejoras.res_groups_docente"/>
                             </group>
 
                         </group>
@@ -73,7 +73,7 @@
                             <group>
                                 <field name="user_id" invisible="1"/>
                                 <field name="estado" invisible="1"/>
-                                <field name="evicencia_id" groups="plan_mejoras.res_groups_docente" attrs="{'invisible':['|',('expirado', '==', 'expired'), ('estado','==', True)]}"/>
+                                <field name="evicencia_id" string="Evidencia" groups="plan_mejoras.res_groups_docente" attrs="{'invisible':['|',('expirado', '==', 'expired'), ('estado','==', True)]}"/>
                             </group>
 
                         </group>
@@ -355,6 +355,7 @@
                 <graph string="Tareas del Plan Mejoras">
                     <field name="name"/>
                     <field name="estado_id"/>
+                    <field name="user_id"/>
                 </graph>
             </field>
         </record>
@@ -382,8 +383,51 @@
                                <div class="oe_kanban_details">
                                    <strong>
                                        <ul>
-                                           <li class="text-danger float-right mb4" t-if="record.estado.raw_value"><i class="fa fa-circle" role="img" aria-label="Finalizado" title="Finalizado"></i></li>
-                                           <li class="text-success float-right mb4" t-if="!record.estado.raw_value"><i class="fa fa-circle" role="img" aria-label="Pendiente" title="Pendiente"></i></li>
+                                           <li class="text-success float-right mb4" t-if="record.estado.raw_value"><i class="fa fa-circle" role="img" aria-label="Finalizado" title="Finalizado"></i></li>
+                                           <li class="text-info float-right mb4" t-if="!record.estado.raw_value"><i class="fa fa-circle" role="img" aria-label="Pendiente" title="Pendiente"></i></li>
+                                       </ul>
+                                   </strong>
+                                   <t class="o_kanban_record_title">
+                                       <strong t-esc="record.name.value"/>
+                                   </t>
+                                   <div t-if="record.estado_id.value">
+                                       <t t-esc="record.estado_id.value"/>
+                                   </div>
+                                   <div t-if="record.user_id.value">
+                                       <t t-esc="record.user_id.value"/>
+                                   </div>
+                               </div>
+                           </div>
+                       </t>
+                   </templates>
+                 </kanban>
+            </field>
+        </record>
+
+        <!--Vista Kanban Mis Tarea-->
+        <record id="view_kanban_tarea_docente" model="ir.ui.view">
+            <field name="name">view.tree.pm.tarea</field>
+            <field name="model">pm.tarea</field>
+            <field name="type">kanban</field>
+            <field name="arch" type="xml">
+                 <kanban  create="false" default_group_by = "estado_id" class="o_kanban_small_column o_kanban_project_tasks">
+                     <field name="name"/>
+                     <field name="estado_id" options='{"group_by_tooltip": {"description": "Description"}}'/>
+                     <field name="create_uid"/>
+                     <field name="user_id" />
+                     <field name="estado" invisible="1"/>
+                     <progressbar field="ponderacion" colors='{"nulo": "muted", "noc": "danger", "cep": "warning", "cum": "success"}'/>
+                   <templates>
+                       <t t-name="kanban-box">
+                           <div t-attf-class="oe_kanban_global_click">
+                               <div class="o_kanban_image">
+                                   <img t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)" class="oe_module_icon" alt="Docente"/>
+                               </div>
+                               <div class="oe_kanban_details">
+                                   <strong>
+                                       <ul>
+                                           <li class="text-success float-right mb4" t-if="record.estado.raw_value"><i class="fa fa-circle" role="img" aria-label="Finalizado" title="Finalizado"></i></li>
+                                           <li class="text-info float-right mb4" t-if="!record.estado.raw_value"><i class="fa fa-circle" role="img" aria-label="Pendiente" title="Pendiente"></i></li>
                                        </ul>
                                    </strong>
                                    <t class="o_kanban_record_title">
@@ -559,6 +603,19 @@
             </field>
         </record>
 
+        <!--Vista Tree Mis Tarea-->
+        <record id="view_tree_tarea_docente" model="ir.ui.view">
+            <field name="name">view.tree.pm.tarea</field>
+            <field name="model">pm.tarea</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="estado_id"/>
+                   <field name="fecha_inicio" optional="hide"/>
+                    <field name="fecha_fin" optional="hide"/>
+                </tree>
+            </field>
+        </record>
 
 
         <!--Vista Tree Tarea-->
@@ -635,6 +692,7 @@
                     <field name="finalizado" invisible="1"/>
                     <field name="fecha_inicio"/>
                     <field name="fecha_fin"/>
+                    <field name="finalizado"/>
                     <field name="estado_Inicializar" invisible="1"/>
                     <field name="estado_Comunicar" invisible="1"/>
 
@@ -812,18 +870,22 @@
                                 name="group_estado_tarea_fin"
                                 domain="[('estado', '=' ,True)]"/>
                         <separator/>
+                        <filter string="Tareas con Evidencia"
+                                name="group_estado_tarea_evidencia"
+                                domain="[('tiene_evidencia', '=' ,True)]"/>
+                        <separator/>
                         <filter name="filter_today"
-                                string="Hoy"
+                                string="Expira Hoy"
                                 domain="[('fecha_fin','&gt;=',datetime.datetime.now().strftime('%Y-%m-%d 00:00:00')),
                                 ('fecha_fin','&lt;=',datetime.datetime.now().strftime('%Y-%m-%d 23:59:59'))]"/>
                         <filter name="filter_this_week"
-                                string="Semana"
-                                domain="[('fecha_fin','&lt;=',context_today().strftime('%Y-%m-%d 23:59:59')),
-                                ('fecha_fin','&gt;=',(context_today()-datetime.timedelta(days=7)).strftime('%Y-%m-%d 00:00:00'))]"/>
+                                string="Expira en una Semana"
+                                domain="[('fecha_fin','&gt;=',context_today().strftime('%Y-%m-%d 23:59:59')),
+                                ('fecha_fin','&lt;=',(context_today()+datetime.timedelta(days=7)).strftime('%Y-%m-%d 00:00:00'))]"/>
                         <filter name="filter_this_month"
-                                string="Mes"
-                                domain="[('fecha_fin','&lt;=',context_today().strftime('%Y-%m-%d 23:59:59')),
-                                ('fecha_fin','&gt;=',(context_today()-datetime.timedelta(days=30)).strftime('%Y-%m-%d 00:00:00'))]"/>
+                                string="Expira en un Mes"
+                                domain="[('fecha_fin','&gt;=',context_today().strftime('%Y-%m-%d 23:59:59')),
+                                ('fecha_fin','&lt;=',(context_today()+datetime.timedelta(days=30)).strftime('%Y-%m-%d 00:00:00'))]"/>
                     </group>
                 </search>
             </field>
@@ -881,7 +943,7 @@
 
         <!--Accion de ventana tarea-->
         <record id="action_view_tarea" model="ir.actions.act_window">
-            <field name="name">Tareas</field>
+            <field name="name">Tareas Vigentes</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">pm.tarea</field>
             <field name="domain">[('plan_id.finalizado','=',False)]</field>
@@ -898,10 +960,10 @@
 
         <!--Accion de ventana tarea-->
         <record id="action_view_tarea_docente" model="ir.actions.act_window">
-            <field name="name">Tareas</field>
+            <field name="name">Tareas Vigentes</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">pm.tarea</field>
-            <field name="domain">[('plan_id.finalizado','=',False)]</field>
+            <field name="domain">[('user_id','=', uid),('plan_id.finalizado','=',False)]</field>
             <field name="context">{'plan_id.default_finalizado':False}</field>
             <field name="view_mode">kanban,tree,form,calendar,graph</field>
             <!--<field name="search_view_id" ref="base.view_res_partner_filter"/>-->
@@ -950,7 +1012,8 @@
         <record id="action_view_tarea_kanban_docente" model="ir.actions.act_window.view">
             <field name="sequence" eval="0"/>
             <field name="view_mode">kanban</field>
-            <field name="view_id" ref="plan_mejoras.view_kanban_tarea"/>
+
+            <field name="view_id" ref="plan_mejoras.view_kanban_tarea_docente"/>
             <field name="act_window_id" ref="action_view_tarea_docente"/>
         </record>
 
@@ -967,7 +1030,7 @@
         <record id="action_view_tarea_tree_docente" model="ir.actions.act_window.view">
             <field name="sequence" eval="1"/>
             <field name="view_mode">tree</field>
-            <field name="view_id" ref="plan_mejoras.view_tree_tarea"/>
+            <field name="view_id" ref="plan_mejoras.view_tree_tarea_docente"/>
             <field name="act_window_id" ref="action_view_tarea_docente"/>
         </record>
 
@@ -1236,16 +1299,17 @@
 
         <!--Accion de ventana Plan-->
         <record id="action_view_informe" model="ir.actions.act_window">
-            <field name="name">Plan Mejoras</field>
+            <field name="name">Plan Mejoras de la Evaluación al Desempeño Docente</field>
             <field name="res_model">pm.plan</field>
             <field name="view_mode">tree,form</field>
         </record>
 
         <!--Menú-->
          <menuitem id="menu_main_pm_app"
-                  name="Plan Mejoras"
-                  parent=""
-                  action="plan_mejoras.action_view_informe"/>
+                   name="Plan Mejoras EDD"
+                   parent=""
+                   sequence = "0"
+                   action="plan_mejoras.action_view_informe"/>
 
         <menuitem id="menu_docentes"
                   name="Docentes"
@@ -1268,7 +1332,7 @@
 
 
         <menuitem id="menu_plan"
-                  name="Plan Mejoras"
+                  name="Plan Mejoras EDD"
                   sequence = "0"
                   parent="plan_mejoras.menu_main_pm_app"
                   action="plan_mejoras.action_view_informe"/>
