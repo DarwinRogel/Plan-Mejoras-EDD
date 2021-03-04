@@ -13,7 +13,7 @@
                             <group>
                                 <field name="estado_id"/>
                                 <field name="debilidad_id" groups = "plan_mejoras.res_groups_docente" readonly="1"/>
-                                <field name="debilidad_id" groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
+
                                 <field name="etiqueta_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                             </group>
                             <group>
@@ -26,13 +26,14 @@
                                 <field name="fecha_fin" required="1" groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
                             </group>
                             <group>
-                                <field name="user_id" invisible="1" groups="plan_mejoras.res_groups_administrador"/>
+                                <field name="user_id" readonly="1" groups="plan_mejoras.res_groups_administrador, plan_mejoras.res_groups_docente_consejo"/>
                                 <field name="plan_id" invisible="1" groups="plan_mejoras.res_groups_administrador"/>
                                 <field name="evicencia_id" string="Evidencia" groups="plan_mejoras.res_groups_administrador, plan_mejoras.res_groups_docente_consejo, plan_mejoras.res_groups_docente"/>
                             </group>
 
                         </group>
                         <group>
+                                <field name="estado" string="Finalizada"/>
                                 <field name="description"  required="1"/>
 
                         </group>
@@ -546,6 +547,7 @@
                                             string="Ver Tareas"
                                             type="object"
                                             name="vista_tree_tareas"
+                                            attrs="{'invisible':[('finalizado', '=', True)]}"
                                             class="btn btn-primary">Ver Tareas</button>
                                </div>
                            </div>
@@ -600,6 +602,7 @@
                     <field name="estado_id"/>
                    <field name="fecha_inicio" optional="hide"/>
                     <field name="fecha_fin" optional="hide"/>
+                    <field name="plan_id" optional="hide"/>
                 </tree>
             </field>
         </record>

@@ -1,7 +1,6 @@
-import datetime
-
 from odoo import fields, models, api, SUPERUSER_ID
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, AccessError
+from datetime import datetime
 
 
 class Tarea(models.Model):
@@ -160,17 +159,18 @@ class Tarea(models.Model):
                     record.check_expiryenv.user.notify_danger(
                         message='Se produjo un error al enviar la Notificación al correo electrónico')
 
-    @api.constrains("evidencia_id.id")
+    @api.constrains("evicencia_id")
     def _contador_evidencia(self):
         print("Entro")
         for record in self:
             mes = datetime.now().year
             aux = False
-            movs = record.evidencia_id.filtered(
+            movs = record.evicencia_id.filtered(
                 lambda r: r.create_date.year == mes)
             if len(movs) > 0:
                 aux = True
             record.tiene_evidencia = aux
+
 
 class Estado(models.Model):
     _name = "pm.estado"
@@ -195,9 +195,6 @@ class Evidencia(models.Model):
 
     tareas_ids = fields.Many2one("pm.tarea", string="Tareas", ondelete='cascade')
 
-    _sql_constraints = [
-        ('name_unique', 'unique (name)', "El nombre de la Evidencia ya existe!"),
-    ]
 
 
 class Etiqueta(models.Model):
@@ -362,14 +359,10 @@ class ResUser(models.Model):
             Calcular el número de Tareas por usuario pendientes a calificar o que se encuentran
             sin asignar alguna ponderación.
         """
-
-        lista_plan = self.env["pm.plan"].search([])
-        for plan in lista_plan:
-            if plan.finalizado == False:
-                for record in self:
-                    movs = record.tarea_ids.filtered(
-                        lambda r: r.ponderacion == 'nulo')
-                    record.count_tarea = len(movs)
+        for record in self:
+            movs = record.tarea_ids.filtered(
+                lambda r: r.ponderacion == 'nulo' and r.plan_id.finalizado == False)
+            record.count_tarea = len(movs)
 
     @api.depends('total_val', 'criterio_ids', 'us_cat')
     def _compute_valoracion_docente(self):
