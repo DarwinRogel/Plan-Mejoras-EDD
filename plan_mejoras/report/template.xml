@@ -7,13 +7,15 @@
                             <div style="font-family: 'Open Sans', sans-serif; font-size: 16pt;
                                 color: #000000">
                                 <h1 align="center">UNIVERSIDAD NACIONAL DE LOJA</h1>
-                                <h3 align="center">FACULTAD DE LA ENERGIA LAS INDUSTRIAS Y LOS RECURNOS NATURALES NO RENOVABLES</h3>
-                                <h3 align="center">CARRERA DE INGENIERIA EN SISTEMAS/COMPUTACION</h3>
+                                <h3 align="center">FACULTAD DE LA ENERGÍA, LAS INDUSTRIAS Y LOS RECURSOS NATURALES NO RENOVABLES</h3>
+                                <br/>
+                                <h3 align="center"><t t-esc="obj.user_ids.company_id.name"/></h3>
                                 <br/>
                                 <br/>
                                 <h1 align="center"><t t-esc="obj.name"/></h1>
                                 <br/>
                                 <h3 align="center">Elaborado por: </h3>
+                                <br/>
                                 <br/>
                                 <t t-foreach="request.env['res.users'].search([])" t-as="consejo">
                                     <t t-if="consejo.has_group('plan_mejoras.res_groups_docente_consejo') or consejo.has_group('plan_mejoras.res_groups_administrador')">
@@ -23,9 +25,11 @@
                                     </t>
                                 </t>
                                 <br/>
+                                <br/>
                                 <h3 align="center">LOJA - ECUADOR </h3>
                                 <span align="center" t-esc="fecha"/>
                             </div>
+                            <br/>
                             <br/>
                             <div style="font-family: 'Open Sans', sans-serif; font-size: 14pt;
                                 color: #000000">
@@ -40,39 +44,37 @@
                                 color: #000000; text-align: justify">
                                 <div class="page"/>
                                     <p style="page-break-after:always;">   </p>
-                                        <span><b>INTRODUCCIÓN</b> <br/><t t-raw="obj.introduccion"/></span>
+                                        <span><b>INTRODUCCIÓN</b> <br/><br/><t t-raw="obj.introduccion"/></span>
                                         <div class="page"/>
                                         <p style="page-break-after:always;">   </p>
-                                        <span><b>OBJETIVO</b> <br/><t t-raw="obj.objetivo"/></span>
+                                        <span><b>OBJETIVOS</b> <br/><br/><t t-raw="obj.objetivo"/></span>
                                         <div class="page"/>
                                         <p style="page-break-after:always;">   </p>
                                         <span align="left"><b>DETALLES DE LAS TAREAS REALIZADAS POR LOS DOCENTES DE LA CIS-UNL</b></span>
                                         <br/>
                                         <t t-foreach="request.env['res.users'].search([])" t-as="doc1">
                                             <br/>
-                                            <t t-if="doc1.is_group_admin == False">
-                                                <b align="center">Docente:</b> <span t-esc="doc1.name"/>
-                                                <table class="table table-condensed table-bordered">
-                                                    <thead>
-                                                        <th style="width: 65%">Título</th>
-                                                        <th class="text-center" style="width: 15%">Descripción</th>
-                                                        <th class="text-center" style="width: 20%">Ponderación</th>
-                                                        <th class="text-center" style="width: 20%">Fecha Inicio</th>
-                                                        <th class="text-center" style="width: 20%">Fecha Fin</th>
-                                                        <th class="text-center" style="width: 20%">Estado</th>
-                                                    </thead>
-                                                    <t t-foreach="request.env['pm.tarea'].search([('user_id', '=', doc1.id)])" t-as="doc">
-                                                        <tbody>
-                                                            <td class="text-center"><span t-esc="doc.name"/></td>
-                                                            <td class="text-center"><span t-raw="doc.description"/></td>
-                                                            <td class="text-center"><span t-field="doc.ponderacion"/></td>
-                                                            <td class="text-center"><span t-field="doc.fecha_inicio"/></td>
-                                                            <td class="text-center"><span t-field="doc.fecha_fin"/></td>
-                                                            <td class="text-center"><span t-field="doc.estado_id"/></td>
-                                                        </tbody>
-                                                    </t>
-                                                </table>
-                                            </t>
+                                            <b align="center">Docente:</b> <span t-esc="doc1.name"/>
+                                            <table class="table table-condensed table-bordered">
+                                                <thead>
+                                                    <th style="width: 65%">Título</th>
+                                                    <th class="text-center" style="width: 15%">Descripción</th>
+                                                    <th class="text-center" style="width: 20%">Ponderación</th>
+                                                    <th class="text-center" style="width: 20%">Fecha Inicio</th>
+                                                    <th class="text-center" style="width: 20%">Fecha Fin</th>
+                                                    <th class="text-center" style="width: 20%">Estado</th>
+                                                </thead>
+                                                <t t-foreach="request.env['pm.tarea'].search([('user_id', '=', doc1.id)])" t-as="doc">
+                                                    <tbody>
+                                                        <td class="text-center"><span t-esc="doc.name"/></td>
+                                                        <td class="text-center"><span t-raw="doc.description"/></td>
+                                                        <td class="text-center"><span t-field="doc.ponderacion"/></td>
+                                                        <td class="text-center"><span t-field="doc.fecha_inicio"/></td>
+                                                        <td class="text-center"><span t-field="doc.fecha_fin"/></td>
+                                                        <td class="text-center"><span t-field="doc.estado_id"/></td>
+                                                    </tbody>
+                                                </t>
+                                            </table>
                                         </t>
                                         <t t-if="obj.add_resultados == True">
                                             <div class="page"/>
@@ -80,33 +82,31 @@
                                             <span align="left"><b>RESULTADOS DE LA EVALUACIÓN AL DESEMPEÑO DOCENTE</b></span>
                                             <br/>
                                             <t t-foreach="request.env['res.users'].search([])" t-as="doc2">
-                                                <t t-if="doc2.is_group_admin == False">
-                                                    <br/>
-                                                    <span><b>Docente:</b> <t t-esc="doc2.name"></t></span>
-                                                    <br/>
-                                                    <table class="table table-condensed table-bordered">
-                                                        <thead>
-                                                            <th class="text-center" style="width: 65%">Criterios Evaluación</th>
-                                                            <th class="text-center" style="width: 65%">Calificación</th>
-                                                        </thead>
-                                                        <t t-foreach="request.env['pm.criterio'].search([('user_id', '=', doc2.id)])" t-as="crt">
-                                                            <tbody>
-                                                                <td class="text-left"><span t-esc="crt.criterionombre_id.name"/></td>
-                                                                <td class="text-left"><span t-esc="crt.calificacion"/></td>
-                                                            </tbody>
-                                                        </t>
-                                                    </table>
-                                                    <span><b>Valoración Cuantitativa:</b> <t t-esc="doc2.us_cat"></t></span>
-                                                    <br/>
-                                                </t>
+                                                <br/>
+                                                <span><b>Docente:</b> <t t-esc="doc2.name"></t></span>
+                                                <br/>
+                                                <table class="table table-condensed table-bordered">
+                                                    <thead>
+                                                        <th class="text-center" style="width: 65%">Criterios Evaluación</th>
+                                                        <th class="text-center" style="width: 65%">Calificación</th>
+                                                    </thead>
+                                                    <t t-foreach="request.env['pm.criterio'].search([('user_id', '=', doc2.id)])" t-as="crt">
+                                                        <tbody>
+                                                            <td class="text-left"><span t-esc="crt.criterionombre_id.name"/></td>
+                                                            <td class="text-left"><span t-esc="crt.calificacion"/></td>
+                                                        </tbody>
+                                                    </t>
+                                                </table>
+                                                <span><b>Valoración Cuantitativa:</b> <t t-esc="doc2.us_cat"></t></span>
+                                                <br/>
                                             </t>
                                         </t>
                                         <div class="page"/>
                                         <p style="page-break-after:always;">   </p>
-                                        <span><b>CONCLUSIONES</b> <br/><span t-raw="obj.conclusion"/></span>
+                                        <span><b>CONCLUSIONES</b> <br/><br/><span t-raw="obj.conclusion"/></span>
                                         <div class="page"/>
                                         <p style="page-break-after:always;">   </p>
-                                        <span><b>RECOMENDACIONES</b> <br/><span t-raw="obj.recomendacion"/></span>
+                                        <span><b>RECOMENDACIONES</b> <br/><br/><span t-raw="obj.recomendacion"/></span>
                                         <t t-if="obj.add_anexos == True">
                                             <div class="page"/>
                                                 <p style="page-break-after:always;">   </p>

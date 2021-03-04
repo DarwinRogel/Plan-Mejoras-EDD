@@ -1,6 +1,6 @@
 from odoo import fields, models, api, SUPERUSER_ID
 from odoo.exceptions import ValidationError, AccessError
-from datetime import datetime
+import datetime
 
 
 class Tarea(models.Model):
@@ -9,7 +9,7 @@ class Tarea(models.Model):
     _inherit = "mail.thread"
 
     name = fields.Char(string="Tarea", required=True)
-    description = fields.Html(string="Descripción", default="Tarea creada por: Administrador",
+    description = fields.Html(string="Descripción", default="Tarea creada del Plan Mejoras de la Evaluación al Desempeño Docente",
                               track_visibility="onchange")
     fecha_inicio = fields.Date(string="Fecha de Inicio", required=True)
 
@@ -57,7 +57,7 @@ class Tarea(models.Model):
             if record.plan_id.finalizado == False:
                 fecha_ini_tarea = record.fecha_inicio
                 fecha_fin_tarea = record.fecha_fin
-                fecha_fin_plan =  record.plan_id.fecha_fin
+                fecha_fin_plan = record.plan_id.fecha_fin
                 fecha_ini = datetime.datetime.strptime(str(fecha_ini_tarea), "%Y-%m-%d")
                 fecha_fin = datetime.datetime.strptime(str(fecha_fin_tarea), "%Y-%m-%d")
                 fecha_plan = datetime.datetime.strptime(str(fecha_fin_plan), "%Y-%m-%d")
@@ -161,12 +161,10 @@ class Tarea(models.Model):
 
     @api.constrains("evicencia_id")
     def _contador_evidencia(self):
-        print("Entro")
         for record in self:
-            mes = datetime.now().year
             aux = False
             movs = record.evicencia_id.filtered(
-                lambda r: r.create_date.year == mes)
+                lambda r: record.plan_id.finalizado == False)
             if len(movs) > 0:
                 aux = True
             record.tiene_evidencia = aux

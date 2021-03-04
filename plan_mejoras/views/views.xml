@@ -1,52 +1,5 @@
 <odoo>
     <data>
-        <!--Vista Form Tarea-->
-        <record id="view_form_tarea" model="ir.ui.view">
-            <field name="name">view.form.pm.tarea</field>
-            <field name="model">pm.tarea</field>
-            <field name="arch" type="xml">
-                <form  create="false" >
-                    <sheet>
-                        <div class="oe_button_box d-flex justify-content-end" name="button_box">
-                        </div>
-                        <group>
-                            <group>
-                                <field name="estado_id"/>
-                                <field name="debilidad_id" groups = "plan_mejoras.res_groups_docente" readonly="1"/>
-
-                                <field name="etiqueta_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
-                            </group>
-                            <group>
-                                <field name="name" required="1" groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
-                                <field name="ponderacion" required="1" groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
-                                <field name="expirado" readonly="1"/>
-                            </group>
-                            <group>
-                                <field name="fecha_inicio" required="1" groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
-                                <field name="fecha_fin" required="1" groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
-                            </group>
-                            <group>
-                                <field name="user_id" readonly="1" groups="plan_mejoras.res_groups_administrador, plan_mejoras.res_groups_docente_consejo"/>
-                                <field name="plan_id" invisible="1" groups="plan_mejoras.res_groups_administrador"/>
-                                <field name="evicencia_id" string="Evidencia" groups="plan_mejoras.res_groups_administrador, plan_mejoras.res_groups_docente_consejo, plan_mejoras.res_groups_docente"/>
-                            </group>
-
-                        </group>
-                        <group>
-                                <field name="estado" string="Finalizada"/>
-                                <field name="description"  required="1"/>
-
-                        </group>
-                        <notebook>
-                        </notebook>
-                    </sheet>
-                    <div class="oe_chatter">
-                            <field name="message_ids" widget="mail_thread" groups="plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
-                    </div>
-                </form>
-            </field>
-        </record>
-
         <!--Vista Form Tarea Docente-->
         <record id="view_form_tarea_docente" model="ir.ui.view">
             <field name="name">view.form.pm.tarea</field>
@@ -68,18 +21,65 @@
                                 <field name="expirado" groups = "plan_mejoras.res_groups_docente" readonly="1"/>
                             </group>
                             <group>
-                                <field name="fecha_inicio" required="1" groups = "plan_mejoras.res_groups_docente" readonly="1"/>
-                                <field name="fecha_fin" required="1" groups = "plan_mejoras.res_groups_docente" readonly="1"/>
+                                <field name="fecha_inicio" required="1" readonly="1"/>
+                                <field name="fecha_fin" required="1" readonly="1"/>
                             </group>
                             <group>
                                 <field name="user_id" invisible="1"/>
                                 <field name="estado" invisible="1"/>
-                                <field name="evicencia_id" string="Evidencia" groups="plan_mejoras.res_groups_docente" attrs="{'invisible':['|',('expirado', '==', 'expired'), ('estado','==', True)]}"/>
+                                <field name="evicencia_id" string="Evidencia" attrs="{'invisible':['|',('expirado', '=', 'expired'), ('estado','=', True)]}"/>
                             </group>
 
                         </group>
                         <group>
                                 <field name="description"  required="1" groups = "plan_mejoras.res_groups_docente" readonly="1"/>
+                        </group>
+                        <notebook>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                            <field name="message_ids" widget="mail_thread" groups="plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!--Vista Form Tarea-->
+        <record id="view_form_tarea" model="ir.ui.view">
+            <field name="name">view.form.pm.tarea</field>
+            <field name="model">pm.tarea</field>
+            <field name="arch" type="xml">
+                <form  create="false" >
+                    <sheet>
+                        <div class="oe_button_box d-flex justify-content-end" name="button_box">
+                        </div>
+                        <group>
+                            <group>
+                                <field name="estado_id"/>
+                                <field name="debilidad_id" groups = "plan_mejoras.res_groups_docente" />
+
+                                <field name="etiqueta_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                            </group>
+                            <group>
+                                <field name="name" required="1" groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
+                                <field name="ponderacion" required="1" groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
+                                <field name="expirado" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="fecha_inicio" required="1" groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
+                                <field name="fecha_fin" required="1" groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
+                            </group>
+                            <group>
+                                <field name="user_id" readonly="1" groups="plan_mejoras.res_groups_administrador, plan_mejoras.res_groups_docente_consejo"/>
+                                <field name="plan_id" invisible="1" groups="plan_mejoras.res_groups_administrador"/>
+                                <field name="evicencia_id" string="Evidencia" groups="plan_mejoras.res_groups_administrador, plan_mejoras.res_groups_docente_consejo, plan_mejoras.res_groups_docente"/>
+                            </group>
+
+                        </group>
+                        <group>
+                                <field name="estado" string="Finalizada" groups="plan_mejoras.res_groups_administrador, plan_mejoras.res_groups_docente_consejo"/>
+                                <field name="description"  required="1"/>
+
                         </group>
                         <notebook>
                         </notebook>
@@ -690,7 +690,7 @@
             <field name="name">view.tree.pm.plan</field>
             <field name="model">pm.plan</field>
             <field name="arch" type="xml">
-                <tree decoration-success="finalizado == False" decoration-danger="finalizado == True">
+                <tree decoration-success="finalizado == False" decoration-danger="finalizado == True" default_order="create_date desc">
                     <field name="name"/>
                     <field name="finalizado" invisible="1"/>
                     <field name="fecha_inicio"/>
@@ -835,6 +835,17 @@
             </field>
         </record>
 
+        <!--Vista de calendario Tarea Docente-->
+        <record id="view_calendar_tarea_docente" model="ir.ui.view">
+            <field name="name">view.calendar.pm.tarea</field>
+            <field name="model">pm.tarea</field>
+            <field name="arch" type="xml">
+                <calendar date_start="fecha_fin"  mode="month" color="user_id" event_limit="5" form_view_id="view_form_tarea_docente">
+                    <field name="name"/>
+                </calendar>
+            </field>
+        </record>
+
         <!--Vista Usuario-->
        <record id="view_res_users_add_tareas" model="ir.ui.view">
             <field name="name">view.res.users.add.tareas</field>
@@ -968,7 +979,7 @@
             <field name="res_model">pm.tarea</field>
             <field name="domain">[('user_id','=', uid),('plan_id.finalizado','=',False)]</field>
             <field name="context">{'plan_id.default_finalizado':False}</field>
-            <field name="view_mode">kanban,tree,form,calendar,graph</field>
+            <field name="view_mode">kanban,form,calendar,tree</field>
             <!--<field name="search_view_id" ref="base.view_res_partner_filter"/>-->
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
@@ -1020,6 +1031,13 @@
             <field name="act_window_id" ref="action_view_tarea_docente"/>
         </record>
 
+        <!--Accion de ventana tarea Calendar-->
+        <record id="action_view_tarea_calendar_docente" model="ir.actions.act_window.view">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">calendar</field>
+            <field name="view_id" ref="plan_mejoras.view_calendar_tarea_docente"/>
+            <field name="act_window_id" ref="action_view_tarea_docente"/>
+        </record>
 
         <!--Accion de ventana tarea tree-->
         <record id="action_view_tarea_tree" model="ir.actions.act_window.view">
