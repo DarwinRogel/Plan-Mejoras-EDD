@@ -1,5 +1,53 @@
 <odoo>
     <data>
+
+        <!--Vista Form Tarea-->
+        <record id="view_form_tarea" model="ir.ui.view">
+            <field name="name">view.form.pm.tarea</field>
+            <field name="model">pm.tarea</field>
+            <field name="arch" type="xml">
+                <form  create="false">
+                    <sheet>
+                        <div class="oe_button_box d-flex justify-content-end" name="button_box">
+                        </div>
+                        <group>
+                            <group>
+                                <field name="estado_id"/>
+                                <field name="debilidad_id" groups = "plan_mejoras.res_groups_docente" />
+
+                                <field name="etiqueta_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                            </group>
+                            <group>
+                                <field name="name" required="1" groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
+                                <field name="ponderacion" required="1" groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
+                                <field name="expirado" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="fecha_inicio" required="1" groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
+                                <field name="fecha_fin" required="1" groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
+                            </group>
+                            <group>
+                                <field name="user_id" readonly="1" groups="plan_mejoras.res_groups_administrador, plan_mejoras.res_groups_docente_consejo"/>
+                                <field name="plan_id" invisible="1" groups="plan_mejoras.res_groups_administrador"/>
+                                <field name="evicencia_id" string="Evidencia" groups="plan_mejoras.res_groups_administrador, plan_mejoras.res_groups_docente_consejo, plan_mejoras.res_groups_docente"/>
+                            </group>
+
+                        </group>
+                        <group>
+                                <field name="estado" string="Finalizada" groups="plan_mejoras.res_groups_administrador, plan_mejoras.res_groups_docente_consejo"/>
+                                <field name="description"  required="1"/>
+
+                        </group>
+                        <notebook>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                            <field name="message_ids" widget="mail_thread" groups="plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
         <!--Vista Form Tarea Docente-->
         <record id="view_form_tarea_docente" model="ir.ui.view">
             <field name="name">view.form.pm.tarea</field>
@@ -33,53 +81,6 @@
                         </group>
                         <group>
                                 <field name="description"  required="1" groups = "plan_mejoras.res_groups_docente" readonly="1"/>
-                        </group>
-                        <notebook>
-                        </notebook>
-                    </sheet>
-                    <div class="oe_chatter">
-                            <field name="message_ids" widget="mail_thread" groups="plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
-                    </div>
-                </form>
-            </field>
-        </record>
-
-        <!--Vista Form Tarea-->
-        <record id="view_form_tarea" model="ir.ui.view">
-            <field name="name">view.form.pm.tarea</field>
-            <field name="model">pm.tarea</field>
-            <field name="arch" type="xml">
-                <form  create="false" >
-                    <sheet>
-                        <div class="oe_button_box d-flex justify-content-end" name="button_box">
-                        </div>
-                        <group>
-                            <group>
-                                <field name="estado_id"/>
-                                <field name="debilidad_id" groups = "plan_mejoras.res_groups_docente" />
-
-                                <field name="etiqueta_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
-                            </group>
-                            <group>
-                                <field name="name" required="1" groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
-                                <field name="ponderacion" required="1" groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
-                                <field name="expirado" readonly="1"/>
-                            </group>
-                            <group>
-                                <field name="fecha_inicio" required="1" groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
-                                <field name="fecha_fin" required="1" groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
-                            </group>
-                            <group>
-                                <field name="user_id" readonly="1" groups="plan_mejoras.res_groups_administrador, plan_mejoras.res_groups_docente_consejo"/>
-                                <field name="plan_id" invisible="1" groups="plan_mejoras.res_groups_administrador"/>
-                                <field name="evicencia_id" string="Evidencia" groups="plan_mejoras.res_groups_administrador, plan_mejoras.res_groups_docente_consejo, plan_mejoras.res_groups_docente"/>
-                            </group>
-
-                        </group>
-                        <group>
-                                <field name="estado" string="Finalizada" groups="plan_mejoras.res_groups_administrador, plan_mejoras.res_groups_docente_consejo"/>
-                                <field name="description"  required="1"/>
-
                         </group>
                         <notebook>
                         </notebook>
@@ -1016,7 +1017,7 @@
 
         <!--Accion de ventana tarea kanban-->
         <record id="action_view_tarea_kanban" model="ir.actions.act_window.view">
-            <field name="sequence" eval="0"/>
+            <field name="sequence" eval="1"/>
             <field name="view_mode">kanban</field>
             <field name="view_id" ref="plan_mejoras.view_kanban_tarea"/>
             <field name="act_window_id" ref="action_view_tarea"/>
@@ -1024,7 +1025,7 @@
 
         <!--Accion de ventana tarea kanban-->
         <record id="action_view_tarea_kanban_docente" model="ir.actions.act_window.view">
-            <field name="sequence" eval="0"/>
+            <field name="sequence" eval="2"/>
             <field name="view_mode">kanban</field>
 
             <field name="view_id" ref="plan_mejoras.view_kanban_tarea_docente"/>
@@ -1066,7 +1067,7 @@
 
         <!--Accion de ventana tarea form Docente-->
         <record id="action_view_tarea_form_docente" model="ir.actions.act_window.view">
-            <field name="sequence" eval="5"/>
+            <field name="sequence" eval="3"/>
             <field name="view_mode">form</field>
             <field name="view_id" ref="plan_mejoras.view_form_tarea_docente"/>
             <field name="act_window_id" ref="action_view_tarea_docente"/>
@@ -1074,7 +1075,7 @@
 
         <!--Accion de ventana tarea form Individual Admin-->
         <record id="action_view_tarea_form_individual" model="ir.actions.act_window.view">
-            <field name="sequence" eval="5"/>
+            <field name="sequence" eval="4"/>
             <field name="view_mode">form</field>
             <field name="view_id" ref="plan_mejoras.view_form_tarea_individual"/>
             <field name="act_window_id" ref="action_view_tarea_individual"/>
