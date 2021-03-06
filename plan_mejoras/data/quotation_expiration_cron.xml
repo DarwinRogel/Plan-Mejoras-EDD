@@ -34,7 +34,7 @@
      <field name="state">code</field>
      <field name="code">model.send_notification_tarea_consejo()</field>
      <field name="interval_type">days</field>
-     <field name="name">Notificación para revisar Tareas del Plan Mejoras lleva el 50%</field>
+     <field name="name">Notificación para revisar Tareas</field>
      <field name="numbercall">-1</field>
      <field name="doall">False</field>
      <field name="active">True</field>

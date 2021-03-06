@@ -238,8 +238,8 @@
         <field name="name">model.access.tag.docente</field>
         <field name="model_id" ref="plan_mejoras.model_pm_etiqueta"/>
         <field name="group_id" ref="plan_mejoras.res_groups_docente"/><!--Administracion/Ajustes-->
-        <field name="perm_create" eval="0"/>
-        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="0"/>
         <field name="perm_unlink" eval="0"/>
         <field name="perm_read" eval="1"/>
     </record>

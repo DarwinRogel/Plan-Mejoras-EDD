@@ -103,7 +103,7 @@ class Tarea(models.Model):
             if tarea.expirado == "no_expired" and tarea.fecha_fin < today:
                 tarea.expirado = "expired"
                 tarea.estado = True
-                if (tarea.user_id.has_group('plan_mejoras.res_groups_docente')) and tarea.ponderacion != 'nulo':
+                if (tarea.user_id.has_group('plan_mejoras.res_groups_docente')) and tarea.ponderacion == 'nulo':
                     template_rec = self.env.ref('plan_mejoras.email_template_tarea_expirada')
                     template_rec.write({'email_to': tarea.user_id.email})
                     template_rec.send_mail(tarea.id, force_send=True)

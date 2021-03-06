@@ -13,7 +13,7 @@
                         <group>
                             <group>
                                 <field name="estado_id"/>
-                                <field name="debilidad_id" groups = "plan_mejoras.res_groups_docente" />
+                                <field name="debilidad_id" groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
 
                                 <field name="etiqueta_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                             </group>
@@ -61,7 +61,7 @@
                             <group>
                                 <field name="estado_id"/>
                                 <field name="debilidad_id" groups = "plan_mejoras.res_groups_docente" readonly="1"/>
-                                <field name="etiqueta_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                                <field name="etiqueta_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                             </group>
                             <group>
                                 <field name="name" groups = "plan_mejoras.res_groups_docente" readonly="1"/>
@@ -107,7 +107,6 @@
                         <group>
                             <group>
                                 <field name="estado_id"/>
-                                <field name="debilidad_id" groups = "plan_mejoras.res_groups_docente" readonly="1"/>
                                 <field name="debilidad_id" groups = "plan_mejoras.res_groups_administrador,plan_mejoras.res_groups_docente_consejo"/>
                                 <field name="etiqueta_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                             </group>
@@ -1025,7 +1024,7 @@
 
         <!--Accion de ventana tarea kanban-->
         <record id="action_view_tarea_kanban_docente" model="ir.actions.act_window.view">
-            <field name="sequence" eval="2"/>
+            <field name="sequence" eval="1"/>
             <field name="view_mode">kanban</field>
 
             <field name="view_id" ref="plan_mejoras.view_kanban_tarea_docente"/>
@@ -1034,7 +1033,7 @@
 
         <!--Accion de ventana tarea Calendar-->
         <record id="action_view_tarea_calendar_docente" model="ir.actions.act_window.view">
-            <field name="sequence" eval="0"/>
+            <field name="sequence" eval="4"/>
             <field name="view_mode">calendar</field>
             <field name="view_id" ref="plan_mejoras.view_calendar_tarea_docente"/>
             <field name="act_window_id" ref="action_view_tarea_docente"/>
@@ -1050,7 +1049,7 @@
 
         <!--Accion de ventana tarea tree Docente-->
         <record id="action_view_tarea_tree_docente" model="ir.actions.act_window.view">
-            <field name="sequence" eval="1"/>
+            <field name="sequence" eval="3"/>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="plan_mejoras.view_tree_tarea_docente"/>
             <field name="act_window_id" ref="action_view_tarea_docente"/>
