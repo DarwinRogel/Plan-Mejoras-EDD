@@ -447,7 +447,6 @@ class Plan(models.Model):
             :param vals: Campos del modelo, como una lista de diccionarios.
             :returns: La creación de un nuevo Plan.
         """
-
         registros = self.env["pm.plan"].search([])
         aux = vals.get('fecha_inicio')
         aux1 = vals.get('fecha_fin')

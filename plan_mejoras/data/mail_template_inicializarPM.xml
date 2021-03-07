@@ -10,97 +10,93 @@
             <field name="auto_delete" eval="True"/>
             <field name="lang">${object.lang}</field>
             <field name="body_html" type="html">
-<table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
-<table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
-<tbody>
-    <!-- HEADER -->
-    <tr>
-        <td align="center" style="min-width: 590px;">
-            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
-                <tr><td valign="middle">
-                    <span style="font-size: 12px;">Universidad Nacional de Loja</span><br/>
-                    <span style="font-size: 18px; font-weight: bold;">
-                        ${object.company_id.name}
-                    </span>
-                </td><td valign="middle" align="right">
-                    <img src="plan_mejoras/static/src/img/CIS.png" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${object.company_id.name or ''}"/>
-                </td></tr>
-                <tr><td colspan="2" style="text-align:center;">
-                  <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;"/>
-                </td></tr>
-            </table>
-        </td>
-    </tr>
-    <!-- CONTENT -->
-    <tr>
-        <td align="center" style="min-width: 590px;">
-            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
-                <tr><td valign="top" style="font-size: 13px;">
-                    <div>
-                        Estimado/a ${object.name or ''},<br/> <br/>
-                        Se le comunica que el Plan Mejoras de la Evaluación al desempeño Docente acaba de Inicializar.<br/>
-                        Por favor, revise su planificación el en Módulo del Plan Mejoras dentro del Sistema Odoo ERP.
-                        <br/>
-                        Ingrese con la siguiente información:
-                        <ul>
-                            <li>Usuario: ${object.login or ''}</li>
-                            <li>Portal: <a href="${object.company_id.website or ''}">${object.company_id.website or ''}</a></li>
-                        </ul>
-                        Ingrese a su cuenta desde el siguiente enlace:
-                        <ul>
-                            <li><a href="${object.signup_url}">${object.signup_url}</a></li>
-                        </ul>
-                        <br/>
-                        Saludos cordiales.
-                    </div>
-                </td></tr>
-                <tr><td style="text-align:center;">
-                  <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
-                </td></tr>
-            </table>
-        </td>
-    </tr>
-    <!-- FOOTER -->
-    <tr>
-        <td align="center" style="min-width: 590px;">
-            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
-                <tr><td valign="middle" align="left">
-                    ${object.company_id.name}
-                </td></tr>
-                <tr><td valign="middle" align="left" style="opacity: 0.7;">
-                    ${object.company_id.phone or ''}
-                    ${(object.company_id.street) or ''} ${object.company_id.street2 or ''}
-                    % if object.company_id.email
-                        | <a href="'mailto:%s' % ${object.company_id.email}" style="text-decoration:none; color: #454748;">${object.company_id.email}</a>
-                    % endif
-                    % if object.company_id.website
-                        | <a href="'%s' % ${object.company_id.website}" style="text-decoration:none; color: #454748;">
-                        ${object.company_id.website}
-                    </a>
-                    % endif
-
-                </td>
+                <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
+                <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+                <tbody>
+                    <!-- HEADER -->
+                    <tr>
+                        <td align="center" style="min-width: 590px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                <tr><td valign="middle">
+                                    <span style="font-size: 12px;">Universidad Nacional de Loja</span><br/>
+                                    <span style="font-size: 18px; font-weight: bold;">
+                                        ${object.company_id.name}
+                                    </span>
+                                </td><td valign="middle" align="right">
+                                    <img src="/logo.png?company=${object.company_id.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${object.company_id.name or ''}"/>
+                                </td></tr>
+                                <tr><td colspan="2" style="text-align:center;">
+                                  <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;"/>
+                                </td></tr>
+                            </table>
+                        </td>
                     </tr>
-                <tr>
-                <td valign="middle" align="left">
-                    <img src="/logo.png?company=${object.company_id.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${object.company_id.name}"/>
-                </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-</tbody>
-</table>
-</td></tr>
-<!-- POWERED BY -->
-<tr><td align="center" style="min-width: 590px;">
-    <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
-      <tr><td style="text-align: center; font-size: 13px;">
-          <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=portalinvite" style="color: #875A7B;">Odoo</a>
-      </td></tr>
-    </table>
-</td></tr>
-</table>
+                    <!-- CONTENT -->
+                    <tr>
+                        <td align="center" style="min-width: 590px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                <tr><td valign="top" style="font-size: 13px;">
+                                    <div>
+                                        Estimado/a ${object.name or ''},<br/> <br/>
+                                        Se le comunica que el Plan Mejoras de la Evaluación al desempeño Docente acaba de Inicializar.<br/>
+                                        Por favor, revise su planificación el en Módulo del Plan Mejoras dentro del Sistema Odoo ERP.
+                                        <br/>
+                                        Ingrese con la siguiente información:
+                                        <ul>
+                                            <li>Usuario: ${object.login or ''}</li>
+                                            <li>Portal: <a href="${object.company_id.website or ''}">${object.company_id.website or ''}</a></li>
+                                        </ul>
+                                        <br/>
+                                        Saludos cordiales.
+                                    </div>
+                                </td></tr>
+                                <tr><td style="text-align:center;">
+                                  <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                </td></tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <!-- FOOTER -->
+                    <tr>
+                        <td align="center" style="min-width: 590px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                <tr><td valign="middle" align="left">
+                                    ${object.company_id.name}
+                                </td></tr>
+                                <tr><td valign="middle" align="left" style="opacity: 0.7;">
+                                    ${object.company_id.phone or ''}
+                                    ${(object.company_id.street) or ''} ${object.company_id.street2 or ''}
+                                    % if object.company_id.email
+                                        | <a href="'mailto:%s' % ${object.company_id.email}" style="text-decoration:none; color: #454748;">${object.company_id.email}</a>
+                                    % endif
+                                    % if object.company_id.website
+                                        | <a href="'%s' % ${object.company_id.website}" style="text-decoration:none; color: #454748;">
+                                        ${object.company_id.website}
+                                    </a>
+                                    % endif
+
+                                </td>
+                                    </tr>
+                                <tr>
+                                <td valign="middle" align="left">
+                                    <img src="/logo.png?company=${object.company_id.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${object.company_id.name}"/>
+                                </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+                </table>
+                </td></tr>
+                <!-- POWERED BY -->
+                <tr><td align="center" style="min-width: 590px;">
+                    <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+                      <tr><td style="text-align: center; font-size: 13px;">
+                          <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=portalinvite" style="color: #875A7B;">Odoo</a>
+                      </td></tr>
+                    </table>
+                </td></tr>
+                </table>
             </field>
         </record>
     </data>
@@ -115,30 +111,98 @@
             <field name="subject">CONTROL DEL CRONOGRAMA DE TAREAS PARA EL PLAN MEJORAS DE LA EDD</field>
             <field name="auto_delete" eval="True"/>
             <field name="lang">${object.lang}</field>
-            <field name="body_html"><![CDATA[
-                <p>Estimado <b>${(object.user_id.name)},</b></p>
-                <br/>
-                <p>La tarea "${(object.name)}", está a punto de culminar, por favor revisar sus tareas.</p>
-                <br/>
-                <a href="${(object.user_id.company_id.website)}">
-                    <button
-                    style="background-color: #B048B2;
-                    color: white;
-                    border-radius: 8px;
-                    padding: 15px 32px;
-                    text-align: center;
-                    display: inline-block;
-                    font-size: 16px;">Ver Tareas</button>
-                </a>
-                <br/>
-                <p>Saludos cordiales.</p>
-                <br/>
-                <p><b>${object.user_id.company_id.name}</b> </p>
-                <p><b>Correo:</b> ${object.user_id.company_id.email}</p>
-                <p><b>Teléfono:</b> ${(object.user_id.company_id.phone)}</p>
-                <p><b>Dirección:</b> ${object.user_id.company_id.street} ${object.user_id.company_id.street2}</p>
-                <p><b>Sitio Web:</b> ${(object.user_id.company_id.website)}</p>
-            ]]>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
+                <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+                <tbody>
+                    <!-- HEADER -->
+                    <tr>
+                        <td align="center" style="min-width: 590px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                <tr><td valign="middle">
+                                    <span style="font-size: 12px;">Universidad Nacional de Loja</span><br/>
+                                    <span style="font-size: 18px; font-weight: bold;">
+                                        ${object.user_id.company_id.name}
+                                    </span>
+                                </td><td valign="middle" align="right">
+                                    <img src="/logo.png?company=${object.user_id.company_id.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${object.user_id.company_id.name or ''}"/>
+                                </td></tr>
+                                <tr><td colspan="2" style="text-align:center;">
+                                  <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;"/>
+                                </td></tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <!-- CONTENT -->
+                    <tr>
+                        <td align="center" style="min-width: 590px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                <tr><td valign="top" style="font-size: 13px;">
+                                    <div>
+                                        Estimado/a ${object.user_id.name or ''},<br/> <br/>
+                                        Se le comunica que la tarea "${(object.name)}", está a punto de culminar, por favor revisar sus tareas.
+                                        <br/><br/>
+                                        <a href="${(object.user_id.company_id.website)}">
+                                            <button
+                                            style="background-color: #B048B2;
+                                            color: white;
+                                            border-radius: 8px;
+                                            padding: 15px 32px;
+                                            text-align: center;
+                                            display: inline-block;
+                                            font-size: 16px;">Ver Tareas</button>
+                                        </a>
+                                        <br/><br/>
+                                        Saludos cordiales.
+                                    </div>
+                                </td></tr>
+                                <tr><td style="text-align:center;">
+                                  <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                </td></tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <!-- FOOTER -->
+                    <tr>
+                        <td align="center" style="min-width: 590px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                <tr><td valign="middle" align="left">
+                                    ${object.user_id.company_id.name}
+                                </td></tr>
+                                <tr><td valign="middle" align="left" style="opacity: 0.7;">
+                                    ${object.user_id.company_id.phone or ''}
+                                    ${(object.user_id.company_id.street) or ''} ${object.user_id.company_id.street2 or ''}
+                                    % if object.user_id.company_id.email
+                                        | <a href="'mailto:%s' % ${object.user_id.company_id.email}" style="text-decoration:none; color: #454748;">${object.user_id.company_id.email}</a>
+                                    % endif
+                                    % if object.user_id.company_id.website
+                                        | <a href="'%s' % ${object.user_id.company_id.website}" style="text-decoration:none; color: #454748;">
+                                        ${object.user_id.company_id.website}
+                                    </a>
+                                    % endif
+
+                                </td>
+                                    </tr>
+                                <tr>
+                                <td valign="middle" align="left">
+                                    <img src="/logo.png?company=${object.user_id.company_id.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${object.user_id.company_id.name}"/>
+                                </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+                </table>
+                </td></tr>
+                <!-- POWERED BY -->
+                <tr><td align="center" style="min-width: 590px;">
+                    <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+                      <tr><td style="text-align: center; font-size: 13px;">
+                          <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=portalinvite" style="color: #875A7B;">Odoo</a>
+                      </td></tr>
+                    </table>
+                </td></tr>
+                </table>
             </field>
         </record>
     </data>
@@ -153,20 +217,94 @@
             <field name="subject">CONTROL DE EXPIRACIÓN DE LAS TAREAS DEL PLAN MEJORAS DE LA EDD</field>
             <field name="auto_delete" eval="True"/>
             <field name="lang">${object.lang}</field>
-            <field name="body_html"><![CDATA[
-                <p>Estimado <b>${(object.user_id.name)},</b></p>
-                <br/>
-                <p>La tarea "${(object.name)}", Ha expirado, se le recomienda ponerse en contacto con el Gestor de la
-                Carrera para Justificar.</p>
-                <br/>
-                <p>Saludos cordiales.</p>
-                <br/>
-                <p><b>${object.user_id.company_id.name}</b> </p>
-                <p><b>Correo:</b> ${object.user_id.company_id.email}</p>
-                <p><b>Teléfono:</b> ${(object.user_id.company_id.phone)}</p>
-                <p><b>Dirección:</b> ${object.user_id.company_id.street} ${object.user_id.company_id.street2}</p>
-                <p><b>Sitio Web:</b> ${(object.user_id.company_id.website)}</p>
-            ]]>
+             <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
+                <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+                <tbody>
+                    <!-- HEADER -->
+                    <tr>
+                        <td align="center" style="min-width: 590px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                <tr><td valign="middle">
+                                    <span style="font-size: 12px;">Universidad Nacional de Loja</span><br/>
+                                    <span style="font-size: 18px; font-weight: bold;">
+                                        ${object.user_id.company_id.name}
+                                    </span>
+                                </td><td valign="middle" align="right">
+                                    <img src="/logo.png?company=${object.user_id.company_id.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${object.user_id.company_id.name or ''}"/>
+                                </td></tr>
+                                <tr><td colspan="2" style="text-align:center;">
+                                  <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;"/>
+                                </td></tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <!-- CONTENT -->
+                    <tr>
+                        <td align="center" style="min-width: 590px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                <tr><td valign="top" style="font-size: 13px;">
+                                    <div>
+                                        Estimado/a ${object.user_id.name or ''},<br/> <br/>
+                                        Se le comunica que la tarea "${(object.name)}", Ha expirado, se le recomienda ponerse en contacto con el Gestor de la
+                                        Carrera para Justificar el motivo.
+                                        <br/>
+                                        Ingrese a la plataforma con la siguiente información:
+                                        <ul>
+                                            <li>Usuario: ${object.user_id.login or ''}</li>
+                                            <li>Portal: <a href="${object.user_id.company_id.website or ''}">${object.user_id.company_id.website or ''}</a></li>
+                                        </ul>
+                                        <br/>
+                                        Saludos cordiales.
+                                    </div>
+                                </td></tr>
+                                <tr><td style="text-align:center;">
+                                  <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                </td></tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <!-- FOOTER -->
+                    <tr>
+                        <td align="center" style="min-width: 590px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                <tr><td valign="middle" align="left">
+                                    ${object.user_id.company_id.name}
+                                </td></tr>
+                                <tr><td valign="middle" align="left" style="opacity: 0.7;">
+                                    ${object.user_id.company_id.phone or ''}
+                                    ${(object.user_id.company_id.street) or ''} ${object.user_id.company_id.street2 or ''}
+                                    % if object.user_id.company_id.email
+                                        | <a href="'mailto:%s' % ${object.user_id.company_id.email}" style="text-decoration:none; color: #454748;">${object.user_id.company_id.email}</a>
+                                    % endif
+                                    % if object.user_id.company_id.website
+                                        | <a href="'%s' % ${object.user_id.company_id.website}" style="text-decoration:none; color: #454748;">
+                                        ${object.user_id.company_id.website}
+                                    </a>
+                                    % endif
+
+                                </td>
+                                    </tr>
+                                <tr>
+                                <td valign="middle" align="left">
+                                    <img src="/logo.png?company=${object.user_id.company_id.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${object.user_id.company_id.name}"/>
+                                </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+                </table>
+                </td></tr>
+                <!-- POWERED BY -->
+                <tr><td align="center" style="min-width: 590px;">
+                    <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+                      <tr><td style="text-align: center; font-size: 13px;">
+                          <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=portalinvite" style="color: #875A7B;">Odoo</a>
+                      </td></tr>
+                    </table>
+                </td></tr>
+                </table>
             </field>
         </record>
     </data>
@@ -181,30 +319,99 @@
             <field name="subject">NOTIFICACIÓN DE LA PONDERACIÓN DE LAS TAREAS DEL PLAN MEJORAS DE LA EDD</field>
             <field name="auto_delete" eval="True"/>
             <field name="lang">${object.lang}</field>
-            <field name="body_html"><![CDATA[
-                <p>Estimado <b>${(object.user_id.name)},</b></p>
-                <br/>
-                <p>La tarea "${(object.name)}", ha sido ponderada, se le recomienda revisar las tareas en su
-                tablero Kanban.</p>
-                <a href="${(object.user_id.company_id.website)}">
-                    <button
-                    style="background-color: #B048B2;
-                    color: white;
-                    border-radius: 8px;
-                    padding: 15px 32px;
-                    text-align: center;
-                    display: inline-block;
-                    font-size: 16px;">Ver Tareas</button>
-                </a>
-                <br/>
-                <p>Saludos cordiales.</p>
-                <br/>
-                <p><b>${object.user_id.company_id.name}</b> </p>
-                <p><b>Correo:</b> ${object.user_id.company_id.email}</p>
-                <p><b>Teléfono:</b> ${(object.user_id.company_id.phone)}</p>
-                <p><b>Dirección:</b> ${object.user_id.company_id.street} ${object.user_id.company_id.street2}</p>
-                <p><b>Sitio Web:</b> ${(object.user_id.company_id.website)}</p>
-            ]]>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
+                <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+                <tbody>
+                    <!-- HEADER -->
+                    <tr>
+                        <td align="center" style="min-width: 590px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                <tr><td valign="middle">
+                                    <span style="font-size: 12px;">Universidad Nacional de Loja</span><br/>
+                                    <span style="font-size: 18px; font-weight: bold;">
+                                        ${object.user_id.company_id.name}
+                                    </span>
+                                </td><td valign="middle" align="right">
+                                    <img src="/logo.png?company=${object.user_id.company_id.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${object.user_id.company_id.name or ''}"/>
+                                </td></tr>
+                                <tr><td colspan="2" style="text-align:center;">
+                                  <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;"/>
+                                </td></tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <!-- CONTENT -->
+                    <tr>
+                        <td align="center" style="min-width: 590px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                <tr><td valign="top" style="font-size: 13px;">
+                                    <div>
+                                        Estimado/a ${object.user_id.name or ''},<br/> <br/>
+                                        Se le comunica que la tarea "${(object.name)}", ha sido ponderada, se le recomienda revisar las tareas en su
+                                        tablero Kanban.
+                                        <br/><br/>
+                                        <a href="${(object.user_id.company_id.website)}">
+                                            <button
+                                            style="background-color: #B048B2;
+                                            color: white;
+                                            border-radius: 8px;
+                                            padding: 15px 32px;
+                                            text-align: center;
+                                            display: inline-block;
+                                            font-size: 16px;">Ver Tareas</button>
+                                        </a>
+                                        <br/><br/>
+                                        Saludos cordiales.
+                                    </div>
+                                </td></tr>
+                                <tr><td style="text-align:center;">
+                                  <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                </td></tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <!-- FOOTER -->
+                    <tr>
+                        <td align="center" style="min-width: 590px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                <tr><td valign="middle" align="left">
+                                    ${object.user_id.company_id.name}
+                                </td></tr>
+                                <tr><td valign="middle" align="left" style="opacity: 0.7;">
+                                    ${object.user_id.company_id.phone or ''}
+                                    ${(object.user_id.company_id.street) or ''} ${object.user_id.company_id.street2 or ''}
+                                    % if object.user_id.company_id.email
+                                        | <a href="'mailto:%s' % ${object.user_id.company_id.email}" style="text-decoration:none; color: #454748;">${object.user_id.company_id.email}</a>
+                                    % endif
+                                    % if object.user_id.company_id.website
+                                        | <a href="'%s' % ${object.user_id.company_id.website}" style="text-decoration:none; color: #454748;">
+                                        ${object.user_id.company_id.website}
+                                    </a>
+                                    % endif
+
+                                </td>
+                                    </tr>
+                                <tr>
+                                <td valign="middle" align="left">
+                                    <img src="/logo.png?company=${object.user_id.company_id.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${object.user_id.company_id.name}"/>
+                                </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+                </table>
+                </td></tr>
+                <!-- POWERED BY -->
+                <tr><td align="center" style="min-width: 590px;">
+                    <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+                      <tr><td style="text-align: center; font-size: 13px;">
+                          <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=portalinvite" style="color: #875A7B;">Odoo</a>
+                      </td></tr>
+                    </table>
+                </td></tr>
+                </table>
             </field>
         </record>
     </data>
@@ -219,31 +426,99 @@
             <field name="subject">NOTIFICACIÓN PARA EL SEGUIMIENTO DE LAS TAREAS DEL PLAN MEJORAS DE LA EDD</field>
             <field name="auto_delete" eval="True"/>
             <field name="lang">${object.lang}</field>
-            <field name="body_html"><![CDATA[
-                <p><b>Estimado ${(object.user_ids.name)},</b></p>
-                <br/>
-                <p>Como parte del Consejo Consultivo, debe realizar la revisión de la Tareas del Plan Mejoras de la Evalución
-                al Desempeño Docente. Por favor diríjase al módulo del Plan Mejoras dentro del Sistema Odoo ERP</p>
-                <br/>
-                <a href="${(object.user_ids.company_id.website)}">
-                    <button
-                    style="background-color: #B048B2;
-                    color: white;
-                    border-radius: 8px;
-                    padding: 15px 32px;
-                    text-align: center;
-                    display: inline-block;
-                    font-size: 16px;">Revisar</button>
-                </a>
-                <br/>
-                <p>Saludos cordiales.</p>
-                <br/>
-                <p><b>${object.user_ids.company_id.name}</b></p>
-                <p><b>Correo:</b> ${object.user_ids.company_id.email}</p>
-                <p><b>Teléfono:</b> ${(object.user_ids.company_id.phone)}</p>
-                <p><b>Dirección:</b> ${(object.user_ids.company_id.street)} ${(object.user_ids.company_id.street2)}</p>
-                <p><b>Sitio Web:</b> ${(object.user_ids.company_id.website)}</p>
-            ]]>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
+                <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+                <tbody>
+                    <!-- HEADER -->
+                    <tr>
+                        <td align="center" style="min-width: 590px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                <tr><td valign="middle">
+                                    <span style="font-size: 12px;">Universidad Nacional de Loja</span><br/>
+                                    <span style="font-size: 18px; font-weight: bold;">
+                                        ${object.user_ids.company_id.name}
+                                    </span>
+                                </td><td valign="middle" align="right">
+                                    <img src="/logo.png?company=${object.user_ids.company_id.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${object.user_ids.company_id.name or ''}"/>
+                                </td></tr>
+                                <tr><td colspan="2" style="text-align:center;">
+                                  <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;"/>
+                                </td></tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <!-- CONTENT -->
+                    <tr>
+                        <td align="center" style="min-width: 590px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                <tr><td valign="top" style="font-size: 13px;">
+                                    <div>
+                                        Estimado/a ${object.user_ids.name or ''},<br/> <br/>
+                                        Se le comunica que como parte del Consejo Consultivo, debe realizar la revisión de la Tareas del Plan Mejoras de la Evalución
+                                        al Desempeño Docente. Por favor diríjase al módulo del Plan Mejoras dentro del Sistema Odoo ERP.
+                                        <br/><br/>
+                                        <a href="${(object.user_ids.company_id.website)}">
+                                            <button
+                                            style="background-color: #B048B2;
+                                            color: white;
+                                            border-radius: 8px;
+                                            padding: 15px 32px;
+                                            text-align: center;
+                                            display: inline-block;
+                                            font-size: 16px;">Ver Tareas</button>
+                                        </a>
+                                        <br/><br/>
+                                        Saludos cordiales.
+                                    </div>
+                                </td></tr>
+                                <tr><td style="text-align:center;">
+                                  <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                </td></tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <!-- FOOTER -->
+                    <tr>
+                        <td align="center" style="min-width: 590px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                <tr><td valign="middle" align="left">
+                                    ${object.user_ids.company_id.name}
+                                </td></tr>
+                                <tr><td valign="middle" align="left" style="opacity: 0.7;">
+                                    ${object.user_ids.company_id.phone or ''}
+                                    ${(object.user_ids.company_id.street) or ''} ${object.user_ids.company_id.street2 or ''}
+                                    % if object.user_ids.company_id.email
+                                        | <a href="'mailto:%s' % ${object.user_ids.company_id.email}" style="text-decoration:none; color: #454748;">${object.user_ids.company_id.email}</a>
+                                    % endif
+                                    % if object.user_ids.company_id.website
+                                        | <a href="'%s' % ${object.user_ids.company_id.website}" style="text-decoration:none; color: #454748;">
+                                        ${object.user_ids.company_id.website}
+                                    </a>
+                                    % endif
+
+                                </td>
+                                    </tr>
+                                <tr>
+                                <td valign="middle" align="left">
+                                    <img src="/logo.png?company=${object.user_ids.company_id.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${object.user_ids.company_id.name}"/>
+                                </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+                </table>
+                </td></tr>
+                <!-- POWERED BY -->
+                <tr><td align="center" style="min-width: 590px;">
+                    <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+                      <tr><td style="text-align: center; font-size: 13px;">
+                          <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=portalinvite" style="color: #875A7B;">Odoo</a>
+                      </td></tr>
+                    </table>
+                </td></tr>
+                </table>
             </field>
         </record>
     </data>
@@ -259,18 +534,94 @@
             <field name="subject">FINALIZACIÓN DEL PLAN MEJORAS DE LA EVALUACIÓN AL DESEMPEÑO DOCENTE</field>
             <field name="auto_delete" eval="True"/>
             <field name="lang">${object.lang}</field>
-            <field name="body_html"><![CDATA[
-                <p>El Plan Mejoras denominado: <b>"${(object.name)}"</b> a finalizado, si presenta algún inconveniente
-                comuníquese con la carrera al siguiente correo: ${(object.user_ids.company_id.email)}</p>
-                <br/>
-                <p>Saludos cordiales.</p>
-                <br/>
-                <p><b>${object.user_ids.company_id.name}</b> </p>
-                <p><b>Correo:</b> ${object.user_ids.company_id.email}</p>
-                <p><b>Teléfono:</b> ${(object.user_ids.company_id.phone)}</p>
-                <p><b>Dirección:</b> ${(object.user_ids.company_id.street)} ${(object.user_ids.company_id.street2)}</p>
-                <p><b>Sitio Web:</b> ${(object.user_ids.company_id.website)}</p>
-            ]]>
+            <field name="body_html" type="html">
+                <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
+                <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+                <tbody>
+                    <!-- HEADER -->
+                    <tr>
+                        <td align="center" style="min-width: 590px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                <tr><td valign="middle">
+                                    <span style="font-size: 12px;">Universidad Nacional de Loja</span><br/>
+                                    <span style="font-size: 18px; font-weight: bold;">
+                                        ${object.user_ids.company_id.name}
+                                    </span>
+                                </td><td valign="middle" align="right">
+                                    <img src="/logo.png?company=${object.user_ids.company_id.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${object.user_ids.company_id.name or ''}"/>
+                                </td></tr>
+                                <tr><td colspan="2" style="text-align:center;">
+                                  <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;"/>
+                                </td></tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <!-- CONTENT -->
+                    <tr>
+                        <td align="center" style="min-width: 590px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                <tr><td valign="top" style="font-size: 13px;">
+                                    <div>
+                                        Estimado/a ${object.user_ids.name or ''},<br/> <br/>
+                                        Se le comunica que el Plan Mejoras denominado: <b>"${(object.name)}"</b> a finalizado, si presenta algún inconveniente
+                                        comuníquese con la carrera al siguiente correo: ${(object.user_ids.company_id.email)}
+                                        <br/>
+                                        Ingrese con la siguiente información:
+                                        <ul>
+                                            <li>Usuario: ${object.user_ids.login or ''}</li>
+                                            <li>Portal: <a href="${object.user_ids.company_id.website or ''}">${object.user_ids.company_id.website or ''}</a></li>
+                                        </ul>
+                                        <br/>
+                                        Saludos cordiales.
+                                    </div>
+                                </td></tr>
+                                <tr><td style="text-align:center;">
+                                  <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                                </td></tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <!-- FOOTER -->
+                    <tr>
+                        <td align="center" style="min-width: 590px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                                <tr><td valign="middle" align="left">
+                                    ${object.user_ids.company_id.name}
+                                </td></tr>
+                                <tr><td valign="middle" align="left" style="opacity: 0.7;">
+                                    ${object.user_ids.company_id.phone or ''}
+                                    ${(object.user_ids.company_id.street) or ''} ${object.user_ids.company_id.street2 or ''}
+                                    % if object.user_ids.company_id.email
+                                        | <a href="'mailto:%s' % ${object.user_ids.company_id.email}" style="text-decoration:none; color: #454748;">${object.user_ids.company_id.email}</a>
+                                    % endif
+                                    % if object.user_ids.company_id.website
+                                        | <a href="'%s' % ${object.user_ids.company_id.website}" style="text-decoration:none; color: #454748;">
+                                        ${object.user_ids.company_id.website}
+                                    </a>
+                                    % endif
+
+                                </td>
+                                    </tr>
+                                <tr>
+                                <td valign="middle" align="left">
+                                    <img src="/logo.png?company=${object.user_ids.company_id.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${object.user_ids.company_id.name}"/>
+                                </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+                </table>
+                </td></tr>
+                <!-- POWERED BY -->
+                <tr><td align="center" style="min-width: 590px;">
+                    <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+                      <tr><td style="text-align: center; font-size: 13px;">
+                          <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=portalinvite" style="color: #875A7B;">Odoo</a>
+                      </td></tr>
+                    </table>
+                </td></tr>
+                </table>
             </field>
         </record>
     </data>
