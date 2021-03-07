@@ -10,7 +10,7 @@
             <field name="margin_bottom" eval="30"/>
             <field name="margin_left" eval="20"/>
             <field name="header_line" eval="False" />
-            <field name="header_spacing" eval="20"/>
+            <field name="header_spacing" eval="30"/>
         </record>
 
     <report id="plan_mejoras.action_report_detalle_plan_mejoras"
