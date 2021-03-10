@@ -40,8 +40,25 @@
                                 <br/>
                             </div>
                             <br/>
+
                             <div style="font-family: 'Open Sans', sans-serif; font-size: 14pt;
                                 color: #000000; text-align: justify">
+                                <div class="page"/>
+                                        <p style="page-break-after:always;">   </p>
+                                        <span><b>LEGALIZACIÓN</b> <br/><br/><br/><br/><br/></span>
+                                <t t-foreach="request.env['res.users'].search([])" t-as="consejo">
+                                    <t t-if="consejo.has_group('plan_mejoras.res_groups_administrador')">
+                                        <span>Firma:___________________________</span><br/>
+                                        <b><span>ENCARGADO DE LA GESTIÓN DE LA CIS/C</span></b>
+                                        <br/><br/><br/><br/><br/>
+                                    </t>
+                                    <t t-if="consejo.has_group('plan_mejoras.res_groups_docente_consejo')">
+                                        <span>Firma:___________________________</span><br/>
+                                        <b><span>MIEMBRO DEL CONSEJO CONSULTIVO DE LA CIS/C</span></b>
+                                        <br/><br/><br/><br/><br/>
+                                    </t>
+                                </t>
+
                                 <div class="page"/>
                                     <p style="page-break-after:always;">   </p>
                                         <span><b>INTRODUCCIÓN</b> <br/><br/><t t-raw="obj.introduccion"/></span>

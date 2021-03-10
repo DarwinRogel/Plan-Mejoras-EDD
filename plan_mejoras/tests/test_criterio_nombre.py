@@ -16,34 +16,34 @@ class TestModuloPlanMejoras(common.TransactionCase):
     def test_criterio_nombre_existe(self):
         self.assertTrue(self.criterio_nombre_obj._name in self.env)
 
-    def test_criterio_nombre_crear_datos_validos(self):
+    def test_crear_datos_validos(self):
         criterio_nombre = self.criterio_nombre_obj.create({
             'name': 'Pedagogico1',
             'porcentaje_ponderacion': 30.0})
         self.assertTrue(bool(self.criterio_nombre_obj.search([('id', '=', criterio_nombre.id)], limit=1)))
 
     @unittest.skip("Es Positivo")
-    def test_criterio_nombre_metodo_check_porcentaje_ponderacion_neg(self):
+    def test_check_porcentaje_ponderacion_neg(self):
         self.criterio_nombre_obj.create({
             'name': 'Pedagogico1',
             'porcentaje_ponderacion': -1})
         self.fail()
 
-    def test_criterio_nombre_metodo_check_porcentaje_ponderacion_pos(self):
+    def test_check_porcentaje_ponderacion_pos(self):
         criterio_nombre = self.criterio_nombre_obj.create({
             'name': 'Pedagogico1',
             'porcentaje_ponderacion': 1})
         self.assertGreater(criterio_nombre.porcentaje_ponderacion, 0,'Es Positivo')
 
     @unittest.skip("Es Cero")
-    def test_criterio_nombre_metodo_check_porcentaje_ponderacion_cero(self):
+    def test_check_porcentaje_ponderacion_cero(self):
         self.criterio_nombre_obj.create({
             'name': 'Pedagogico1',
             'porcentaje_ponderacion': 0})
         self.fail()
 
 
-    def test_criterio_nombre_metodo_compute_valoracion_porcentaje_suma_correcta(self):
+    def test_compute_valoracion_porcentaje_suma_correcta(self):
         criterio_nombre2 = self.criterio_nombre_obj.create({
             'name': 'Etico2',
             'porcentaje_ponderacion': 30})
@@ -54,7 +54,7 @@ class TestModuloPlanMejoras(common.TransactionCase):
         self.assertEqual(criterio_nombre3.total_val, 100)
 
     @unittest.skip("Supera 100%")
-    def test_criterio_nombre_metodo_compute_valoracion_porcentaje_supera100(self):
+    def test_compute_valoracion_porcentaje_supera100(self):
         criterio_nombre2 = self.criterio_nombre_obj.create({
             'name': 'Etico2',
             'porcentaje_ponderacion': 40})

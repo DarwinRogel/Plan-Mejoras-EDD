@@ -52,8 +52,7 @@ class Tarea(models.Model):
         '''
 
         today = fields.Date.today()
-        lista_tareas = self.env["pm.tarea"].search([])
-        for record in lista_tareas:
+        for record in self:
             if record.plan_id.finalizado == False:
                 fecha_ini_tarea = record.fecha_inicio
                 fecha_fin_tarea = record.fecha_fin
@@ -65,7 +64,7 @@ class Tarea(models.Model):
                     if fecha_fin.date() < today or fecha_ini.date() > fecha_fin.date():
                         raise ValidationError(("Verifique las Fechas ingresadas para la tarea: %s") % record.name)
                 else:
-                    raise ValidationError(("la Fecha de Finalización ingresadas para la tarea: %s No Puede ser mayor a la de Finalización del Plan Mejoras de la EDD") % record.name)
+                    raise ValidationError(("La Fecha de Finalización ingresadas para la tarea: %s No Puede ser mayor a la de Finalización del Plan Mejoras de la EDD") % record.name)
 
     @api.constrains('fecha_fin')
     def fecha_fin_modificada(self):

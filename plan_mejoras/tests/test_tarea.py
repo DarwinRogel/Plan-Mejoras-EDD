@@ -53,10 +53,10 @@ class TestModuloPlanMejoras(common.TransactionCase):
             'debilidad_id': self.debilidad1.id,
             'user_id': self.docente.id})
 
-    def test_tarea_existe(self):
+    def test_existe(self):
         self.assertTrue(self.tarea_obj._name in self.env)
 
-    def test_tarea_crear_datos_validos(self):
+    def test_crear_datos_validos(self):
         tarea = self.tarea_obj.create({
             'name': 'Ejecutar un curso de Redes y Telecomunicaciones',
             'fecha_inicio': '2020-10-01 16:00:00',
@@ -69,7 +69,7 @@ class TestModuloPlanMejoras(common.TransactionCase):
             'user_id': self.docente.id})
         self.assertTrue(bool(self.tarea_obj.search([('id', '=', tarea.id)], limit=1)))
 
-    def test_tarea_eliminar_relacion(self):
+    def test_eliminar(self):
         tarea = self.tarea_obj.create({
             'name': 'Ejecutar un curso de Redes y Telecomunicaciones',
             'fecha_inicio': '2020-10-01 16:00:00',
@@ -79,7 +79,7 @@ class TestModuloPlanMejoras(common.TransactionCase):
         self.assertTrue(tarea, msg=None)
         self.assertTrue(tarea.unlink(), msg=None)
 
-    def test_tarea_metodo_check_expiry_expired(self):
+    def test_check_expiry_expired(self):
         tarea = self.tarea_obj.create({
             'name': 'Ejecutar un curso de Redes y Telecomunicaciones',
             'fecha_inicio': '2021-01-15 16:00:00',
@@ -93,7 +93,7 @@ class TestModuloPlanMejoras(common.TransactionCase):
         tarea.check_expiry()
         self.assertEqual(tarea.expirado, 'expired')
 
-    def test_tarea_metodo_check_expiry_no_expired(self):
+    def test_check_expiry_no_expired(self):
         tarea = self.tarea_obj.create({
             'name': 'Ejecutar un curso de Redes y Telecomunicaciones',
             'fecha_inicio': '2021-01-15 16:00:00',
@@ -108,11 +108,11 @@ class TestModuloPlanMejoras(common.TransactionCase):
         self.assertEqual(tarea.expirado, 'no_expired')
 
 
-    #def test_tarea_metodo_send_notification_tarea(self):
+    #def test_send_notification_tarea(self):
      #   self.tarea1.send_notification_tarea()
       #  self.fail()
 
-    #def test_tarea_metodo_send_notification_tarea_ponderada(self):
+    #def test_send_notification_tarea_ponderada(self):
         #self.tarea1.send_notification_tarea()
         #self.fail()
 

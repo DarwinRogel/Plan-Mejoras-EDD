@@ -87,7 +87,7 @@ class TestModuloPlanMejoras(common.TransactionCase):
             'name': 'Pedagogico1',
             'porcentaje_ponderacion': 20.0})
 
-    def test_usuario_crear_datos_validos(self):
+    def test_crear_datos_validos(self):
         usuario = self.Users.create({
             'name': 'Juan Montalvan',
             'login': 'juan1',
@@ -98,17 +98,17 @@ class TestModuloPlanMejoras(common.TransactionCase):
                 (6, 0, [self.env.ref('plan_mejoras.res_groups_docente').id])]})
         self.assertTrue(bool(self.Users.search([('id', '=', usuario.id)], limit=1)))
 
-    def test_usuario_grupos_email(self):
+    def test_grupos_email(self):
         email = ['alexrog96@gmail.com', 'darogel96@gmail.com', 'd.d@example.com', 'r.c@example.com', 'robin.cordova@unl.edu.ec']
         email1 = self.Users.get_groups_usesr_email()
         self.assertEqual(email, email1)
 
 
-    def test_usuario_is_admin_true(self):
+    def test_is_admin_true(self):
         self.docente2._compute_is_group_admin()
         self.assertTrue(self.docente2.is_group_admin)
 
-    def test_usuario_is_admin_false(self):
+    def test_is_admin_false(self):
         self.docente1._compute_is_group_admin()
         self.assertFalse(self.docente1.is_group_admin)
 
