@@ -44,13 +44,16 @@ class TestModuloPlanMejoras(common.TransactionCase):
 
 
     def test_compute_valoracion_porcentaje_suma_correcta(self):
+
         criterio_nombre2 = self.criterio_nombre_obj.create({
             'name': 'Etico2',
             'porcentaje_ponderacion': 30})
         criterio_nombre3 = self.criterio_nombre_obj.create({
             'name': 'Academico1',
-            'porcentaje_ponderacion': 30})
+            'porcentaje_ponderacion': 40})
+
         criterio_nombre3._compute_valoracion_porcentaje()
+
         self.assertEqual(criterio_nombre3.total_val, 100)
 
     @unittest.skip("Supera 100%")

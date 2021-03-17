@@ -35,17 +35,17 @@ class TestModuloPlanMejoras(common.TransactionCase):
 
         self.plan1 = self.plan_obj.create({
             'name' : "Plan Mejoras",
-            'fecha_inicio' : '2020-10-14 16:00:00',
-            'fecha_fin' : '2020-10-14 16:00:00',
+            'fecha_inicio' : '2021-03-01',
+            'fecha_fin' : '2021-03-28',
             'add_resultados' : True,
             'add_anexos' : True,
             'finalizado' : False,
-            'user_ids' : self.docente.id})
+            'user_ids' : [self.docente.id]})
 
         self.tarea1 = self.tarea_obj.create({
             'name': 'Ejecutar un curso de Redes y Telecomunicaciones',
-            'fecha_inicio': '2020-10-01 16:00:00',
-            'fecha_fin': '2020-10-14 16:00:00',
+            'fecha_inicio': '2021-03-02',
+            'fecha_fin': '2021-03-18',
             'ponderacion': 'nulo',
             'expirado': 'no_expired',
             'estado_id': self.estado1.id,
@@ -59,8 +59,8 @@ class TestModuloPlanMejoras(common.TransactionCase):
     def test_crear_datos_validos(self):
         tarea = self.tarea_obj.create({
             'name': 'Ejecutar un curso de Redes y Telecomunicaciones',
-            'fecha_inicio': '2020-10-01 16:00:00',
-            'fecha_fin': '2020-10-14 16:00:00',
+            'fecha_inicio': '2021-03-02',
+            'fecha_fin': '2021-03-18',
             'ponderacion': 'nulo',
             'expirado': 'no_expired',
             'estado_id': self.estado1.id,
@@ -72,18 +72,22 @@ class TestModuloPlanMejoras(common.TransactionCase):
     def test_eliminar(self):
         tarea = self.tarea_obj.create({
             'name': 'Ejecutar un curso de Redes y Telecomunicaciones',
-            'fecha_inicio': '2020-10-01 16:00:00',
-            'fecha_fin': '2020-10-14 16:00:00',
+            'fecha_inicio': '2021-03-02',
+            'fecha_fin': '2021-03-18',
             'ponderacion': 'nulo',
-            'expirado': 'no_expired'})
+            'expirado': 'no_expired',
+            'estado_id': self.estado1.id,
+            'plan_id': self.plan1.id,
+            'debilidad_id': self.debilidad1.id,
+            'user_id': self.docente.id})
         self.assertTrue(tarea, msg=None)
         self.assertTrue(tarea.unlink(), msg=None)
 
     def test_check_expiry_expired(self):
         tarea = self.tarea_obj.create({
             'name': 'Ejecutar un curso de Redes y Telecomunicaciones',
-            'fecha_inicio': '2021-01-15 16:00:00',
-            'fecha_fin': '2021-01-14 16:00:00',
+            'fecha_inicio': '2021-03-01',
+            'fecha_fin': '2021-03-12',
             'ponderacion': 'nulo',
             'expirado': 'no_expired',
             'estado_id': self.estado1.id,
@@ -96,8 +100,8 @@ class TestModuloPlanMejoras(common.TransactionCase):
     def test_check_expiry_no_expired(self):
         tarea = self.tarea_obj.create({
             'name': 'Ejecutar un curso de Redes y Telecomunicaciones',
-            'fecha_inicio': '2021-01-15 16:00:00',
-            'fecha_fin': '2021-03-14 16:00:00',
+            'fecha_inicio': '2021-03-02',
+            'fecha_fin': '2021-03-20',
             'ponderacion': 'nulo',
             'expirado': 'no_expired',
             'estado_id': self.estado1.id,

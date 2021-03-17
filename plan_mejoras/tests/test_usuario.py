@@ -50,26 +50,17 @@ class TestModuloPlanMejoras(common.TransactionCase):
 
         self.plan1 = self.plan_obj.create({
             'name': "Plan Mejoras",
-            'fecha_inicio': '2020-10-14 16:00:00',
-            'fecha_fin': '2020-10-14 16:00:00',
+            'fecha_inicio': '2021-03-01',
+            'fecha_fin': '2021-03-28',
             'add_resultados': True,
             'add_anexos': True,
             'finalizado': False,
-            'user_ids': self.docente.id})
-
-        self.plan2 = self.plan_obj.create({
-            'name': "Plan Mejoras 2020",
-            'fecha_inicio': '2020-10-14 16:00:00',
-            'fecha_fin': '2020-10-14 16:00:00',
-            'add_resultados': True,
-            'add_anexos': True,
-            'finalizado': True,
-            'user_ids': self.docenteF.id})
+            'user_ids': [self.docente.id]})
 
         self.tarea1 = self.tarea_obj.create({
             'name': 'Ejecutar un curso de Redes y Telecomunicaciones',
-            'fecha_inicio': '2020-10-01 16:00:00',
-            'fecha_fin': '2020-10-14 16:00:00',
+            'fecha_inicio': '2021-03-01',
+            'fecha_fin': '2021-03-18',
             'ponderacion': 'nulo',
             'expirado': 'no_expired',
             'plan_id': self.plan1.id,
@@ -99,7 +90,7 @@ class TestModuloPlanMejoras(common.TransactionCase):
         self.assertTrue(bool(self.Users.search([('id', '=', usuario.id)], limit=1)))
 
     def test_grupos_email(self):
-        email = ['alexrog96@gmail.com', 'darogel96@gmail.com', 'd.d@example.com', 'r.c@example.com', 'robin.cordova@unl.edu.ec']
+        email = ['d.d@example.com', 'robincordova7@gmail.com', 'r.c@example.com']
         email1 = self.Users.get_groups_usesr_email()
         self.assertEqual(email, email1)
 
@@ -119,11 +110,11 @@ class TestModuloPlanMejoras(common.TransactionCase):
     def test_contador_tarea_false(self):
         tarea3 = self.tarea_obj.create({
             'name': 'Ejecutar un cursos de Redes',
-            'fecha_inicio': '2020-10-01 16:00:00',
-            'fecha_fin': '2020-10-14 16:00:00',
+            'fecha_inicio': '2021-03-01',
+            'fecha_fin': '2021-03-18',
             'ponderacion': 'nulo',
             'expirado': 'no_expired',
-            'plan_id': self.plan2.id,
+            'plan_id': self.plan1.id,
             'user_id': self.docenteF.id})
 
         self.docenteF._contador_tareas()

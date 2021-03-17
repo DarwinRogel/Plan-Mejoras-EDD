@@ -9,19 +9,21 @@ class Tarea(models.Model):
     _inherit = "mail.thread"
 
     name = fields.Char(string="Tarea", required=True)
-    description = fields.Html(string="Descripción", default="Tarea creada del Plan Mejoras de la Evaluación al Desempeño Docente",
+    description = fields.Html(string="Descripción",
+                              default="Tarea creada del Plan Mejoras de la "
+                                      "Evaluación al Desempeño Docente",
                               track_visibility="onchange")
-    fecha_inicio = fields.Date(string="Fecha de Inicio", required=True)
-
-    fecha_fin = fields.Date(string="Fecha Fin", required=True)
+    fecha_inicio = fields.Date(string="Fecha de Inicio",
+                               required=True)
+    fecha_fin = fields.Date(string="Fecha Fin",
+                            required=True)
     expirado = fields.Selection(selection=[("no_expired", "No Expirado"), ("expired", "Expirado")],
                                string="Tiempo Límite",
                                default="no_expired")
-
     ponderacion = fields.Selection(
-        selection=[("nulo", "Sin Calificar"), ("noc", "No Cumple"), ("cep", "Cumple en parte"), ("cum", "Cumple")],
+        selection=[("nulo", "Sin Calificar"), ("noc", "No Cumple"),
+                   ("cep", "Cumple en parte"), ("cum", "Cumple")],
         string="Ponderación", default="nulo")
-
     estado = fields.Boolean(default=False)
     tiene_evidencia = fields.Boolean(default=False, string="Posee Evidencia")
 
@@ -29,7 +31,7 @@ class Tarea(models.Model):
                                    default=lambda self: self.env['pm.estado'].search([], limit=1),
                                    group_expand='_group_expand_stage_ids', track_visibility="onchange")
 
-    user_id = fields.Many2one("res.users", string="Docente", required=True, default=lambda self: self.env.uid)
+    user_id = fields.Many2one("res.users", string="Docente", required=True, ondelete="cascade", default=lambda self: self.env.uid)
 
     plan_id = fields.Many2one("pm.plan", string="Plan Mejoras", ondelete="cascade")
 
@@ -187,10 +189,14 @@ class Evidencia(models.Model):
     _name = "pm.evidencia"
     _description = "Evidencias"
 
-    name = fields.Char(string='Nombre', required=True, translate=True)
+    name = fields.Char(string='Nombre',
+                       required=True,
+                       translate=True)
     evidencia = fields.Html(string="Evidencias")
 
-    tareas_ids = fields.Many2one("pm.tarea", string="Tareas", ondelete='cascade')
+    tareas_ids = fields.Many2one("pm.tarea",
+                                 string="Tareas",
+                                 ondelete='cascade')
 
 
 
@@ -298,7 +304,7 @@ class ResUser(models.Model):
         store=True
     )
 
-    tarea_ids = fields.One2many("pm.tarea", "user_id")
+    tarea_ids = fields.One2many("pm.tarea", "user_id", ondelete="cascade")
 
     criterio_ids = fields.One2many("pm.criterio", "user_id")
 
@@ -390,9 +396,10 @@ class ResUser(models.Model):
 
     def vista_tree(self):
         """
-            Redireccionar desde vista Docentes al Plan de Mejoras, mostrando el Plan de Actividades según
-            el estado.
-            :returns: Acción de ventana que contiene la vista Kanban del Plan de Actividades.
+            Redireccionar desde vista Docentes al Plan de Mejoras, mostrando el
+            Plan de Actividades según el estado.
+            :returns: Acción de ventana que contiene la vista Kanban del
+            Plan de Actividades.
         """
 
         return {
@@ -440,9 +447,10 @@ class Plan(models.Model):
     @api.model
     def create(self, vals):
         """
-            Sobrecarga del método create del Plan Mejoras para controlar la creación de un solo registro activo vigente,
-            además de validar que la fecha de finalización del Plan sea mayor a la fecha actual y la fecha inicio del
-            Plan menor a la fecha de finalización.
+            Sobrecarga del método create del Plan Mejoras para controlar la
+            creación de un solo registro activo vigente, además de validar que
+            la fecha de finalización del Plan sea mayor a la fecha actual y la
+            fecha inicio del Plan menor a la fecha de finalización.
             :param vals: Campos del modelo, como una lista de diccionarios.
             :returns: La creación de un nuevo Plan.
         """
@@ -620,7 +628,6 @@ class NotificacionControl(models.Model):
     nro_notificacion = fields.Integer(required=True, translate=True, string="Nro. de Notificaciones a ejecutar al Consejo Consultivo")
 
     @api.model
-
     def create(self, vals):
         """
             Sobrecarga del método create del NotificacionControl para controlar la creación de un solo registro activo.
