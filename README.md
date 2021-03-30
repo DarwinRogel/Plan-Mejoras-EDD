@@ -47,14 +47,14 @@ El objetivo del módulo es la optimización técnica de todas las actividades y 
 ---
 Para ingresar al módulo de software solicitar la dirección url al correo: direccion.cis@unl.edu.ec o su vez a los autores.
 <br/><br/>
-Para acceder al manual de usuario (Gestor de la CIS/C, Consejo Consultivo) del módulo de software ingrese al siguiente enlace: https://medium.com/@williamkhepri/fibonacci-y-optimizaci%C3%B3n-f0b9590e989a
+Para acceder al manual de usuario (Gestor de la CIS/C, Consejo Consultivo) del módulo de software ingrese al siguiente enlace: https://drive.google.com/file/d/1Y9z8aw7zdjAzlMk6PyCScE7vufUZq8kJ/view?usp=sharing
 <br/><br/>
-Para acceder al manual de usuario (Docente) del módulo de software ingrese al siguiente enlace: https://medium.com/@williamkhepri/fibonacci-y-optimizaci%C3%B3n-f0b9590e989a
+Para acceder al manual de usuario (Docente) del módulo de software ingrese al siguiente enlace: https://drive.google.com/file/d/1r1TRm8-9pcTBHBRKUgvfWdWCE0g2GIuK/view?usp=sharing
 
  	
 ## Guía de instalación
 ---
-Para comenzar con la instalación del módulo de software se recomienda acceder al siguiente enlace: https://medium.com/@williamkhepri/fibonacci-y-optimizaci%C3%B3n-f0b9590e989a el cual proporciona una guía referente a la implantación del módulo en el Sistema Odoo ERP.
+Para comenzar con la instalación del módulo de software se recomienda acceder al siguiente enlace: hps://drive.google.com/file/d/1O-xapR0NC_oOJvLrRy5JsZdmO_FtZdSM/view?usp=sharing el cual proporciona una guía referente a la implantación del módulo en el Sistema Odoo ERP.
 <br/><br/>
 Las Tecnologías y Herramientas utilizadas fueron:
 -   Plataforma de Google en la Nube (GCP)
