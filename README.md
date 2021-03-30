@@ -54,7 +54,7 @@ Para acceder al manual de usuario (Docente) del módulo de software ingrese al s
  	
 ## Guía de instalación
 ---
-Para comenzar con la instalación del módulo de software se recomienda acceder al siguiente enlace: hps://drive.google.com/file/d/1O-xapR0NC_oOJvLrRy5JsZdmO_FtZdSM/view?usp=sharing el cual proporciona una guía referente a la implantación del módulo en el Sistema Odoo ERP.
+Para comenzar con la instalación del módulo de software se recomienda acceder al siguiente enlace: https://drive.google.com/file/d/1O-xapR0NC_oOJvLrRy5JsZdmO_FtZdSM/view?usp=sharing el cual proporciona una guía referente a la implantación del módulo en el Sistema Odoo ERP.
 <br/><br/>
 Las Tecnologías y Herramientas utilizadas fueron:
 -   Plataforma de Google en la Nube (GCP)
