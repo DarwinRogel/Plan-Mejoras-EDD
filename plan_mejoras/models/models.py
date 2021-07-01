@@ -618,14 +618,14 @@ class NotificacionDias(models.Model):
     _description = "Notificación Días"
 
     name = fields.Char(translate=True, string="Descripción")
-    dias_notificacion = fields.Integer(required=True, translate=True, string="Nro. de días para Notificar la culminacion de las Tareas")
+    dias_notificacion = fields.Integer(required=True, string="Nro. de días para Notificar la culminacion de las Tareas")
 
 class NotificacionControl(models.Model):
     _name = "pm.notificacionc"
     _description = "Notificación Control"
 
     name = fields.Char(translate=True, string="Descripción")
-    nro_notificacion = fields.Integer(required=True, translate=True, string="Nro. de Notificaciones a ejecutar al Consejo Consultivo")
+    nro_notificacion = fields.Integer(required=True, string="Nro. de Notificaciones a ejecutar al Consejo Consultivo")
 
     @api.model
     def create(self, vals):
