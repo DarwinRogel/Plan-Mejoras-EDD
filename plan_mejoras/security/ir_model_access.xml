@@ -130,6 +130,28 @@
         <field name="perm_read" eval="1"/>
     </record>
 
+    <!-- Accesos al Grupo Administrador a la confirm_wizard-->
+    <record id="model_access_confirm_wizard_admin" model="ir.model.access">
+        <field name="name">model.access.confirm_wizard_admin</field>
+        <field name="model_id" ref="plan_mejoras.model_pm_confirm_wizard"/>
+        <field name="group_id" ref="plan_mejoras.res_groups_administrador"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
+    <!-- Accesos al Grupo Administrador a la confirm_wizardI-->
+    <record id="model_access_confirm_iniciar_admin" model="ir.model.access">
+        <field name="name">model.access.confirm_iniciar_admin</field>
+        <field name="model_id" ref="plan_mejoras.model_pm_confirm_iniciar"/>
+        <field name="group_id" ref="plan_mejoras.res_groups_administrador"/><!--Administracion/Ajustes-->
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="perm_read" eval="1"/>
+    </record>
+
     <!-- PERMISOS USUARIO CONSEJO CONSULTIVO -->
 
     <!-- Accesos al Grupo Consejo Consultivo a la Informe-->
