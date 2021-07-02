@@ -671,7 +671,7 @@ class confirm_wizard(models.TransientModel):
         self.env.cr.commit()
         return {
             "type": "ir.actions.client",
-            "tag": "mail.discuss",
+            "tag": "mail.widgets.discuss",
             "target": "main"
         }
 
@@ -722,6 +722,6 @@ class confirm_wizardI(models.TransientModel):
         ResUser.action_send_email(self.env.user)
         return {
             "type": "ir.actions.client",
-            "tag": "mail.discuss",
+            "tag": "mail.widgets.discuss",
             "target": "main"
         }
