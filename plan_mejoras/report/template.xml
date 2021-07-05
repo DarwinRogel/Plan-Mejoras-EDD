@@ -19,9 +19,9 @@
                                 <br/>
                                 <t t-foreach="request.env['res.users'].search([])" t-as="consejo">
                                     <t t-if="consejo.has_group('plan_mejoras.res_groups_docente_consejo') or consejo.has_group('plan_mejoras.res_groups_administrador')">
-                                        <ol >
+                                        <ul align="center">
                                             <li align="center"><span><t t-esc="consejo.name"/></span></li>
-                                        </ol>
+                                        </ul>
                                     </t>
                                 </t>
                                 <br/>
@@ -52,7 +52,7 @@
                                         <b><span><t t-esc="consejo.function"/></span></b>
                                         <br/><br/><br/><br/><br/>
                                     </t>
-                                    <t t-if="consejo.has_group('plan_mejoras.res_groups_docente_consejo') and !consejo.has_group('plan_mejoras.res_groups_administrador')">
+                                    <t t-if="consejo.has_group('plan_mejoras.res_groups_docente_consejo') and not consejo.has_group('plan_mejoras.res_groups_administrador')">
                                         <span>Firma:___________________________</span><br/>
                                         <b><span><t t-esc="consejo.function"/></span></b>
                                         <br/><br/><br/><br/><br/>
@@ -89,8 +89,12 @@
                                                         <td class="text-center"><span t-field="doc.ponderacion"/></td>
                                                         <td class="text-center"><span t-field="doc.debilidad_id.name"/></td>
                                                         <td class="text-center">
-                                                            <t t-foreach="request.env['pm.evidencia'].search([('evidencia_id', '=', doc.evicencia_id)])" t-as="evidencia">
-                                                                <span t-field="evidencia.name"/>
+                                                            <t t-foreach="request.env['pm.evidencia'].search([])" t-as="evi">
+                                                                <t t-if="evi.tareas_ids.id == doc.id">
+                                                                    <ul >
+                                                                        <li align="center"><span t-field="evi.name"/></li>
+                                                                    </ul>
+                                                                </t>
                                                             </t>
                                                         </td>
                                                         <td class="text-center"><span t-field="doc.estado_id"/></td>

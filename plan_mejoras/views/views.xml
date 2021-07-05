@@ -324,8 +324,10 @@
                         </group>
                         <group>
                             <group>
-                                <field name="email"/>
+                                <field name="login" string="Correo Electrónico"/>
+                                <field name="email" invisible="1"/>
                                 <field name="function"/>
+
                                 <field name="groups_id"/> <!-- domain="['|','|', ('id','=',31),('id','=',32),('id','=',33)]"-->
                             </group>
                         </group>
