@@ -6,8 +6,7 @@
             <field name="model_id" ref="plan_mejoras.model_res_users"/>
             <field name="email_from">${(object.company_id.email | safe)}</field>
             <!--<field name="email_to" >${}</field>-->
-            <field name="subject">INICIALIZACIÓN DEL PLAN MEJORAS DE LA
-                EVALUACIÓN AL DESEMPEÑO DOCENTE</field>
+            <field name="subject">INICIALIZACIÓN DEL PLAN MEJORAS DE LA EDD</field>
             <field name="auto_delete" eval="True"/>
             <field name="lang">${object.lang}</field>
             <field name="body_html" type="html">

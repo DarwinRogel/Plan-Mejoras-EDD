@@ -3,12 +3,12 @@
         <field name="name">Plan Mejoras</field>
     </record>
     <record id="res_groups_administrador" model="res.groups">
-        <field name="name"> Administrador</field>
+        <field name="name">Administrador</field>
         <field name="category_id" ref="plan_mejoras.module_plan_mejoras"/>
     </record>
 
     <record id="res_groups_docente" model="res.groups">
-        <field name="name"> Docentes</field>
+        <field name="name">Docentes</field>
         <field name="category_id" ref="plan_mejoras.module_plan_mejoras"/>
     </record>
 

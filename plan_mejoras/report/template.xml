@@ -70,6 +70,7 @@
                                         <span align="left"><b>DETALLES DE LAS TAREAS REALIZADAS POR LOS DOCENTES DE LA CIS-UNL</b></span>
                                         <br/>
                                         <t t-foreach="request.env['res.users'].search([])" t-as="doc1">
+                                            <t t-if="doc1.has_group('plan_mejoras.res_groups_docente')">
                                             <br/>
                                             <b align="center">Docente:</b> <span t-esc="doc1.name"/>
                                             <table class="table table-condensed table-bordered">
@@ -97,6 +98,7 @@
                                                 </t>
                                             </table>
                                         </t>
+                                        </t>
                                         <t t-if="obj.add_resultados == True">
                                             <div class="page"/>
                                             <p style="page-break-after:always;">   </p>
@@ -104,6 +106,7 @@
                                             <br/>
                                             <t t-foreach="request.env['res.users'].search([])" t-as="doc2">
                                                 <br/>
+                                                <t t-if="doc2.has_group('plan_mejoras.res_groups_docente')">
                                                 <span><b>Docente:</b> <t t-esc="doc2.name"></t></span>
                                                 <br/>
                                                 <table class="table table-condensed table-bordered">
@@ -120,6 +123,7 @@
                                                 </table>
                                                 <span><b>Valoración Cualitativa:</b> <t t-esc="doc2.us_cat"></t></span>
                                                 <br/>
+                                            </t>
                                             </t>
                                         </t>
                                         <div class="page"/>
