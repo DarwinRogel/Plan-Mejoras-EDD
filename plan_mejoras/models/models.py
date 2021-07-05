@@ -8,8 +8,8 @@ class Tarea(models.Model):
     _description = "Tareas"
     _inherit = "mail.thread"
 
-    name = fields.Char(string="Tarea", required=True)
-    description = fields.Html(string="Descripción",
+    name = fields.Char(string="Nombre de la Tarea", required=True)
+    description = fields.Html(string="Descripción de la Tarea",
                               default="Tarea creada del Plan Mejoras de la "
                                       "Evaluación al Desempeño Docente",
                               track_visibility="onchange")

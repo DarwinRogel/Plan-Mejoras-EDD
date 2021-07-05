@@ -49,12 +49,12 @@
                                 <t t-foreach="request.env['res.users'].search([])" t-as="consejo">
                                     <t t-if="consejo.has_group('plan_mejoras.res_groups_administrador')">
                                         <span>Firma:___________________________</span><br/>
-                                        <b><span>ENCARGADO DE LA GESTIÓN DE LA CIS/C</span></b>
+                                        <b><span><t t-esc="consejo.function"/></span></b>
                                         <br/><br/><br/><br/><br/>
                                     </t>
-                                    <t t-if="consejo.has_group('plan_mejoras.res_groups_docente_consejo')">
+                                    <t t-if="consejo.has_group('plan_mejoras.res_groups_docente_consejo') and !consejo.has_group('plan_mejoras.res_groups_administrador')">
                                         <span>Firma:___________________________</span><br/>
-                                        <b><span>MIEMBRO DEL CONSEJO CONSULTIVO DE LA CIS/C</span></b>
+                                        <b><span><t t-esc="consejo.function"/></span></b>
                                         <br/><br/><br/><br/><br/>
                                     </t>
                                 </t>
@@ -74,11 +74,11 @@
                                             <b align="center">Docente:</b> <span t-esc="doc1.name"/>
                                             <table class="table table-condensed table-bordered">
                                                 <thead>
-                                                    <th style="width: 65%">Título</th>
-                                                    <th class="text-center" style="width: 15%">Descripción</th>
+                                                    <th style="width: 65%">Nombre de la Tarea</th>
+                                                    <th class="text-center" style="width: 15%">Descripción de la Tarea</th>
                                                     <th class="text-center" style="width: 20%">Ponderación</th>
-                                                    <th class="text-center" style="width: 20%">Fecha Inicio</th>
-                                                    <th class="text-center" style="width: 20%">Fecha Fin</th>
+                                                    <th class="text-center" style="width: 20%">Debilidades</th>
+                                                    <th class="text-center" style="width: 20%">Evidencias</th>
                                                     <th class="text-center" style="width: 20%">Estado</th>
                                                 </thead>
                                                 <t t-foreach="request.env['pm.tarea'].search([('user_id', '=', doc1.id)])" t-as="doc">
@@ -86,8 +86,12 @@
                                                         <td class="text-center"><span t-esc="doc.name"/></td>
                                                         <td class="text-center"><span t-raw="doc.description"/></td>
                                                         <td class="text-center"><span t-field="doc.ponderacion"/></td>
-                                                        <td class="text-center"><span t-field="doc.fecha_inicio"/></td>
-                                                        <td class="text-center"><span t-field="doc.fecha_fin"/></td>
+                                                        <td class="text-center"><span t-field="doc.debilidad_id.name"/></td>
+                                                        <td class="text-center">
+                                                            <t t-foreach="request.env['pm.evidencia'].search([('evidencia_id', '=', doc.evicencia_id)])" t-as="evidencia">
+                                                                <span t-field="evidencia.name"/>
+                                                            </t>
+                                                        </td>
                                                         <td class="text-center"><span t-field="doc.estado_id"/></td>
                                                     </tbody>
                                                 </t>
@@ -114,7 +118,7 @@
                                                         </tbody>
                                                     </t>
                                                 </table>
-                                                <span><b>Valoración Cuantitativa:</b> <t t-esc="doc2.us_cat"></t></span>
+                                                <span><b>Valoración Cualitativa:</b> <t t-esc="doc2.us_cat"></t></span>
                                                 <br/>
                                             </t>
                                         </t>
